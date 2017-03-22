@@ -1,0 +1,7 @@
+*.obj
+*.log
+Debug/NeuralNetwork.pch
+*.tlog
+Debug/vc140.idb
+*.pdb
+*.pch

@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Quelldateien">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Headerdateien">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Ressourcendateien">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Headerdateien\Framework">
+      <UniqueIdentifier>{079a7363-4a53-407e-a99c-0efc7e603597}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="VisualStudioSpecific">
+      <UniqueIdentifier>{61f55cef-d3bf-44ff-8637-f702f22f2fa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Framework">
+      <UniqueIdentifier>{8c233e95-960f-47ea-9944-5105e0438800}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\GameState">
+      <UniqueIdentifier>{cd4b4361-8892-4d35-a13a-292b63d5ec4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\GameState">
+      <UniqueIdentifier>{f09259c4-c814-4629-abd1-79a5641b2b3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Math">
+      <UniqueIdentifier>{660ba89f-0dd1-4d2d-9139-0ee40caa6f7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Math">
+      <UniqueIdentifier>{0c8a4a89-bbc6-433f-805e-aea0c33bb877}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>VisualStudioSpecific</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>VisualStudioSpecific</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\Framework.hpp">
+      <Filter>Headerdateien\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameState\GameState.hpp">
+      <Filter>Headerdateien\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameState\MainMenuState.hpp">
+      <Filter>Headerdateien\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\EventManager.hpp">
+      <Filter>Headerdateien\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\TextureManager.hpp">
+      <Filter>Headerdateien\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Framework\SoundManager.hpp">
+      <Filter>Headerdateien\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\mySFMLVectorFunctions.hpp">
+      <Filter>Headerdateien\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\myUsefulMath.hpp">
+      <Filter>Headerdateien\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\ourMatrices.hpp">
+      <Filter>Headerdateien\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Math\ourVectors.hpp">
+      <Filter>Headerdateien\Math</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>VisualStudioSpecific</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Framework\Framework.cpp">
+      <Filter>Quelldateien\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Framework\main.cpp">
+      <Filter>Quelldateien\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameState\GameState.cpp">
+      <Filter>Quelldateien\GameState</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameState\MainMenuState.cpp">
+      <Filter>Quelldateien\GameState</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Framework\EventManager.cpp">
+      <Filter>Quelldateien\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Framework\TextureManager.cpp">
+      <Filter>Quelldateien\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Framework\SoundManager.cpp">
+      <Filter>Quelldateien\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Math\mySFMLVectorFunctions.cpp">
+      <Filter>Quelldateien\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Math\myUsefulMath.cpp">
+      <Filter>Quelldateien\Math</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
