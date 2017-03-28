@@ -60,7 +60,7 @@ void Framework::handleEvents()
 				mShowFPS = !mShowFPS;
 			}
 		}
-		
+
 		//Pass the Events through to the EventManager
 		if (mEvent.type == sf::Event::EventType::MouseButtonPressed)
 		{
@@ -139,7 +139,7 @@ void Framework::update()
 void Framework::render()
 {
 	pRenderWindow->clear(sf::Color::Black);
-	
+
 	mStackOfGameStates.top()->render(pRenderWindow);
 	if (mShowFPS)
 	{
@@ -167,7 +167,7 @@ void Framework::determineFrametime()
 	if (timeSinceLastSecond > sf::seconds(1.f))
 	{
 		mFPS = framesSinceLastSecond;
-		mFPSText.setString("FPS: " + std::to_string(mFPS));
+        mFPSText.setString("FPS: " + std::to_string(mFPS));
 
 		mUtilization = (timeSinceLastSecond - renderTimeSinceLastSecond).asSeconds();
 		mUtilizationText.setString("Util: " + std::to_string(static_cast<int>(mUtilization * 100.f)) + "%");

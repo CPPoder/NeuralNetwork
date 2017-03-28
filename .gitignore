@@ -5,3 +5,9 @@ Debug/NeuralNetwork.pch
 Debug/vc140.idb
 *.pdb
 *.pch
+*.cbp
+*.layout
+obj
+bin
+targetver.h
+*.depend

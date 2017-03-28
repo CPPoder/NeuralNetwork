@@ -2,6 +2,7 @@
 #define MYSFMLVECTORFUNCTIONS_HPP
 
 #include "SFML\Graphics.hpp"
+#include "Source\Math\myUsefulMath.hpp"
 
 #include <iostream>
 #include <math.h>
@@ -93,48 +94,6 @@ namespace mySFML {
 			return sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
 		}
 
-		//////////////////
-		//Angle in radiant
-		template <typename T> T angleOf(sf::Vector2<T> const & vector)
-		{
-			if (vector.x == T(0) && vector.y == T(0))
-			{
-				std::cerr << "template <typename T> T mySFML::angleOf(sf::Vector2<T> vector) : Error! vector is (0,0)!" << std::endl;
-				return T(0);
-			}
-			sf::Vector2<T> normVec = mySFML::normalize(vector);
-			normVec = sf::Vector2<T>(normVec.x, -normVec.y);
-			float angle;
-			if (myMath::abs(normVec.y) < myMath::SQRT2f / 2.f)
-			{
-				angle = atan(normVec.y / normVec.x);
-			}
-			else
-			{
-				bool secondOrFourthQuadrant = ((normVec.x < 0 && normVec.y > 0) || (normVec.x > 0 && normVec.y < 0));
-				if (!secondOrFourthQuadrant)
-				{
-					angle = (myMath::PId / 2.0 - atan(normVec.x / normVec.y));
-				}
-				else
-				{
-					angle = (myMath::PId * 3.0 / 2.0 - atan(normVec.x / normVec.y));
-				}
-			}
-			if (vector.x < 0)
-			{
-				angle += myMath::PId;
-			}
-			while (angle > 2.0 * myMath::PId)
-			{
-				angle -= 2.0 * myMath::PId;
-			}
-			while (angle < 0.0)
-			{
-				angle += 2.0 * myMath::PId;
-			}
-			return angle;
-		}
 
 		///////////
 		//Normalize
@@ -164,6 +123,51 @@ namespace mySFML {
 				return (vector / length);
 			}
 		}
+
+		//////////////////
+		//Angle in radiant
+		template <typename T> T angleOf(sf::Vector2<T> const & vector)
+		{
+			if (vector.x == T(0) && vector.y == T(0))
+			{
+				std::cerr << "template <typename T> T mySFML::angleOf(sf::Vector2<T> vector) : Error! vector is (0,0)!" << std::endl;
+				return T(0);
+			}
+			sf::Vector2<T> normVec = mySFML::Simple::normalize(vector);
+			normVec = sf::Vector2<T>(normVec.x, -normVec.y);
+			float angle;
+			if (myMath::Simple::abs(normVec.y) < myMath::Const::SQRT2f / 2.f)
+			{
+				angle = atan(normVec.y / normVec.x);
+			}
+			else
+			{
+				bool secondOrFourthQuadrant = ((normVec.x < 0 && normVec.y > 0) || (normVec.x > 0 && normVec.y < 0));
+				if (!secondOrFourthQuadrant)
+				{
+					angle = (myMath::Const::PId / 2.0 - atan(normVec.x / normVec.y));
+				}
+				else
+				{
+					angle = (myMath::Const::PId * 3.0 / 2.0 - atan(normVec.x / normVec.y));
+				}
+			}
+			if (vector.x < 0)
+			{
+				angle += myMath::Const::PId;
+			}
+			while (angle > 2.0 * myMath::Const::PId)
+			{
+				angle -= 2.0 * myMath::Const::PId;
+			}
+			while (angle < 0.0)
+			{
+				angle += 2.0 * myMath::Const::PId;
+			}
+			return angle;
+		}
+
+
 
 		//////////////////////////////////////////////////////////////////////////////
 		//Componentwise Multiplication (Returns a Vector with the first arguments type)
@@ -209,7 +213,7 @@ namespace mySFML {
 		sf::Vector2f dirtyRandNormalVector(int parameter);
 
 	} //Namespace Rand
-	
+
 	namespace Comp
 	{
 
@@ -219,7 +223,7 @@ namespace mySFML {
 		bool smaller(sf::Vector2i const & smallerVector, sf::Vector2i const & largerVector, bool & xSmaller, bool & ySmaller);
 
 	} //Namespace Comp
-	
+
 	namespace IO
 	{
 

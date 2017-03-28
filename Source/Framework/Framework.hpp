@@ -6,7 +6,7 @@
 
 #include "SFML\Graphics.hpp"
 
-#include "mySFMLVectorFunctions.hpp"
+#include "Source\Math\mySFMLVectorFunctions.hpp"
 
 #include "Source\Framework\EventManager.hpp"
 
