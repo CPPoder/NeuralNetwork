@@ -22,7 +22,7 @@ namespace GameState
 	{
 		if (!mCloseMainMenu)
 		{
-			return GameStateChange::NO_CHANGE;
+			return GameStateChange::REPLACE_RACE_STATE;
 		}
 		else
 		{

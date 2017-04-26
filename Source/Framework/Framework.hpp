@@ -12,6 +12,7 @@
 
 #include "Source\GameState\GameState.hpp"
 #include "Source\GameState\MainMenuState.hpp"
+#include "Source\GameState\RaceState.hpp"
 
 #include "Source\Framework\TextureManager.hpp"
 #include "Source\Framework\SoundManager.hpp"

@@ -34,6 +34,18 @@
     <Filter Include="Quelldateien\Math">
       <UniqueIdentifier>{0c8a4a89-bbc6-433f-805e-aea0c33bb877}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Simulation">
+      <UniqueIdentifier>{b4256903-77c7-475f-be23-40fb288958fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Simulation">
+      <UniqueIdentifier>{c1300e90-493c-4512-863b-e489762060f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Track">
+      <UniqueIdentifier>{c8be4a19-3971-467f-b365-994253e13c98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Track">
+      <UniqueIdentifier>{038bdd10-0994-4050-8b3c-da3cdb1c65dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -75,6 +87,15 @@
     <ClInclude Include="Source\Math\ourVectors.hpp">
       <Filter>Headerdateien\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Source\GameState\RaceState.hpp">
+      <Filter>Headerdateien\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Simulation\RaceSimulation.hpp">
+      <Filter>Headerdateien\Simulation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Track\Track.hpp">
+      <Filter>Headerdateien\Track</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -106,6 +127,15 @@
     </ClCompile>
     <ClCompile Include="Source\Math\myUsefulMath.cpp">
       <Filter>Quelldateien\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameState\RaceState.cpp">
+      <Filter>Quelldateien\GameState</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Simulation\RaceSimulation.cpp">
+      <Filter>Quelldateien\Simulation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Track\Track.cpp">
+      <Filter>Quelldateien\Track</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -158,10 +158,13 @@
     <ClInclude Include="Source\Framework\TextureManager.hpp" />
     <ClInclude Include="Source\GameState\GameState.hpp" />
     <ClInclude Include="Source\GameState\MainMenuState.hpp" />
+    <ClInclude Include="Source\GameState\RaceState.hpp" />
     <ClInclude Include="Source\Math\mySFMLVectorFunctions.hpp" />
     <ClInclude Include="Source\Math\myUsefulMath.hpp" />
     <ClInclude Include="Source\Math\ourMatrices.hpp" />
     <ClInclude Include="Source\Math\ourVectors.hpp" />
+    <ClInclude Include="Source\Simulation\RaceSimulation.hpp" />
+    <ClInclude Include="Source\Track\Track.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -173,8 +176,11 @@
     <ClCompile Include="Source\Framework\TextureManager.cpp" />
     <ClCompile Include="Source\GameState\GameState.cpp" />
     <ClCompile Include="Source\GameState\MainMenuState.cpp" />
+    <ClCompile Include="Source\GameState\RaceState.cpp" />
     <ClCompile Include="Source\Math\mySFMLVectorFunctions.cpp" />
     <ClCompile Include="Source\Math\myUsefulMath.cpp" />
+    <ClCompile Include="Source\Simulation\RaceSimulation.cpp" />
+    <ClCompile Include="Source\Track\Track.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

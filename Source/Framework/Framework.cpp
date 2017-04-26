@@ -118,14 +118,32 @@ void Framework::update()
 		mStackOfGameStates.push(new GameState::MainMenuState);
 		break;
 
+	case GameState::GameStateChange::POP_TWICE_AND_PUSH_RACE_STATE:
+		delete mStackOfGameStates.top();
+		mStackOfGameStates.pop();
+		delete mStackOfGameStates.top();
+		mStackOfGameStates.pop();
+		mStackOfGameStates.push(new GameState::RaceState);
+		break;
+
 	case GameState::GameStateChange::PUSH_MAIN_MENU_STATE:
 		mStackOfGameStates.push(new GameState::MainMenuState);
+		break;
+
+	case GameState::GameStateChange::PUSH_RACE_STATE:
+		mStackOfGameStates.push(new GameState::RaceState);
 		break;
 
 	case GameState::GameStateChange::REPLACE_MAIN_MENU_STATE:
 		delete mStackOfGameStates.top();
 		mStackOfGameStates.pop();
 		mStackOfGameStates.push(new GameState::MainMenuState);
+		break;
+
+	case GameState::GameStateChange::REPLACE_RACE_STATE:
+		delete mStackOfGameStates.top();
+		mStackOfGameStates.pop();
+		mStackOfGameStates.push(new GameState::RaceState);
 		break;
 	}
 	if (mStackOfGameStates.empty())
