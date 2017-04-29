@@ -3,7 +3,8 @@
 
 
 RaceSimulation::RaceSimulation()
-	: mTrack(this->constructCircleTrack())
+	: mTrack(this->constructCircleTrack()),
+	  mCar(sf::Vector2f(50.f, 50.f), sf::Vector2f(0.f, 1.f), 3.f)
 {
 
 }
@@ -16,21 +17,28 @@ RaceSimulation::~RaceSimulation()
 
 void RaceSimulation::render(sf::RenderWindow * renderWindow)
 {
+	sf::View raceView(sf::FloatRect(0.f, 0.f, 100.f, 100.f));
+	sf::View originalView(renderWindow->getView());
+	renderWindow->setView(raceView);
+
 	mTrack.render(renderWindow);
+	mCar.render(renderWindow);
+
+	renderWindow->setView(originalView);
 }
 
 void RaceSimulation::update(sf::Time const & time, sf::RenderWindow const * renderWindow)
 {
-
+	mCar.update(time, renderWindow);
 }
 
 
 
 std::list<std::pair<sf::Vector2f, float>> RaceSimulation::constructCircleTrack()
 {
-	float radius(200.f);
-	sf::Vector2f center(300.f, 300.f);
-	float width(30.f);
+	float radius(40.f);
+	sf::Vector2f center(50.f, 50.f);
+	float width(5.f);
 	unsigned int numberOfPoints(30u);
 
 	std::list<std::pair<sf::Vector2f, float>> list;

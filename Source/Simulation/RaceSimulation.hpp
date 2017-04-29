@@ -4,12 +4,14 @@
 #include "SFML\Graphics.hpp"
 
 #include "Source\Track\Track.hpp"
+#include "Source\Car\Car.hpp"
 
 
 class RaceSimulation
 {
 private:
 	Track mTrack;
+	Car mCar;
 
 public:
 	RaceSimulation();

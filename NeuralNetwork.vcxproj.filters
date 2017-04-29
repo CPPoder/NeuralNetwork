@@ -46,6 +46,12 @@
     <Filter Include="Quelldateien\Track">
       <UniqueIdentifier>{038bdd10-0994-4050-8b3c-da3cdb1c65dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Car">
+      <UniqueIdentifier>{1c1f3ea1-a30e-42b7-9870-865f0e0a7980}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Car">
+      <UniqueIdentifier>{69577cf0-1a88-44b9-8238-8de9257380bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -96,6 +102,9 @@
     <ClInclude Include="Source\Track\Track.hpp">
       <Filter>Headerdateien\Track</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Car\Car.hpp">
+      <Filter>Headerdateien\Car</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -136,6 +145,9 @@
     </ClCompile>
     <ClCompile Include="Source\Track\Track.cpp">
       <Filter>Quelldateien\Track</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Car\Car.cpp">
+      <Filter>Quelldateien\Car</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
