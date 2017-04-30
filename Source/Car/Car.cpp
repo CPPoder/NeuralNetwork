@@ -10,9 +10,16 @@ Car::Car()
 Car::Car(sf::Vector2f const & position, sf::Vector2f const & direction, float velocity)
 	: mPosition(position),
 	  mVelocity(velocity),
-	  mDirection(mySFML::Simple::normalize(direction))
+	  mDirection(mySFML::Simple::normalize(direction)),
+	  pBrain(Brain::constructBrain(BrainType::PLAYER))
 {
 	this->setVertexArray();
+}
+
+Car::~Car()
+{
+	delete pBrain;
+	pBrain = nullptr;
 }
 
 
@@ -21,19 +28,22 @@ void Car::render(sf::RenderWindow * renderWindow) const
 	renderWindow->draw(mVertexArray);
 }
 
-void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow)
+void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, RaceSimulation const * raceSimPointer)
 {
 	//Determine GasBrakeForce- & WheelAngle-Derivatives from Brain
-	mGasBrakeForceDerivative = 0.f;
-	mSteeringWheelAngleDerivative = 0.f;
-
+	BrainOutput brainOutput = pBrain->calculateBrainOutput(raceSimPointer, this);
+	mGasBrakeForceDerivative = brainOutput.gasBrakeForceDerivative;
+	mSteeringWheelAngleDerivative = brainOutput.steeringWheelAngleDerivative;
+	
 	//Determine GasBrakeForce & WheelAngle
 	mGasOrBrakeForce += mGasBrakeForceDerivative * time.asSeconds();
 	mSteeringWheelAngle += mSteeringWheelAngleDerivative * time.asSeconds();
+	mGasOrBrakeForce = myMath::Simple::trim(-mMaximalGasOrBrakeForce, mGasOrBrakeForce, mMaximalGasOrBrakeForce);
+	mSteeringWheelAngle = myMath::Simple::trim(-mMaximalSteeringWheelAngle, mSteeringWheelAngle, mMaximalSteeringWheelAngle);
 
 	//Determine Total Force
 	float centripetalForce = mMass / mDistanceBetweenFrontAndBackWheels * mVelocity * mVelocity * mSteeringWheelAngle; //Has sign from angle!
-	sf::Vector2f totalForce = mGasOrBrakeForce * mDirection - centripetalForce * mySFML::Create::createOrthogonalVector(mDirection);
+	sf::Vector2f totalForce = mGasOrBrakeForce * mDirection + centripetalForce * mySFML::Create::createOrthogonalVector(mDirection);
 
 	//Cut total force to be smaller than friction force
 	float frictionForce = mFrictionCoefficient * mMass * 9.81f;
@@ -73,3 +83,50 @@ void Car::setVertexArray()
 	mVertexArray.append(sf::Vertex(mPosition - upVector - leftVector, carColor));
 	mVertexArray.append(sf::Vertex(mPosition + upVector - leftVector, carColor));
 }
+
+
+
+////////
+//Getter
+
+sf::Vector2f Car::getPosition() const
+{
+	return mPosition;
+}
+sf::Vector2f Car::getDirection() const
+{
+	return mDirection;
+}
+float Car::getVelocity() const
+{
+	return mVelocity;
+}
+float Car::getGasBrakeForce() const
+{
+	return mGasOrBrakeForce;
+}
+float Car::getSteeringWheelAngle() const
+{
+	return mSteeringWheelAngle;
+}
+float Car::getMaximalGasBrakeForce() const
+{
+	return mMaximalGasOrBrakeForce;
+}
+float Car::getMaximalSteeringWheelAngle() const
+{
+	return mMaximalSteeringWheelAngle;
+}
+float Car::getMass() const
+{
+	return mMass;
+}
+float Car::getFrictionCoefficient() const
+{
+	return mFrictionCoefficient;
+}
+float Car::getDistanceBetweenFrontAndBackWheels() const
+{
+	return mDistanceBetweenFrontAndBackWheels;
+}
+

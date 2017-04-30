@@ -105,6 +105,18 @@
     <ClInclude Include="Source\Car\Car.hpp">
       <Filter>Headerdateien\Car</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Car\Brain.hpp">
+      <Filter>Headerdateien\Car</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Car\BrainOutput.hpp">
+      <Filter>Headerdateien\Car</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Car\PlayerBrain.hpp">
+      <Filter>Headerdateien\Car</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Car\BrainType.hpp">
+      <Filter>Headerdateien\Car</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -147,6 +159,15 @@
       <Filter>Quelldateien\Track</Filter>
     </ClCompile>
     <ClCompile Include="Source\Car\Car.cpp">
+      <Filter>Quelldateien\Car</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Car\Brain.cpp">
+      <Filter>Quelldateien\Car</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Car\BrainOutput.cpp">
+      <Filter>Quelldateien\Car</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Car\PlayerBrain.cpp">
       <Filter>Quelldateien\Car</Filter>
     </ClCompile>
   </ItemGroup>

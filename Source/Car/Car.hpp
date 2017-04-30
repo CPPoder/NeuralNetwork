@@ -5,6 +5,9 @@
 
 #include "Source\Math\mySFMLVectorFunctions.hpp"
 
+#include "Source\Car\Brain.hpp"
+#include "Source\Car\PlayerBrain.hpp"
+
 
 class Car
 {
@@ -25,18 +28,32 @@ private:
 	float const mFrictionCoefficient = 0.5f;
 	float const mDistanceBetweenFrontAndBackWheels = 3.f;
 
+	Brain* pBrain = nullptr;
+
 	sf::VertexArray mVertexArray;
 
 
 public:
 	Car();
 	Car(sf::Vector2f const & position, sf::Vector2f const & direction, float velocity);
-	~Car() = default;
+	~Car();
 	Car(Car const & car) = default;
 	Car& operator=(Car const & car) = default;
 
 	void render(sf::RenderWindow * renderWindow) const;
-	void update(sf::Time const & time, sf::RenderWindow const * renderWindow);
+	void update(sf::Time const & time, sf::RenderWindow const * renderWindow, RaceSimulation const * raceSimPointer);
+
+public:
+	sf::Vector2f getPosition() const;
+	sf::Vector2f getDirection() const;
+	float getVelocity() const;
+	float getGasBrakeForce() const;
+	float getSteeringWheelAngle() const;
+	float getMaximalGasBrakeForce() const;
+	float getMaximalSteeringWheelAngle() const;
+	float getMass() const;
+	float getFrictionCoefficient() const;
+	float getDistanceBetweenFrontAndBackWheels() const;
 
 private:
 	void setVertexArray();

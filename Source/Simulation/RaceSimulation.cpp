@@ -29,7 +29,7 @@ void RaceSimulation::render(sf::RenderWindow * renderWindow)
 
 void RaceSimulation::update(sf::Time const & time, sf::RenderWindow const * renderWindow)
 {
-	mCar.update(time, renderWindow);
+	mCar.update(time, renderWindow, this);
 }
 
 
