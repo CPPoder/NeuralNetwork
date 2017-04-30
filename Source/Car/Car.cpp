@@ -55,10 +55,12 @@ void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, R
 	//Evolve velocities according to totalForce
 	sf::Vector2f acceleration = totalForce / mMass;
 	sf::Vector2f newVelocityVector = mDirection * mVelocity + acceleration * time.asSeconds();
-	mVelocity = mySFML::Simple::lengthOf(newVelocityVector);
+	bool forwards = (mySFML::Simple::scalarProduct(newVelocityVector, mDirection) > 0.f);
+	float forwardFactor = (forwards ? 1.f : -1.f);
+	mVelocity = mySFML::Simple::lengthOf(newVelocityVector) * forwardFactor;
 	if (myMath::Simple::abs(mVelocity) > 1.0E-05f) //Saves directions!!!
 	{
-		mDirection = mySFML::Simple::normalize(newVelocityVector);
+		mDirection = forwardFactor * mySFML::Simple::normalize(newVelocityVector);
 	}
 
 	//Evolve position according to direction & velocity
@@ -66,6 +68,8 @@ void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, R
 
 	//Reset intern variables
 	this->setVertexArray();
+
+	mySFML::IO::outputOnTerminal(mDirection, "Dir: ");
 }
 
 
