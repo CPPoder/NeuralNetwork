@@ -6,12 +6,15 @@
 #include "Source\Track\Track.hpp"
 #include "Source\Car\Car.hpp"
 
+#include <list>
+
 
 class RaceSimulation
 {
 private:
 	Track mTrack;
-	Car mCar;
+
+	std::list<Car> mListOfCars;
 
 public:
 	RaceSimulation();

@@ -40,8 +40,8 @@ public:
 	Car();
 	Car(sf::Vector2f const & position, sf::Vector2f const & direction, float velocity);
 	~Car();
-	Car(Car const & car) = default;
-	Car& operator=(Car const & car) = default;
+	Car(Car const & car);
+	Car& operator=(Car const & car) = delete;
 
 	void render(sf::RenderWindow * renderWindow) const;
 	void update(sf::Time const & time, sf::RenderWindow const * renderWindow, RaceSimulation const * raceSimPointer);

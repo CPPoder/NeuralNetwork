@@ -3,10 +3,12 @@
 
 
 RaceSimulation::RaceSimulation()
-	: mTrack(this->constructCircleTrack()),
-	  mCar(sf::Vector2f(10.f, 50.f), sf::Vector2f(0.f, 1.f), 3.f)
+	: mTrack(this->constructCircleTrack())
 {
-
+	for (unsigned int i = 0; i < 1; ++i)
+	{
+		mListOfCars.push_back(Car(sf::Vector2f(10.f, 50.f), sf::Vector2f(0.f, 1.f), 3.f));
+	}
 }
 
 RaceSimulation::~RaceSimulation()
@@ -22,14 +24,20 @@ void RaceSimulation::render(sf::RenderWindow * renderWindow)
 	renderWindow->setView(raceView);
 
 	mTrack.render(renderWindow);
-	mCar.render(renderWindow);
+	for (auto & car : mListOfCars)
+	{
+		car.render(renderWindow);
+	}
 
 	renderWindow->setView(originalView);
 }
 
 void RaceSimulation::update(sf::Time const & time, sf::RenderWindow const * renderWindow)
 {
-	mCar.update(time, renderWindow, this);
+	for (auto & car : mListOfCars)
+	{
+		car.update(time, renderWindow, this);
+	}
 }
 
 

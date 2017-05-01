@@ -4,7 +4,8 @@
 
 enum class BrainType
 {
-	PLAYER
+	PLAYER,
+	RANDOM
 };
 
 

@@ -24,6 +24,11 @@ Car::~Car()
 	pBrain = nullptr;
 }
 
+Car::Car(Car const & car)
+	: Car(car.mPosition, car.mDirection, car.mVelocity)
+{
+}
+
 
 void Car::render(sf::RenderWindow * renderWindow) const
 {

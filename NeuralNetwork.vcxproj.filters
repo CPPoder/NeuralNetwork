@@ -129,6 +129,9 @@
     <ClInclude Include="Source\Collision\Line.hpp">
       <Filter>Headerdateien\Collision</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Car\RandomBrain.hpp">
+      <Filter>Headerdateien\Car</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -187,6 +190,9 @@
     </ClCompile>
     <ClCompile Include="Source\Collision\Line.cpp">
       <Filter>Quelldateien\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Car\RandomBrain.cpp">
+      <Filter>Quelldateien\Car</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
