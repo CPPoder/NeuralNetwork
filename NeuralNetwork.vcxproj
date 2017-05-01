@@ -157,6 +157,8 @@
     <ClInclude Include="Source\Car\BrainType.hpp" />
     <ClInclude Include="Source\Car\Car.hpp" />
     <ClInclude Include="Source\Car\PlayerBrain.hpp" />
+    <ClInclude Include="Source\Collision\CollisionArea.hpp" />
+    <ClInclude Include="Source\Collision\Line.hpp" />
     <ClInclude Include="Source\Framework\EventManager.hpp" />
     <ClInclude Include="Source\Framework\Framework.hpp" />
     <ClInclude Include="Source\Framework\SoundManager.hpp" />
@@ -178,6 +180,8 @@
     <ClCompile Include="Source\Car\BrainOutput.cpp" />
     <ClCompile Include="Source\Car\Car.cpp" />
     <ClCompile Include="Source\Car\PlayerBrain.cpp" />
+    <ClCompile Include="Source\Collision\CollisionArea.cpp" />
+    <ClCompile Include="Source\Collision\Line.cpp" />
     <ClCompile Include="Source\Framework\EventManager.cpp" />
     <ClCompile Include="Source\Framework\Framework.cpp" />
     <ClCompile Include="Source\Framework\main.cpp" />

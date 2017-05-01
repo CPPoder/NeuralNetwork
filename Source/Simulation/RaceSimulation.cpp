@@ -4,7 +4,7 @@
 
 RaceSimulation::RaceSimulation()
 	: mTrack(this->constructCircleTrack()),
-	  mCar(sf::Vector2f(50.f, 50.f), sf::Vector2f(0.f, 1.f), 3.f)
+	  mCar(sf::Vector2f(10.f, 50.f), sf::Vector2f(0.f, 1.f), 3.f)
 {
 
 }
@@ -31,6 +31,14 @@ void RaceSimulation::update(sf::Time const & time, sf::RenderWindow const * rend
 {
 	mCar.update(time, renderWindow, this);
 }
+
+
+Track const & RaceSimulation::getTrackReference() const
+{
+	return mTrack;
+}
+
+
 
 
 

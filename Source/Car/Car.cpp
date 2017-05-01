@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Source\Car\Car.hpp"
 
+#include "Source\Simulation\RaceSimulation.hpp"
+
 
 Car::Car()
 	: Car(sf::Vector2f(), sf::Vector2f(), 0.f)
@@ -31,6 +33,11 @@ void Car::render(sf::RenderWindow * renderWindow) const
 
 void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, RaceSimulation const * raceSimPointer)
 {
+	//Save current State
+	sf::Vector2f positionBackup = mPosition;
+	sf::Vector2f directionBackup = mDirection;
+	float velocityBackup = mVelocity;
+
 	//Determine GasBrakeForce- & WheelAngle-Derivatives from Brain
 	BrainOutput brainOutput = pBrain->calculateBrainOutput(raceSimPointer, this);
 	mGasBrakeForceDerivative = brainOutput.gasBrakeForceDerivative;
@@ -51,6 +58,11 @@ void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, R
 	if (mySFML::Simple::lengthOf(totalForce) > frictionForce)
 	{
 		totalForce = mySFML::Simple::normalize(totalForce) * frictionForce;
+		mDrifting = true;
+	}
+	else
+	{
+		mDrifting = false;
 	}
 
 	//Evolve velocities according to totalForce
@@ -69,6 +81,17 @@ void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, R
 
 	//Reset intern variables
 	this->setVertexArray();
+
+	//Check for collision and handle
+	if (this->checkForBoundaryCollision(raceSimPointer))
+	{
+		//Restore old state
+		mPosition = positionBackup;
+		mDirection = directionBackup;
+		mVelocity = 0.f;
+
+		this->setVertexArray();
+	}
 }
 
 
@@ -77,7 +100,7 @@ void Car::setVertexArray()
 {
 	//Car Vertex Array
 	sf::Vector2f const carSize(3.f, 1.5f);
-	sf::Color const carColor(sf::Color::Red);
+	sf::Color carColor = (mDrifting ? sf::Color(255, 100, 100) : sf::Color::Red);
 	sf::Vector2f upVector = (carSize.x / 2.f) * mDirection;
 	sf::Vector2f leftVector = (carSize.y / 2.f) * mySFML::Create::createOrthogonalVector(mDirection);
 	mVertexArray.setPrimitiveType(sf::PrimitiveType::Quads);
@@ -149,4 +172,19 @@ float Car::getDistanceBetweenFrontAndBackWheels() const
 {
 	return mDistanceBetweenFrontAndBackWheels;
 }
+sf::VertexArray const & Car::getVertexArrayReference() const
+{
+	return mVertexArray;
+}
 
+
+
+
+///////////////////////////
+//CheckForBoundaryCollision
+
+bool Car::checkForBoundaryCollision(RaceSimulation const * raceSimPointer) const
+{
+	Track const & trackReference = raceSimPointer->getTrackReference();
+	return trackReference.checkCollisionWith(*this);
+}

@@ -20,6 +20,10 @@ public:
 	void render(sf::RenderWindow * renderWindow);
 	void update(sf::Time const & time, sf::RenderWindow const * renderWindow);
 
+public:
+	Track const & getTrackReference() const;
+
+
 private:
 	static std::list<std::pair<sf::Vector2f, float>> constructCircleTrack();
 

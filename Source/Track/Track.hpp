@@ -12,6 +12,8 @@
 
 typedef std::pair<sf::Vector2f, sf::Vector2f> TrackSegment;
 
+class Car;
+
 class Track
 {
 private:
@@ -33,6 +35,8 @@ public:
 	sf::Color getColor() const;
 
 	void render(sf::RenderWindow* renderWindow);
+
+	bool checkCollisionWith(Car const & car) const;
 
 private:
 	void refreshVertexArray();

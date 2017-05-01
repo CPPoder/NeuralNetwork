@@ -28,6 +28,8 @@ private:
 	float const mFrictionCoefficient = 1.0f;
 	float const mDistanceBetweenFrontAndBackWheels = 3.f;
 
+	bool mDrifting = false;
+
 	Brain* pBrain = nullptr;
 
 	sf::VertexArray mVertexArray;
@@ -55,9 +57,13 @@ public:
 	float getMass() const;
 	float getFrictionCoefficient() const;
 	float getDistanceBetweenFrontAndBackWheels() const;
+	sf::VertexArray const & getVertexArrayReference() const;
 
 private:
 	void setVertexArray();
+
+public:
+	bool checkForBoundaryCollision(RaceSimulation const * raceSimPointer) const;
 
 
 

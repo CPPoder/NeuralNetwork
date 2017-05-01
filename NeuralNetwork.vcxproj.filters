@@ -52,6 +52,12 @@
     <Filter Include="Quelldateien\Car">
       <UniqueIdentifier>{69577cf0-1a88-44b9-8238-8de9257380bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\Collision">
+      <UniqueIdentifier>{e5db2572-38bc-4e49-9a48-0697d9f79feb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Collision">
+      <UniqueIdentifier>{b4976913-f325-4bbd-8d05-5b77d6d7fd78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -117,6 +123,12 @@
     <ClInclude Include="Source\Car\BrainType.hpp">
       <Filter>Headerdateien\Car</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Collision\CollisionArea.hpp">
+      <Filter>Headerdateien\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collision\Line.hpp">
+      <Filter>Headerdateien\Collision</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -169,6 +181,12 @@
     </ClCompile>
     <ClCompile Include="Source\Car\PlayerBrain.cpp">
       <Filter>Quelldateien\Car</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collision\CollisionArea.cpp">
+      <Filter>Quelldateien\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collision\Line.cpp">
+      <Filter>Quelldateien\Collision</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

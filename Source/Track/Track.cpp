@@ -1,6 +1,12 @@
 #include "stdafx.h"
 #include "Source\Track\Track.hpp"
 
+#include "Source\Car\Car.hpp"
+#include "Source\Collision\CollisionArea.hpp"
+
+#include <array>
+
+
 //////////////
 //Constructors
 
@@ -59,6 +65,54 @@ void Track::setColor(sf::Color const & color)
 sf::Color Track::getColor() const
 {
 	return mTrackColor;
+}
+
+////////////////////
+//Collision Checking
+
+bool Track::checkCollisionWith(Car const & car) const
+{
+	sf::VertexArray const & carVertexArray = car.getVertexArrayReference();
+	std::array<Line, 4u> arrayOfCarLines{
+		Line(carVertexArray[0].position, carVertexArray[1].position),
+		Line(carVertexArray[1].position, carVertexArray[2].position),
+		Line(carVertexArray[2].position, carVertexArray[3].position),
+		Line(carVertexArray[3].position, carVertexArray[0].position)
+	};
+	std::list<TrackSegment>::const_iterator trackSegIt1 = mListOfTrackSegments.begin();
+	std::list<TrackSegment>::const_iterator trackSegIt2 = ++mListOfTrackSegments.begin();
+	while (trackSegIt2 != mListOfTrackSegments.end())
+	{
+		Line line1(trackSegIt1->first, trackSegIt2->first);
+		Line line2(trackSegIt1->second, trackSegIt2->second);
+		for (auto const & line : arrayOfCarLines)
+		{
+			if (line1.intersects(line))
+			{
+				return true;
+			}
+			if (line2.intersects(line))
+			{
+				return true;
+			}
+		}
+		++trackSegIt1;
+		++trackSegIt2;
+	}
+	Line line1(trackSegIt1->first, mListOfTrackSegments.begin()->first);
+	Line line2(trackSegIt1->second, mListOfTrackSegments.begin()->second);
+	for (auto const & line : arrayOfCarLines)
+	{
+		if (line1.intersects(line))
+		{
+			return true;
+		}
+		if (line2.intersects(line))
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 
