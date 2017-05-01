@@ -21,16 +21,17 @@ private:
 	float mGasBrakeForceDerivative = 0.f;
 	float mSteeringWheelAngleDerivative = 0.f;
 
-	float const mMaximalGasOrBrakeForce = 3000.f; //~10s from 0 to 100 kmh with 1000kg
+	float const mMaximalGasOrBrakeForce = 10000.f; //~3s from 0 to 100 kmh with 1000kg
 	float const mMaximalSteeringWheelAngle = 0.5f; //~30°
 
 	float const mMass = 1000.f;
-	float const mFrictionCoefficient = 0.5f;
+	float const mFrictionCoefficient = 1.0f;
 	float const mDistanceBetweenFrontAndBackWheels = 3.f;
 
 	Brain* pBrain = nullptr;
 
 	sf::VertexArray mVertexArray;
+	sf::VertexArray mTiresVertexArray;
 
 
 public:

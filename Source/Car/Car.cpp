@@ -26,6 +26,7 @@ Car::~Car()
 void Car::render(sf::RenderWindow * renderWindow) const
 {
 	renderWindow->draw(mVertexArray);
+	renderWindow->draw(mTiresVertexArray);
 }
 
 void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, RaceSimulation const * raceSimPointer)
@@ -68,14 +69,13 @@ void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, R
 
 	//Reset intern variables
 	this->setVertexArray();
-
-	mySFML::IO::outputOnTerminal(mDirection, "Dir: ");
 }
 
 
 
 void Car::setVertexArray()
 {
+	//Car Vertex Array
 	sf::Vector2f const carSize(3.f, 1.5f);
 	sf::Color const carColor(sf::Color::Red);
 	sf::Vector2f upVector = (carSize.x / 2.f) * mDirection;
@@ -86,6 +86,22 @@ void Car::setVertexArray()
 	mVertexArray.append(sf::Vertex(mPosition - upVector + leftVector, carColor));
 	mVertexArray.append(sf::Vertex(mPosition - upVector - leftVector, carColor));
 	mVertexArray.append(sf::Vertex(mPosition + upVector - leftVector, carColor));
+
+	//Tires Vertex Array
+	float const tiresLength(1.0f);
+	sf::Color const tiresColor(sf::Color::Red);
+	sf::Vector2f upVecToTires = mDistanceBetweenFrontAndBackWheels / 2.f * mySFML::Simple::normalize(upVector);
+	sf::Vector2f leftTirePos = mPosition + leftVector + upVecToTires;
+	sf::Vector2f rightTirePos = mPosition - leftVector + upVecToTires;
+	float carAngle = mySFML::Simple::angleOf(mDirection);
+	float tiresAngle = carAngle - mSteeringWheelAngle; //- due to mSteeringWheelAngle's definition
+	sf::Vector2f tiresVector = mySFML::Create::createNormalVectorWithAngle(-tiresAngle) * tiresLength / 2.f; //CreateNormalVector does it in mathematical coordinates!!!
+	mTiresVertexArray.setPrimitiveType(sf::PrimitiveType::Lines);
+	mTiresVertexArray.clear();
+	mTiresVertexArray.append(sf::Vertex(leftTirePos - tiresVector, tiresColor));
+	mTiresVertexArray.append(sf::Vertex(leftTirePos + tiresVector, tiresColor));
+	mTiresVertexArray.append(sf::Vertex(rightTirePos - tiresVector, tiresColor));
+	mTiresVertexArray.append(sf::Vertex(rightTirePos + tiresVector, tiresColor));
 }
 
 
