@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Source\Simulation\RaceSimulation.hpp"
 
+#include "Source\Math\myUsefulMath.hpp"
+
 
 RaceSimulation::RaceSimulation()
 	: mTrack(this->constructCircleTrack())
