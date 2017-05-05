@@ -34,12 +34,6 @@
     <Filter Include="Quelldateien\Math">
       <UniqueIdentifier>{0c8a4a89-bbc6-433f-805e-aea0c33bb877}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Headerdateien\Simulation">
-      <UniqueIdentifier>{b4256903-77c7-475f-be23-40fb288958fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Quelldateien\Simulation">
-      <UniqueIdentifier>{c1300e90-493c-4512-863b-e489762060f5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Headerdateien\Track">
       <UniqueIdentifier>{c8be4a19-3971-467f-b365-994253e13c98}</UniqueIdentifier>
     </Filter>
@@ -57,6 +51,24 @@
     </Filter>
     <Filter Include="Quelldateien\Collision">
       <UniqueIdentifier>{b4976913-f325-4bbd-8d05-5b77d6d7fd78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\MainModules">
+      <UniqueIdentifier>{b4256903-77c7-475f-be23-40fb288958fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\MainModules">
+      <UniqueIdentifier>{c1300e90-493c-4512-863b-e489762060f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\ControlElements">
+      <UniqueIdentifier>{3a8880ec-8df3-492f-aa27-9b3ebe455346}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\ControlElements">
+      <UniqueIdentifier>{4602f8c0-c830-4cd1-bdc1-4554470a7437}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\Animation">
+      <UniqueIdentifier>{7caf7bee-70f4-4d0a-b228-9124884a5a98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\Animation">
+      <UniqueIdentifier>{67b3f17f-64bf-4760-8c38-e3d0b96ed19e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -102,9 +114,6 @@
     <ClInclude Include="Source\GameState\RaceState.hpp">
       <Filter>Headerdateien\GameState</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Simulation\RaceSimulation.hpp">
-      <Filter>Headerdateien\Simulation</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Track\Track.hpp">
       <Filter>Headerdateien\Track</Filter>
     </ClInclude>
@@ -131,6 +140,36 @@
     </ClInclude>
     <ClInclude Include="Source\Car\RandomBrain.hpp">
       <Filter>Headerdateien\Car</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MainModules\RaceSimulation.hpp">
+      <Filter>Headerdateien\MainModules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MainModules\MainMenu.hpp">
+      <Filter>Headerdateien\MainModules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ControlElements\Button.hpp">
+      <Filter>Headerdateien\ControlElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ControlElements\ButtonSettings.hpp">
+      <Filter>Headerdateien\ControlElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ControlElements\CheckBox.hpp">
+      <Filter>Headerdateien\ControlElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ControlElements\DropDownMenu.hpp">
+      <Filter>Headerdateien\ControlElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ControlElements\DropDownMenuSettings.hpp">
+      <Filter>Headerdateien\ControlElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ControlElements\TextField.hpp">
+      <Filter>Headerdateien\ControlElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ControlElements\TextFieldSettings.hpp">
+      <Filter>Headerdateien\ControlElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Animation\Animation.hpp">
+      <Filter>Headerdateien\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -167,9 +206,6 @@
     <ClCompile Include="Source\GameState\RaceState.cpp">
       <Filter>Quelldateien\GameState</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Simulation\RaceSimulation.cpp">
-      <Filter>Quelldateien\Simulation</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Track\Track.cpp">
       <Filter>Quelldateien\Track</Filter>
     </ClCompile>
@@ -193,6 +229,36 @@
     </ClCompile>
     <ClCompile Include="Source\Car\RandomBrain.cpp">
       <Filter>Quelldateien\Car</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MainModules\RaceSimulation.cpp">
+      <Filter>Quelldateien\MainModules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MainModules\MainMenu.cpp">
+      <Filter>Quelldateien\MainModules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ControlElements\Button.cpp">
+      <Filter>Quelldateien\ControlElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ControlElements\ButtonSettings.cpp">
+      <Filter>Quelldateien\ControlElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ControlElements\CheckBox.cpp">
+      <Filter>Quelldateien\ControlElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ControlElements\DropDownMenu.cpp">
+      <Filter>Quelldateien\ControlElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ControlElements\DropDownMenuSettings.cpp">
+      <Filter>Quelldateien\ControlElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ControlElements\TextField.cpp">
+      <Filter>Quelldateien\ControlElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ControlElements\TextFieldSettings.cpp">
+      <Filter>Quelldateien\ControlElements</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Animation\Animation.cpp">
+      <Filter>Quelldateien\Animation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

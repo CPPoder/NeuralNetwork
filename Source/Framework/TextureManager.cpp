@@ -5,9 +5,9 @@
 
 void TextureManager::Init()
 {
-	//sf::Texture* checkBoxTextureAtlas = new sf::Texture;
-	//checkBoxTextureAtlas->loadFromFile("./Data/Textures/CheckBox.png");
-	//mMapOfTextures.insert(std::make_pair(TextureManager::TextureName::CHECK_BOX_TEXTURE_ATLAS, checkBoxTextureAtlas));
+	sf::Texture* checkBoxTextureAtlas = new sf::Texture;
+	checkBoxTextureAtlas->loadFromFile("./Data/Textures/CheckBox.png");
+	mMapOfTextures.insert(std::make_pair(TextureManager::TextureName::CHECK_BOX_TEXTURE_ATLAS, checkBoxTextureAtlas));
 }
 
 sf::Texture const * TextureManager::getTexture(TextureName textureName)

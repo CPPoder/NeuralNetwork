@@ -13,7 +13,7 @@ class TextureManager
 public:
 	enum class TextureName
 	{
-		//CHECK_BOX_TEXTURE_ATLAS,
+		CHECK_BOX_TEXTURE_ATLAS,
 
 		NUM_OF_TEXTURE_NAMES
 	};

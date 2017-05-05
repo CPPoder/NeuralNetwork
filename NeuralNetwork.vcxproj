@@ -152,6 +152,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Animation\Animation.hpp" />
     <ClInclude Include="Source\Car\Brain.hpp" />
     <ClInclude Include="Source\Car\BrainOutput.hpp" />
     <ClInclude Include="Source\Car\BrainType.hpp" />
@@ -160,6 +161,13 @@
     <ClInclude Include="Source\Car\RandomBrain.hpp" />
     <ClInclude Include="Source\Collision\CollisionArea.hpp" />
     <ClInclude Include="Source\Collision\Line.hpp" />
+    <ClInclude Include="Source\ControlElements\Button.hpp" />
+    <ClInclude Include="Source\ControlElements\ButtonSettings.hpp" />
+    <ClInclude Include="Source\ControlElements\CheckBox.hpp" />
+    <ClInclude Include="Source\ControlElements\DropDownMenu.hpp" />
+    <ClInclude Include="Source\ControlElements\DropDownMenuSettings.hpp" />
+    <ClInclude Include="Source\ControlElements\TextField.hpp" />
+    <ClInclude Include="Source\ControlElements\TextFieldSettings.hpp" />
     <ClInclude Include="Source\Framework\EventManager.hpp" />
     <ClInclude Include="Source\Framework\Framework.hpp" />
     <ClInclude Include="Source\Framework\SoundManager.hpp" />
@@ -167,16 +175,18 @@
     <ClInclude Include="Source\GameState\GameState.hpp" />
     <ClInclude Include="Source\GameState\MainMenuState.hpp" />
     <ClInclude Include="Source\GameState\RaceState.hpp" />
+    <ClInclude Include="Source\MainModules\MainMenu.hpp" />
+    <ClInclude Include="Source\MainModules\RaceSimulation.hpp" />
     <ClInclude Include="Source\Math\mySFMLVectorFunctions.hpp" />
     <ClInclude Include="Source\Math\myUsefulMath.hpp" />
     <ClInclude Include="Source\Math\ourMatrices.hpp" />
     <ClInclude Include="Source\Math\ourVectors.hpp" />
-    <ClInclude Include="Source\Simulation\RaceSimulation.hpp" />
     <ClInclude Include="Source\Track\Track.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Animation\Animation.cpp" />
     <ClCompile Include="Source\Car\Brain.cpp" />
     <ClCompile Include="Source\Car\BrainOutput.cpp" />
     <ClCompile Include="Source\Car\Car.cpp" />
@@ -184,6 +194,13 @@
     <ClCompile Include="Source\Car\RandomBrain.cpp" />
     <ClCompile Include="Source\Collision\CollisionArea.cpp" />
     <ClCompile Include="Source\Collision\Line.cpp" />
+    <ClCompile Include="Source\ControlElements\Button.cpp" />
+    <ClCompile Include="Source\ControlElements\ButtonSettings.cpp" />
+    <ClCompile Include="Source\ControlElements\CheckBox.cpp" />
+    <ClCompile Include="Source\ControlElements\DropDownMenu.cpp" />
+    <ClCompile Include="Source\ControlElements\DropDownMenuSettings.cpp" />
+    <ClCompile Include="Source\ControlElements\TextField.cpp" />
+    <ClCompile Include="Source\ControlElements\TextFieldSettings.cpp" />
     <ClCompile Include="Source\Framework\EventManager.cpp" />
     <ClCompile Include="Source\Framework\Framework.cpp" />
     <ClCompile Include="Source\Framework\main.cpp" />
@@ -192,9 +209,10 @@
     <ClCompile Include="Source\GameState\GameState.cpp" />
     <ClCompile Include="Source\GameState\MainMenuState.cpp" />
     <ClCompile Include="Source\GameState\RaceState.cpp" />
+    <ClCompile Include="Source\MainModules\MainMenu.cpp" />
+    <ClCompile Include="Source\MainModules\RaceSimulation.cpp" />
     <ClCompile Include="Source\Math\mySFMLVectorFunctions.cpp" />
     <ClCompile Include="Source\Math\myUsefulMath.cpp" />
-    <ClCompile Include="Source\Simulation\RaceSimulation.cpp" />
     <ClCompile Include="Source\Track\Track.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
