@@ -11,3 +11,8 @@ obj
 bin
 targetver.h
 *.depend
+.vs/NeuralNetworks/v15/.suo
+*.db
+NeuralNetworks.sln
+*.vcxproj
+NeuralNetworks.vcxproj.filters
