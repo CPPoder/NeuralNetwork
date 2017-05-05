@@ -3,8 +3,8 @@
 
 #include "SFML\Graphics.hpp"
 
-#include "myUsefulMath.hpp"
-#include "mySFMLVectorFunctions.hpp"
+#include "Source\Math\myUsefulMath.hpp"
+#include "Source\Math\mySFMLVectorFunctions.hpp"
 
 
 class Line

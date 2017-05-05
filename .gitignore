@@ -16,3 +16,4 @@ targetver.h
 NeuralNetworks.sln
 *.vcxproj
 NeuralNetworks.vcxproj.filters
+*.ipch

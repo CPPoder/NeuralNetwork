@@ -5,7 +5,7 @@
 
 #include <list>
 
-#include "mySFMLVectorFunctions.hpp"
+#include "Source\Math\mySFMLVectorFunctions.hpp"
 
 #include "Source\Collision\Line.hpp"
 
