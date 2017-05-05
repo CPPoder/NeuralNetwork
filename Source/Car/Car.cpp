@@ -2,6 +2,7 @@
 #include "Source\Car\Car.hpp"
 
 #include "Source\Simulation\RaceSimulation.hpp"
+#include "Source\Math\myUsefulMath.hpp"
 
 
 Car::Car()

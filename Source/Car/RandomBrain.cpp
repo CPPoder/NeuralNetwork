@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Source\Car\RandomBrain.hpp"
 
+#include "Source\Math\myUsefulMath.hpp"
+
 #include "Source\Car\Car.hpp"
 
 BrainOutput RandomBrain::calculateBrainOutput(RaceSimulation const * raceSimPointer, Car const * carPointer)

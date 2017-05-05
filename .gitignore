@@ -17,3 +17,5 @@ NeuralNetworks.sln
 *.vcxproj
 NeuralNetworks.vcxproj.filters
 *.ipch
+*.exe
+Debug/NeuralNetworks.ilk

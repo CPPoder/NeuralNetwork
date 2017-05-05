@@ -3,6 +3,8 @@
 
 #include "SFML\Graphics.hpp"
 
+#include "Source\Math\myUsefulMath.hpp"
+
 #include <iostream>
 #include <math.h>
 #include <string>
@@ -102,10 +104,10 @@ namespace mySFML {
 				std::cerr << "template <typename T> T mySFML::angleOf(sf::Vector2<T> vector) : Error! vector is (0,0)!" << std::endl;
 				return T(0);
 			}
-			sf::Vector2<T> normVec = mySFML::normalize(vector);
+			sf::Vector2<T> normVec = mySFML::Simple::normalize(vector);
 			normVec = sf::Vector2<T>(normVec.x, -normVec.y);
 			float angle;
-			if (myMath::abs(normVec.y) < myMath::SQRT2f / 2.f)
+			if (myMath::Simple::abs(normVec.y) < myMath::Const::SQRT2f / 2.f)
 			{
 				angle = atan(normVec.y / normVec.x);
 			}
@@ -114,24 +116,24 @@ namespace mySFML {
 				bool secondOrFourthQuadrant = ((normVec.x < 0 && normVec.y > 0) || (normVec.x > 0 && normVec.y < 0));
 				if (!secondOrFourthQuadrant)
 				{
-					angle = (myMath::PId / 2.0 - atan(normVec.x / normVec.y));
+					angle = (myMath::Const::PId / 2.0 - atan(normVec.x / normVec.y));
 				}
 				else
 				{
-					angle = (myMath::PId * 3.0 / 2.0 - atan(normVec.x / normVec.y));
+					angle = (myMath::Const::PId * 3.0 / 2.0 - atan(normVec.x / normVec.y));
 				}
 			}
 			if (vector.x < 0)
 			{
-				angle += myMath::PId;
+				angle += myMath::Const::PId;
 			}
-			while (angle > 2.0 * myMath::PId)
+			while (angle > 2.0 * myMath::Const::PId)
 			{
-				angle -= 2.0 * myMath::PId;
+				angle -= 2.0 * myMath::Const::PId;
 			}
 			while (angle < 0.0)
 			{
-				angle += 2.0 * myMath::PId;
+				angle += 2.0 * myMath::Const::PId;
 			}
 			return angle;
 		}

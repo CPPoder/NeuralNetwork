@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "mySFMLVectorFunctions.hpp"
-#include "myUsefulMath.hpp"
 
 namespace mySFML {
 
@@ -92,11 +91,11 @@ namespace mySFML {
 			if (sNumberOfFontsObjects == 0u)
 			{
 				sf::Font* arialFont = new sf::Font;
-				arialFont->loadFromFile("C:/Users/Udo/Documents/Visual Studio Stuff/Libraries/Fonts/arial.ttf");
+				arialFont->loadFromFile("./Data/Fonts/arial.ttf");
 				sFontsMap.insert(std::pair<FontName, sf::Font*>(FontName::ARIAL, arialFont));
 
 				sf::Font* informalRomanFont = new sf::Font;
-				informalRomanFont->loadFromFile("C:/Users/Udo/Documents/Visual Studio Stuff/Libraries/Fonts/INFROMAN.TTF");
+				informalRomanFont->loadFromFile("./Data/Fonts/INFROMAN.TTF");
 				sFontsMap.insert(std::pair<FontName, sf::Font*>(FontName::INFORMAL_ROMAN, informalRomanFont));
 			}
 			++sNumberOfFontsObjects;
