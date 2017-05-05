@@ -3,6 +3,11 @@
 
 namespace GameState
 {
+	MainMenuState::MainMenuState()
+	{
+
+	}
+
 	MainMenuState::~MainMenuState()
 	{
 
@@ -10,29 +15,31 @@ namespace GameState
 
 	void MainMenuState::update(sf::Time const & frametime, sf::RenderWindow* renderWindow)
 	{
-		
+		mMainMenu.update(frametime, renderWindow);
 	}
 
 	void MainMenuState::render(sf::RenderWindow* renderWindow)
 	{
-		
+		mMainMenu.render(renderWindow);
 	}
 
-	GameStateChange MainMenuState::pollGameStateChange()
+	Change MainMenuState::pollGameStateChange()
 	{
-		if (!mCloseMainMenu)
+		MainMenu::Event mainMenuEvent = mMainMenu.getMainMenuEvent();
+		switch (mainMenuEvent)
 		{
-			return GameStateChange::REPLACE_RACE_STATE;
-		}
-		else
-		{
-			return GameStateChange::POP;
+		case MainMenu::Event::NONE:
+			return Change(Change::Type::NO_CHANGE);
+		case MainMenu::Event::EXIT:
+			return Change(Change::Type::POP);
+		case MainMenu::Event::START_SIMULATION:
+			return Change(Change::Type::REPLACE, Change::State::RACE);
 		}
 	}
 
 	void MainMenuState::reactOnESC()
 	{
-		mCloseMainMenu = true;
+		mMainMenu.reactOnESC();
 	}
 
 }

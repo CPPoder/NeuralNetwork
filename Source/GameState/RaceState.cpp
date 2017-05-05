@@ -18,15 +18,15 @@ namespace GameState
 		mRaceSimulation.render(renderWindow);
 	}
 
-	GameStateChange RaceState::pollGameStateChange()
+	Change RaceState::pollGameStateChange()
 	{
 		if (!mCloseRaceState)
 		{
-			return GameStateChange::NO_CHANGE;
+			return Change(Change::Type::NO_CHANGE);
 		}
 		else
 		{
-			return GameStateChange::POP;
+			return Change(Change::Type::POP);
 		}
 	}
 

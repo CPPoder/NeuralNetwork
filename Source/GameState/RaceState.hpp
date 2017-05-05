@@ -2,7 +2,7 @@
 #define RACESTATE_HPP
 
 #include "Source\GameState\GameState.hpp"
-#include "Source\Simulation\RaceSimulation.hpp"
+#include "Source\MainModules\RaceSimulation.hpp"
 
 
 
@@ -20,7 +20,7 @@ namespace GameState
 
 		virtual void update(sf::Time const & frametime, sf::RenderWindow* renderWindow) override;
 		virtual void render(sf::RenderWindow* renderWindow) override;
-		virtual GameStateChange pollGameStateChange() override;
+		virtual Change pollGameStateChange() override;
 		virtual void reactOnESC() override;
 
 

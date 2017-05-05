@@ -6,25 +6,38 @@
 
 namespace GameState
 {
-
-	enum class GameStateChange
+	struct Change
 	{
-		NO_CHANGE,
+	public:
+		enum class Type
+		{
+			NO_CHANGE,
+			PUSH,
+			REPLACE,
+			POP,
+			POP_TWICE,
+			POP_TWICE_AND_PUSH
+		} type;
 
-		PUSH_MAIN_MENU_STATE,
-		PUSH_RACE_STATE,
-
-		REPLACE_MAIN_MENU_STATE,
-		REPLACE_RACE_STATE,
-
-		POP,
-		POP_TWICE,
-		POP_TWICE_AND_PUSH_MAIN_MENU_STATE,
-		POP_TWICE_AND_PUSH_RACE_STATE,
+		enum class State
+		{
+			NO_STATE,
+			MAIN_MENU,
+			RACE
+		} toState;
 
 
-		NUM_OF_GAME_STATE_CHANGES
+	public:
+		Change() = default;
+		Change(Type _type, State _toState = State::NO_STATE);
+		Change(Change const &) = default;
+		Change& operator=(Change const &) = default;
+		~Change() = default;
+
 	};
+
+
+	
 
 
 
@@ -35,7 +48,7 @@ namespace GameState
 
 		virtual void update(sf::Time const & frametime, sf::RenderWindow* renderWindow) = 0;
 		virtual void render(sf::RenderWindow* renderWindow) = 0;
-		virtual GameStateChange pollGameStateChange() = 0;
+		virtual Change pollGameStateChange() = 0;
 		virtual void reactOnESC() = 0;
 
 	};

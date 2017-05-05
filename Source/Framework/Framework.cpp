@@ -95,57 +95,53 @@ void Framework::handleEvents()
 
 void Framework::update()
 {
-	GameState::GameStateChange gameStateChange = mStackOfGameStates.top()->pollGameStateChange();
-	switch (gameStateChange)
+	GameState::Change gameStateChange = mStackOfGameStates.top()->pollGameStateChange();
+
+	GameState::GameState* gameStatePointer = nullptr;
+
+	switch (gameStateChange.toState)
 	{
-	case GameState::GameStateChange::POP:
-		delete mStackOfGameStates.top();
-		mStackOfGameStates.pop();
+	case GameState::Change::State::NO_STATE:
 		break;
-
-	case GameState::GameStateChange::POP_TWICE:
-		delete mStackOfGameStates.top();
-		mStackOfGameStates.pop();
-		delete mStackOfGameStates.top();
-		mStackOfGameStates.pop();
+	case GameState::Change::State::MAIN_MENU:
+		gameStatePointer = new GameState::MainMenuState;
 		break;
-
-	case GameState::GameStateChange::POP_TWICE_AND_PUSH_MAIN_MENU_STATE:
-		delete mStackOfGameStates.top();
-		mStackOfGameStates.pop();
-		delete mStackOfGameStates.top();
-		mStackOfGameStates.pop();
-		mStackOfGameStates.push(new GameState::MainMenuState);
-		break;
-
-	case GameState::GameStateChange::POP_TWICE_AND_PUSH_RACE_STATE:
-		delete mStackOfGameStates.top();
-		mStackOfGameStates.pop();
-		delete mStackOfGameStates.top();
-		mStackOfGameStates.pop();
-		mStackOfGameStates.push(new GameState::RaceState);
-		break;
-
-	case GameState::GameStateChange::PUSH_MAIN_MENU_STATE:
-		mStackOfGameStates.push(new GameState::MainMenuState);
-		break;
-
-	case GameState::GameStateChange::PUSH_RACE_STATE:
-		mStackOfGameStates.push(new GameState::RaceState);
-		break;
-
-	case GameState::GameStateChange::REPLACE_MAIN_MENU_STATE:
-		delete mStackOfGameStates.top();
-		mStackOfGameStates.pop();
-		mStackOfGameStates.push(new GameState::MainMenuState);
-		break;
-
-	case GameState::GameStateChange::REPLACE_RACE_STATE:
-		delete mStackOfGameStates.top();
-		mStackOfGameStates.pop();
-		mStackOfGameStates.push(new GameState::RaceState);
+	case GameState::Change::State::RACE:
+		gameStatePointer = new GameState::RaceState;
 		break;
 	}
+
+	switch (gameStateChange.type)
+	{
+	case GameState::Change::Type::NO_CHANGE:
+		break;
+	case GameState::Change::Type::POP:
+		delete mStackOfGameStates.top();
+		mStackOfGameStates.pop();
+		break;
+	case GameState::Change::Type::POP_TWICE:
+		delete mStackOfGameStates.top();
+		mStackOfGameStates.pop();
+		delete mStackOfGameStates.top();
+		mStackOfGameStates.pop();
+		break;
+	case GameState::Change::Type::PUSH:
+		mStackOfGameStates.push(gameStatePointer);
+		break;
+	case GameState::Change::Type::REPLACE:
+		delete mStackOfGameStates.top();
+		mStackOfGameStates.pop();
+		mStackOfGameStates.push(gameStatePointer);
+		break;
+	case GameState::Change::Type::POP_TWICE_AND_PUSH:
+		delete mStackOfGameStates.top();
+		mStackOfGameStates.pop();
+		delete mStackOfGameStates.top();
+		mStackOfGameStates.pop();
+		mStackOfGameStates.push(gameStatePointer);
+		break;
+	}
+
 	if (mStackOfGameStates.empty())
 	{
 		throw "Stack of GameStates is empty!";
