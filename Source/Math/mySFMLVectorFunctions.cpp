@@ -48,14 +48,6 @@ namespace mySFML {
 		RectShape::RectShape(RectShape const & rectShape)
 			: pointer(new sf::RectangleShape(*rectShape.pointer))
 		{
-			/*
-			pointer->setSize(rectShape.pointer->getSize());
-			pointer->setOrigin(rectShape.pointer->getOrigin());
-			pointer->setPosition(rectShape.pointer->getPosition());
-			pointer->setFillColor(rectShape.pointer->getFillColor());
-			pointer->setOutlineThickness(rectShape.pointer->getOutlineThickness());
-			pointer->setOutlineColor(rectShape.pointer->getOutlineColor());
-			*/
 		}
 
 		RectShape& RectShape::operator=(RectShape const & rectShape)
