@@ -25,7 +25,7 @@ namespace GameState
 
 	Change MainMenuState::pollGameStateChange()
 	{
-		MainMenu::Event mainMenuEvent = mMainMenu.getMainMenuEvent();
+		MainMenu::Event mainMenuEvent = mMainMenu.pollMainMenuEvent();
 		switch (mainMenuEvent)
 		{
 		case MainMenu::Event::NONE:
@@ -34,6 +34,8 @@ namespace GameState
 			return Change(Change::Type::POP);
 		case MainMenu::Event::START_SIMULATION:
 			return Change(Change::Type::REPLACE, Change::State::RACE);
+		case MainMenu::Event::OPEN_EDITOR:
+			return Change(Change::Type::REPLACE, Change::State::EDITOR);
 		}
 	}
 

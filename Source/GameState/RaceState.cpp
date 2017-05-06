@@ -20,19 +20,19 @@ namespace GameState
 
 	Change RaceState::pollGameStateChange()
 	{
-		if (!mCloseRaceState)
+		RaceSimulation::Event raceEvent = mRaceSimulation.pollRaceSimulationEvent();
+		switch (raceEvent)
 		{
+		case RaceSimulation::Event::NONE:
 			return Change(Change::Type::NO_CHANGE);
-		}
-		else
-		{
-			return Change(Change::Type::POP);
+		case RaceSimulation::Event::OPEN_RACE_SIMULATION_MENU:
+			return Change(Change::Type::PUSH, Change::State::RACE_MENU);
 		}
 	}
 
 	void RaceState::reactOnESC()
 	{
-		mCloseRaceState = true;
+		mRaceSimulation.reactOnESC();
 	}
 
 }

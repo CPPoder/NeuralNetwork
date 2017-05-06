@@ -1,20 +1,19 @@
-#ifndef MAINMENU_HPP
-#define MAINMENU_HPP
+#ifndef RACESIMMENU_HPP
+#define RACESIMMENU_HPP
 
 #include "SFML\Graphics.hpp"
 
 #include "Source\ControlElements\Button.hpp"
 
 
-class MainMenu
+class RaceSimMenu
 {
 public:
 	enum class Event
 	{
 		NONE,
-		EXIT,
-		START_SIMULATION,
-		OPEN_EDITOR
+		CONTINUE,
+		EXIT_RACE_SIMULATION
 	};
 
 private:
@@ -24,21 +23,20 @@ private:
 
 	mySFML::Class::Text mTitleText;
 
-	Button mStartSimulationButton;
-	Button mStartEditorButton;
+	Button mContinueButton;
 	Button mExitButton;
 	
 
 public:
-	MainMenu();
-	~MainMenu();
-	MainMenu(MainMenu const &) = delete;
-	MainMenu& operator=(MainMenu const &) = delete;
+	RaceSimMenu();
+	~RaceSimMenu();
+	RaceSimMenu(RaceSimMenu const &) = delete;
+	RaceSimMenu& operator=(RaceSimMenu const &) = delete;
 
 	void render(sf::RenderWindow * renderWindow);
 	void update(sf::Time const & time, sf::RenderWindow * renderWindow);
 
-	Event pollMainMenuEvent();
+	Event pollRaceSimMenuEvent();
 	void reactOnESC();
 
 };
@@ -48,5 +46,5 @@ public:
 
 
 
-#endif //MAINMENU_HPP
+#endif //RACESIMMENU_HPP
 

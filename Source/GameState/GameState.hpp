@@ -23,7 +23,10 @@ namespace GameState
 		{
 			NO_STATE,
 			MAIN_MENU,
-			RACE
+			RACE,
+			RACE_MENU,
+			EDITOR,
+			EDITOR_MENU
 		} toState;
 
 

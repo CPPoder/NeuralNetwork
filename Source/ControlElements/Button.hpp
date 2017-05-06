@@ -1,7 +1,7 @@
 #ifndef BUTTON_HPP
 #define BUTTON_HPP
 
-#include "mySFMLVectorFunctions.hpp"
+#include "Source\Math\mySFMLVectorFunctions.hpp"
 
 #include "Source\ControlElements\ButtonSettings.hpp"
 #include "Source\Framework\EventManager.hpp"

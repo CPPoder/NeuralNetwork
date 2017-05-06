@@ -109,6 +109,15 @@ void Framework::update()
 	case GameState::Change::State::RACE:
 		gameStatePointer = new GameState::RaceState;
 		break;
+	case GameState::Change::State::EDITOR:
+		gameStatePointer = new GameState::EditorState;
+		break;
+	case GameState::Change::State::EDITOR_MENU:
+		gameStatePointer = new GameState::EditorMenuState;
+		break;
+	case GameState::Change::State::RACE_MENU:
+		gameStatePointer = new GameState::RaceSimMenuState;
+		break;
 	}
 
 	switch (gameStateChange.type)

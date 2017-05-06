@@ -1,20 +1,19 @@
-#ifndef MAINMENU_HPP
-#define MAINMENU_HPP
+#ifndef EDITORMENU_HPP
+#define EDITORMENU_HPP
 
 #include "SFML\Graphics.hpp"
 
 #include "Source\ControlElements\Button.hpp"
 
 
-class MainMenu
+class EditorMenu
 {
 public:
 	enum class Event
 	{
 		NONE,
-		EXIT,
-		START_SIMULATION,
-		OPEN_EDITOR
+		CONTINUE,
+		EXIT_EDITOR
 	};
 
 private:
@@ -24,21 +23,20 @@ private:
 
 	mySFML::Class::Text mTitleText;
 
-	Button mStartSimulationButton;
-	Button mStartEditorButton;
+	Button mContinueButton;
 	Button mExitButton;
 	
 
 public:
-	MainMenu();
-	~MainMenu();
-	MainMenu(MainMenu const &) = delete;
-	MainMenu& operator=(MainMenu const &) = delete;
+	EditorMenu();
+	~EditorMenu();
+	EditorMenu(EditorMenu const &) = delete;
+	EditorMenu& operator=(EditorMenu const &) = delete;
 
 	void render(sf::RenderWindow * renderWindow);
 	void update(sf::Time const & time, sf::RenderWindow * renderWindow);
 
-	Event pollMainMenuEvent();
+	Event pollEditorMenuEvent();
 	void reactOnESC();
 
 };
@@ -48,5 +46,5 @@ public:
 
 
 
-#endif //MAINMENU_HPP
+#endif //EDITORMENU_HPP
 

@@ -13,6 +13,9 @@
 #include "Source\GameState\GameState.hpp"
 #include "Source\GameState\MainMenuState.hpp"
 #include "Source\GameState\RaceState.hpp"
+#include "Source\GameState\EditorState.hpp"
+#include "Source\GameState\EditorMenuState.hpp"
+#include "Source\GameState\RaceSimMenuState.hpp"
 
 #include "Source\Framework\TextureManager.hpp"
 #include "Source\Framework\SoundManager.hpp"

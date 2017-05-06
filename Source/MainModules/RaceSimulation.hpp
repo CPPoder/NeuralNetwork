@@ -11,6 +11,17 @@
 
 class RaceSimulation
 {
+public:
+	enum class Event
+	{
+		NONE,
+		OPEN_RACE_SIMULATION_MENU
+	};
+
+private:
+	Event mEvent = Event::NONE;
+
+
 private:
 	Track mTrack;
 
@@ -22,6 +33,9 @@ public:
 
 	void render(sf::RenderWindow * renderWindow);
 	void update(sf::Time const & time, sf::RenderWindow const * renderWindow);
+
+	Event pollRaceSimulationEvent();
+	void reactOnESC();
 
 public:
 	Track const & getTrackReference() const;

@@ -4,8 +4,8 @@
 
 #include "SFML\Graphics.hpp"
 
-#include "myUsefulMath.hpp"
-#include "mySFMLVectorFunctions.hpp"
+#include "Source\Math\myUsefulMath.hpp"
+#include "Source\Math\mySFMLVectorFunctions.hpp"
 
 #include "Source\ControlElements\DropDownMenuSettings.hpp"
 #include "Source\Framework\EventManager.hpp"

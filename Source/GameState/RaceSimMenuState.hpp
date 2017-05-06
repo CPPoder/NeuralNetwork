@@ -1,21 +1,22 @@
-#ifndef RACESTATE_HPP
-#define RACESTATE_HPP
+#ifndef RACESIMMENUSTATE_HPP
+#define RACESIMMENUSTATE_HPP
 
 #include "Source\GameState\GameState.hpp"
-#include "Source\MainModules\RaceSimulation.hpp"
+#include "Source\MainModules\RaceSimMenu.hpp"
 
 
 
 namespace GameState
 {
 
-	class RaceState final : public GameState
+	class RaceSimMenuState final : public GameState
 	{
 	private:
-		RaceSimulation mRaceSimulation;
+		RaceSimMenu mRaceSimMenu;
 
 	public:
-		virtual ~RaceState() override;
+		RaceSimMenuState();
+		virtual ~RaceSimMenuState() override;
 
 		virtual void update(sf::Time const & frametime, sf::RenderWindow* renderWindow) override;
 		virtual void render(sf::RenderWindow* renderWindow) override;
@@ -29,5 +30,5 @@ namespace GameState
 
 
 
-#endif //RACESTATE_HPP
+#endif //RACESIMMENUSTATE_HPP
 

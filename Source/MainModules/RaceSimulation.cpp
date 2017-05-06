@@ -43,6 +43,24 @@ void RaceSimulation::update(sf::Time const & time, sf::RenderWindow const * rend
 }
 
 
+
+
+RaceSimulation::Event RaceSimulation::pollRaceSimulationEvent()
+{
+	Event backup = mEvent;
+	mEvent = Event::NONE;
+	return backup;
+}
+
+void RaceSimulation::reactOnESC()
+{
+	mEvent = Event::OPEN_RACE_SIMULATION_MENU;
+}
+
+
+
+
+
 Track const & RaceSimulation::getTrackReference() const
 {
 	return mTrack;
