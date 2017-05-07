@@ -5,7 +5,7 @@
 
 
 RaceSimulation::RaceSimulation()
-	: mTrack(this->constructCircleTrack())
+	: mTrack(Track::constructCircleTrack(sf::Vector2f(50.f, 50.f), 40.f, 50u, 6.f))
 {
 	for (unsigned int i = 0; i < 1; ++i)
 	{
@@ -66,22 +66,3 @@ Track const & RaceSimulation::getTrackReference() const
 	return mTrack;
 }
 
-
-
-
-
-std::list<std::pair<sf::Vector2f, float>> RaceSimulation::constructCircleTrack()
-{
-	float radius(40.f);
-	sf::Vector2f center(50.f, 50.f);
-	float width(5.f);
-	unsigned int numberOfPoints(30u);
-
-	std::list<std::pair<sf::Vector2f, float>> list;
-	for (unsigned int i = 0; i < numberOfPoints; ++i)
-	{
-		list.push_back(std::make_pair(radius * mySFML::Create::createNormalVectorWithAngle(static_cast<float>(i) / (numberOfPoints + 1u) * 2.f * myMath::Const::PIf) + center, width));
-	}
-
-	return list;
-}
