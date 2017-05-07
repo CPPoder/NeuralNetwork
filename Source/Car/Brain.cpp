@@ -4,6 +4,7 @@
 #include "Source\Car\PlayerBrain.hpp"
 #include "Source\Car\RandomBrain.hpp"
 
+
 Brain* Brain::constructBrain(BrainType brainType)
 {
 	switch (brainType)

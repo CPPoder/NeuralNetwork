@@ -171,6 +171,24 @@
     <ClInclude Include="Source\Animation\Animation.hpp">
       <Filter>Headerdateien\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="Source\GameState\EditorMenuState.hpp">
+      <Filter>Headerdateien\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameState\EditorState.hpp">
+      <Filter>Headerdateien\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameState\RaceSimMenuState.hpp">
+      <Filter>Headerdateien\GameState</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MainModules\Editor.hpp">
+      <Filter>Headerdateien\MainModules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MainModules\EditorMenu.hpp">
+      <Filter>Headerdateien\MainModules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MainModules\RaceSimMenu.hpp">
+      <Filter>Headerdateien\MainModules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -259,6 +277,24 @@
     </ClCompile>
     <ClCompile Include="Source\Animation\Animation.cpp">
       <Filter>Quelldateien\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameState\EditorMenuState.cpp">
+      <Filter>Quelldateien\GameState</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameState\EditorState.cpp">
+      <Filter>Quelldateien\GameState</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameState\RaceSimMenuState.cpp">
+      <Filter>Quelldateien\GameState</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MainModules\Editor.cpp">
+      <Filter>Quelldateien\MainModules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MainModules\EditorMenu.cpp">
+      <Filter>Quelldateien\MainModules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MainModules\RaceSimMenu.cpp">
+      <Filter>Quelldateien\MainModules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

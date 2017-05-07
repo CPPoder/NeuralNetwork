@@ -38,7 +38,7 @@ private:
 
 public:
 	Car();
-	Car(sf::Vector2f const & position, sf::Vector2f const & direction, float velocity);
+	Car(sf::Vector2f const & position, sf::Vector2f const & direction, float velocity, BrainType brainType);
 	~Car();
 	Car(Car const & car);
 	Car& operator=(Car const & car) = delete;

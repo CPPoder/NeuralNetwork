@@ -6,15 +6,15 @@
 
 
 Car::Car()
-	: Car(sf::Vector2f(), sf::Vector2f(), 0.f)
+	: Car(sf::Vector2f(), sf::Vector2f(), 0.f, BrainType::RANDOM)
 {
 }
 
-Car::Car(sf::Vector2f const & position, sf::Vector2f const & direction, float velocity)
+Car::Car(sf::Vector2f const & position, sf::Vector2f const & direction, float velocity, BrainType brainType)
 	: mPosition(position),
 	  mVelocity(velocity),
 	  mDirection(mySFML::Simple::normalize(direction)),
-	  pBrain(Brain::constructBrain(BrainType::PLAYER))
+	  pBrain(Brain::constructBrain(brainType))
 {
 	this->setVertexArray();
 }
@@ -26,7 +26,7 @@ Car::~Car()
 }
 
 Car::Car(Car const & car)
-	: Car(car.mPosition, car.mDirection, car.mVelocity)
+	: Car(car.mPosition, car.mDirection, car.mVelocity, car.pBrain->getBrainType())
 {
 }
 

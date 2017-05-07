@@ -3,6 +3,12 @@
 
 #include "Source\Car\Car.hpp"
 
+
+BrainType PlayerBrain::getBrainType() const
+{
+	return BrainType::PLAYER;
+}
+
 BrainOutput PlayerBrain::calculateBrainOutput(RaceSimulation const * raceSimPointer, Car const * carPointer)
 {
 	bool up = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up);

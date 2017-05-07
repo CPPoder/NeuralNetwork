@@ -14,6 +14,8 @@ public:
 	RandomBrain(RandomBrain const &) = default;
 	RandomBrain& operator=(RandomBrain const &) = default;
 
+	virtual BrainType getBrainType() const override;
+
 	virtual BrainOutput calculateBrainOutput(RaceSimulation const * raceSimPointer, Car const * carPointer) override;
 
 

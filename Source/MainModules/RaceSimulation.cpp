@@ -9,7 +9,7 @@ RaceSimulation::RaceSimulation()
 {
 	for (unsigned int i = 0; i < 1; ++i)
 	{
-		mListOfCars.push_back(Car(sf::Vector2f(10.f, 50.f), sf::Vector2f(0.f, 1.f), 3.f));
+		mListOfCars.push_back(Car(sf::Vector2f(10.f, 50.f), sf::Vector2f(0.f, 1.f), 3.f, BrainType::PLAYER));
 	}
 }
 

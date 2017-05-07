@@ -5,6 +5,11 @@
 
 #include "Source\Car\Car.hpp"
 
+BrainType RandomBrain::getBrainType() const
+{
+	return BrainType::RANDOM;
+}
+
 BrainOutput RandomBrain::calculateBrainOutput(RaceSimulation const * raceSimPointer, Car const * carPointer)
 {
 	float maximalGasBrakeForce = carPointer->getMaximalGasBrakeForce();
