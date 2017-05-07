@@ -5,7 +5,7 @@
 
 
 RaceSimulation::RaceSimulation()
-	: mTrack(Track::constructCircleTrack(sf::Vector2f(50.f, 50.f), 40.f, 50u, 6.f))
+	: mTrack(Track::createRandomTrack())
 {
 	for (unsigned int i = 0; i < 1; ++i)
 	{

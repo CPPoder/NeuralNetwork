@@ -296,3 +296,39 @@ std::list<CenterWidthTrackSegment> Track::constructCircleTrack(sf::Vector2f cons
 
 	return std::move(list);
 }
+
+//Randomly deform Track
+std::list<CenterWidthTrackSegment> Track::randomlyDeformTrack(std::list<CenterWidthTrackSegment> const & listOfPositionsAndWidths)
+{
+	std::list<CenterWidthTrackSegment> deformedTrack(listOfPositionsAndWidths);
+	unsigned int size = deformedTrack.size();
+	unsigned int randomNumber = myMath::Rand::randIntervali(0, size - 1);
+	float deformationLimit = 5.f;
+	sf::Vector2f randomDeformation = sf::Vector2f(myMath::Rand::randIntervalf(-100, 100) / 100.f * deformationLimit, myMath::Rand::randIntervalf(-100, 100) / 100.f * deformationLimit);
+	std::list<CenterWidthTrackSegment>::iterator it = deformedTrack.begin();
+	std::advance(it, randomNumber);
+	it->first += randomDeformation;
+	return std::move(deformedTrack);
+}
+
+
+//Create Random Track
+std::list<CenterWidthTrackSegment> Track::createRandomTrack()
+{
+	unsigned int numberOfDeformations = 100u;
+	std::list<CenterWidthTrackSegment> originalTrack(std::move(Track::constructCircleTrack(sf::Vector2f(50.f, 50.f), 40.f, 50u, 6.f)));
+	std::list<CenterWidthTrackSegment> deformedTrack;
+	for (unsigned int i = 0; i < numberOfDeformations; ++i)
+	{
+		deformedTrack = std::move(Track::randomlyDeformTrack(originalTrack));
+		if (Track(deformedTrack).checkIfTrackIsValid())
+		{
+			originalTrack = deformedTrack;
+		}
+		else
+		{
+			deformedTrack = originalTrack;
+		}
+	}
+	return std::move(deformedTrack);
+}

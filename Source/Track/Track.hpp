@@ -53,6 +53,8 @@ private:
 
 public:
 	static std::list<CenterWidthTrackSegment> constructCircleTrack(sf::Vector2f const & center, float radius, unsigned int pointCount, float width);
+	static std::list<CenterWidthTrackSegment> randomlyDeformTrack(std::list<CenterWidthTrackSegment> const & listOfPositionsAndWidths);
+	static std::list<CenterWidthTrackSegment> createRandomTrack();
 
 };
 
