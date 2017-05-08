@@ -59,6 +59,8 @@ public:
 	float getDistanceBetweenFrontAndBackWheels() const;
 	sf::VertexArray const & getVertexArrayReference() const;
 
+	void setPosition(sf::Vector2f const & position);
+
 private:
 	void setVertexArray();
 

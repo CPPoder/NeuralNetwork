@@ -3,13 +3,16 @@
 
 #include "Source\Math\myUsefulMath.hpp"
 
+#include "Source\Framework\EventManager.hpp"
+
 
 RaceSimulation::RaceSimulation()
+//	: mTrack(Track::constructCircleTrack(sf::Vector2f(50.f, 50.f), 40.f, 50u, 6.f))
 	: mTrack(Track::createRandomTrack())
 {
 	for (unsigned int i = 0; i < 1; ++i)
 	{
-		mListOfCars.push_back(Car(sf::Vector2f(10.f, 50.f), sf::Vector2f(0.f, 1.f), 3.f, BrainType::PLAYER));
+		mListOfCars.push_back(Car(mTrack.calculatePositionInTrackNear(sf::Vector2f(10.f, 50.f)), sf::Vector2f(0.f, 1.f), 0.f, BrainType::PLAYER));
 	}
 }
 
@@ -39,6 +42,18 @@ void RaceSimulation::update(sf::Time const & time, sf::RenderWindow const * rend
 	for (auto & car : mListOfCars)
 	{
 		car.update(time, renderWindow, this);
+	}
+	if (EventManager::checkForEvent(EventManager::EventType::KEY_RELEASED))
+	{
+		EventManager::KeyInfo keyInfo = EventManager::getReleasedKeyInfo();
+		if (keyInfo.key == sf::Keyboard::Key::Tab)
+		{
+			mTrack = Track(Track::createRandomTrack());
+			for (auto & car : mListOfCars)
+			{
+				car.setPosition(mTrack.calculatePositionInTrackNear(car.getPosition()));
+			}
+		}
 	}
 }
 

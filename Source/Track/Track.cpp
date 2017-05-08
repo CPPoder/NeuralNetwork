@@ -48,7 +48,7 @@ void Track::render(sf::RenderWindow* renderWindow)
 void Track::setTrack(std::list<BorderTrackSegment> const & listOfTrackSegments)
 {
 	mListOfTrackSegments = listOfTrackSegments;
-	std::cout << "Check for validity of the track: " << this->checkIfTrackIsValid() << std::endl;
+	//std::cout << "Check for validity of the track: " << this->checkIfTrackIsValid() << std::endl;
 	this->refreshVertexArray();
 }
 
@@ -136,6 +136,33 @@ bool Track::checkCollisionWith(Car const & car) const
 	return false;
 }
 
+//////////////////////////////////////////////////////////////
+//Calculate Position inside the Track that is near to position
+
+sf::Vector2f Track::calculatePositionInTrackNear(sf::Vector2f const & position) const
+{
+	sf::Vector2f nearestPosition;
+	float dist;
+	bool firstSegment = true;
+	for (auto const & segment : mListOfTrackSegments)
+	{
+		sf::Vector2f newPos = mySFML::Simple::meanVector(segment.first, segment.second);
+		float newDist = mySFML::Simple::lengthOf(newPos - position);
+		if (firstSegment)
+		{
+			firstSegment = false;
+			nearestPosition = newPos;
+			dist = newDist;
+		}
+		else if (newDist < dist)
+		{
+			nearestPosition = newPos;
+			dist = newDist;
+		}
+	}
+	return nearestPosition;
+}
+
 
 //////////////////////////
 //Private intern functions
@@ -163,6 +190,31 @@ bool Track::checkIfTrackIsValid() const
 	auto listsOfLines = std::move(this->getListsOfLines());
 	std::list<Line> listOfLines1 = std::move(listsOfLines.first);
 	std::list<Line> listOfLines2 = std::move(listsOfLines.second);
+
+	//Check if Track is inside its frame
+	for (auto const & line : listOfLines1)
+	{
+		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex1) && mySFML::Comp::smaller(line.vertex1, sf::Vector2f(100.f, 100.f))))
+		{
+			return false;
+		}
+		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex2) && mySFML::Comp::smaller(line.vertex2, sf::Vector2f(100.f, 100.f))))
+		{
+			return false;
+		}
+	}
+	for (auto const & line : listOfLines2)
+	{
+		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex1) && mySFML::Comp::smaller(line.vertex1, sf::Vector2f(100.f, 100.f))))
+		{
+			return false;
+		}
+		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex2) && mySFML::Comp::smaller(line.vertex2, sf::Vector2f(100.f, 100.f))))
+		{
+			return false;
+		}
+	}
+	
 
 	//Check for overlap between any but not neighboured Lines
 	//At first: list1 and list2
@@ -231,6 +283,40 @@ bool Track::checkIfTrackIsValid() const
 	}
 	
 	//Check here maybe for direction conservation (Inner product of neighbouring lines should be greater than 0 or even more)
+	std::function<bool(std::list<Line> const &)> checkForDirectionConservation =
+		[](std::list<Line> const & listOfLines) -> bool
+	{
+		std::list<Line>::const_iterator lineIt1 = listOfLines.begin();
+		std::list<Line>::const_iterator lineIt2 = listOfLines.begin();
+		++lineIt2;
+		while (lineIt2 != listOfLines.end())
+		{
+			sf::Vector2f vec1 = lineIt1->getUnitTangentVector();
+			sf::Vector2f vec2 = lineIt2->getUnitTangentVector();
+			if (mySFML::Simple::scalarProduct(vec1, vec2) < 0.5f)
+			{
+				return false;
+			}
+			++lineIt1;
+			++lineIt2;
+		}
+		sf::Vector2f vec1 = lineIt1->getUnitTangentVector();
+		sf::Vector2f vec2 = listOfLines.front().getUnitTangentVector();
+		if (mySFML::Simple::scalarProduct(vec1, vec2) < 0.f)
+		{
+			return false;
+		}
+		return true;
+	};
+
+	if (!checkForDirectionConservation(listOfLines1))
+	{
+		return false;
+	}
+	if (!checkForDirectionConservation(listOfLines2))
+	{
+		return false;
+	}
 
 
 	//At the end, return true in the no-intersections case
@@ -315,11 +401,19 @@ std::list<CenterWidthTrackSegment> Track::randomlyDeformTrack(std::list<CenterWi
 //Create Random Track
 std::list<CenterWidthTrackSegment> Track::createRandomTrack()
 {
-	unsigned int numberOfDeformations = 100u;
+	std::cout << "RandomTrackCreation! Type in Number of Deformations: ";
+	unsigned int numberOfDeformations;
+	std::cin >> numberOfDeformations;
 	std::list<CenterWidthTrackSegment> originalTrack(std::move(Track::constructCircleTrack(sf::Vector2f(50.f, 50.f), 40.f, 50u, 6.f)));
 	std::list<CenterWidthTrackSegment> deformedTrack;
+	int progressStep = 1;
 	for (unsigned int i = 0; i < numberOfDeformations; ++i)
 	{
+		if (static_cast<float>(i) / static_cast<float>(numberOfDeformations) * 100.f > progressStep)
+		{
+			progressStep += 1;
+			std::cout << "Create Track! Progress: " << progressStep << " %" << std::endl;
+		}
 		deformedTrack = std::move(Track::randomlyDeformTrack(originalTrack));
 		if (Track(deformedTrack).checkIfTrackIsValid())
 		{

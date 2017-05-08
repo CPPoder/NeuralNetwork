@@ -39,6 +39,17 @@ void Car::render(sf::RenderWindow * renderWindow) const
 
 void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, RaceSimulation const * raceSimPointer)
 {
+	//Save the day for long times
+	sf::Time saveTime;
+	if (time > sf::seconds(1.f))
+	{
+		saveTime = sf::seconds(1.f);
+	}
+	else
+	{
+		saveTime = time;
+	}
+
 	//Save current State
 	sf::Vector2f positionBackup = mPosition;
 	sf::Vector2f directionBackup = mDirection;
@@ -50,8 +61,8 @@ void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, R
 	mSteeringWheelAngleDerivative = brainOutput.steeringWheelAngleDerivative;
 	
 	//Determine GasBrakeForce & WheelAngle
-	mGasOrBrakeForce += mGasBrakeForceDerivative * time.asSeconds();
-	mSteeringWheelAngle += mSteeringWheelAngleDerivative * time.asSeconds();
+	mGasOrBrakeForce += mGasBrakeForceDerivative * saveTime.asSeconds();
+	mSteeringWheelAngle += mSteeringWheelAngleDerivative * saveTime.asSeconds();
 	mGasOrBrakeForce = myMath::Simple::trim(-mMaximalGasOrBrakeForce, mGasOrBrakeForce, mMaximalGasOrBrakeForce);
 	mSteeringWheelAngle = myMath::Simple::trim(-mMaximalSteeringWheelAngle, mSteeringWheelAngle, mMaximalSteeringWheelAngle);
 
@@ -73,7 +84,7 @@ void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, R
 
 	//Evolve velocities according to totalForce
 	sf::Vector2f acceleration = totalForce / mMass;
-	sf::Vector2f newVelocityVector = mDirection * mVelocity + acceleration * time.asSeconds();
+	sf::Vector2f newVelocityVector = mDirection * mVelocity + acceleration * saveTime.asSeconds();
 	bool forwards = (mySFML::Simple::scalarProduct(newVelocityVector, mDirection) > 0.f);
 	float forwardFactor = (forwards ? 1.f : -1.f);
 	mVelocity = mySFML::Simple::lengthOf(newVelocityVector) * forwardFactor;
@@ -83,7 +94,7 @@ void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, R
 	}
 
 	//Evolve position according to direction & velocity
-	mPosition += mDirection * mVelocity * time.asSeconds();
+	mPosition += mDirection * mVelocity * saveTime.asSeconds();
 
 	//Reset intern variables
 	this->setVertexArray();
@@ -184,6 +195,14 @@ sf::VertexArray const & Car::getVertexArrayReference() const
 }
 
 
+////////
+//Setter
+
+void Car::setPosition(sf::Vector2f const & position)
+{
+	mPosition = position;
+	this->setVertexArray();
+}
 
 
 ///////////////////////////

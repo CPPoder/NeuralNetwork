@@ -41,6 +41,7 @@ public:
 	void render(sf::RenderWindow* renderWindow);
 
 	bool checkCollisionWith(Car const & car) const;
+	sf::Vector2f calculatePositionInTrackNear(sf::Vector2f const & position) const;
 
 private:
 	void refreshVertexArray();
