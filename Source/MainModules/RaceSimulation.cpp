@@ -8,7 +8,8 @@
 
 RaceSimulation::RaceSimulation()
 //	: mTrack(Track::constructCircleTrack(sf::Vector2f(50.f, 50.f), 40.f, 50u, 6.f))
-	: mTrack(Track::createRandomTrack())
+//	: mTrack(Track::createRandomTrack())
+	: mTrack("./Data/Tracks/test.tr")
 {
 	for (unsigned int i = 0; i < 1; ++i)
 	{
@@ -18,7 +19,7 @@ RaceSimulation::RaceSimulation()
 
 RaceSimulation::~RaceSimulation()
 {
-
+	mTrack.saveToFile("./Data/Tracks/test.tr");
 }
 
 
@@ -48,7 +49,10 @@ void RaceSimulation::update(sf::Time const & time, sf::RenderWindow const * rend
 		EventManager::KeyInfo keyInfo = EventManager::getReleasedKeyInfo();
 		if (keyInfo.key == sf::Keyboard::Key::Tab)
 		{
-			mTrack = Track(Track::createRandomTrack());
+			std::cout << "RandomTrackCreation! Type in Number of Deformations: ";
+			unsigned int numberOfDeformations;
+			std::cin >> numberOfDeformations;
+			mTrack.deformRandomly(numberOfDeformations);
 			for (auto & car : mListOfCars)
 			{
 				car.setPosition(mTrack.calculatePositionInTrackNear(car.getPosition()));

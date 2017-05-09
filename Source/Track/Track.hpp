@@ -10,6 +10,7 @@
 #include <iostream>
 #include <utility>
 #include <list>
+#include <string>
 
 
 typedef std::pair<sf::Vector2f, sf::Vector2f> BorderTrackSegment;
@@ -26,6 +27,7 @@ private:
 
 public:
 	Track();
+	Track(std::string const & filePath);
 	Track(std::list<BorderTrackSegment> const & listOfTrackSegments, sf::Color const & color = sf::Color::White);
 	Track(std::list<CenterWidthTrackSegment> const & listOfPositionsAndWidths, sf::Color const & color = sf::Color::White);
 	Track(Track const &) = default;
@@ -37,11 +39,17 @@ public:
 
 	sf::Color getColor() const;
 	std::pair<std::list<Line>, std::list<Line>> getListsOfLines() const;
+	std::list<CenterWidthTrackSegment> getListOfCenterWidthTrackSegments() const;
 
 	void render(sf::RenderWindow* renderWindow);
 
 	bool checkCollisionWith(Car const & car) const;
 	sf::Vector2f calculatePositionInTrackNear(sf::Vector2f const & position) const;
+
+	void saveToFile(std::string const & path) const;
+	void loadFromFile(std::string const & path);
+
+	void deformRandomly(unsigned int numberOfDeformations);
 
 private:
 	void refreshVertexArray();
@@ -54,8 +62,8 @@ private:
 
 public:
 	static std::list<CenterWidthTrackSegment> constructCircleTrack(sf::Vector2f const & center, float radius, unsigned int pointCount, float width);
-	static std::list<CenterWidthTrackSegment> randomlyDeformTrack(std::list<CenterWidthTrackSegment> const & listOfPositionsAndWidths);
-	static std::list<CenterWidthTrackSegment> createRandomTrack();
+	static std::list<CenterWidthTrackSegment> doOneRandomDeformation(std::list<CenterWidthTrackSegment> const & listOfPositionsAndWidths, float maximalDeformationLength);
+	static std::list<CenterWidthTrackSegment> createRandomTrack(unsigned int numberOfDeformations);
 
 };
 
