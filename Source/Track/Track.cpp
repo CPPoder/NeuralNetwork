@@ -252,12 +252,13 @@ void Track::loadFromFile(std::string const & path)
 
 
 //Deform Track
-void Track::deformRandomly(unsigned int numberOfDeformations, sf::Vector2f const & sizeOfValidTrackArea)
+void Track::deformRandomly(unsigned int numberOfDeformations, sf::Vector2f const & sizeOfValidTrackArea, float deformationStep)
 {
 	std::cout << "Start Deformation of Track! (Number of Deformations: " << numberOfDeformations << ")" << std::endl;
 	std::list<CenterWidthTrackSegment> originalTrack(std::move(this->getListOfCenterWidthTrackSegments()));
 	std::list<CenterWidthTrackSegment> deformedTrack;
 	int progressStep = 0;
+	int fails = 0;
 	for (unsigned int i = 0; i < numberOfDeformations; ++i)
 	{
 		if (static_cast<float>(i) / static_cast<float>(numberOfDeformations) * 100.f > progressStep)
@@ -265,7 +266,7 @@ void Track::deformRandomly(unsigned int numberOfDeformations, sf::Vector2f const
 			progressStep += 1;
 			std::cout << "Create Track! Progress: " << progressStep << " %" << std::endl;
 		}
-		deformedTrack = std::move(Track::doOneRandomDeformation(originalTrack, 5.f));
+		deformedTrack = std::move(Track::doOneRandomDeformation(originalTrack, deformationStep));
 		if (Track(deformedTrack).checkIfTrackIsValid(sizeOfValidTrackArea))
 		{
 			originalTrack = deformedTrack;
@@ -273,16 +274,18 @@ void Track::deformRandomly(unsigned int numberOfDeformations, sf::Vector2f const
 		else
 		{
 			deformedTrack = originalTrack;
+			++fails;
 		}
 	}
 	this->setTrack(Track::convertIntoListOfBorderTrackSegments(deformedTrack));
-	std::cout << "Deformation of Track finished!" << std::endl;
+	std::cout << "Deformation of Track finished! (" << fails << " fails of " << numberOfDeformations << ", Number of Segments: " << mListOfTrackSegments.size() << ")" << std::endl;
 }
 
 //Double the Number of Segments
 void Track::doubleNumberOfSegments()
 {
-	std::cout << "Double the number of Segments...";
+	unsigned int size = mListOfTrackSegments.size();
+	std::cout << "Double the number of Segments from " << size << " to "  << 2 * size << "...";
 
 	std::list<BorderTrackSegment> newList;
 	std::list<BorderTrackSegment>::const_iterator it1 = mListOfTrackSegments.begin();
@@ -342,10 +345,12 @@ bool Track::checkIfTrackIsValid(sf::Vector2f const & sizeOfValidTrackArea) const
 	{
 		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex1) && mySFML::Comp::smaller(line.vertex1, sizeOfValidTrackArea)))
 		{
+			//std::cout << "Fail 1!" << std::endl;
 			return false;
 		}
 		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex2) && mySFML::Comp::smaller(line.vertex2, sizeOfValidTrackArea)))
 		{
+			//std::cout << "Fail 2!" << std::endl;
 			return false;
 		}
 	}
@@ -353,10 +358,12 @@ bool Track::checkIfTrackIsValid(sf::Vector2f const & sizeOfValidTrackArea) const
 	{
 		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex1) && mySFML::Comp::smaller(line.vertex1, sizeOfValidTrackArea)))
 		{
+			//std::cout << "Fail 3!" << std::endl;
 			return false;
 		}
 		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex2) && mySFML::Comp::smaller(line.vertex2, sizeOfValidTrackArea)))
 		{
+			//std::cout << "Fail 4!" << std::endl;
 			return false;
 		}
 	}
@@ -370,6 +377,7 @@ bool Track::checkIfTrackIsValid(sf::Vector2f const & sizeOfValidTrackArea) const
 		{
 			if (line1.intersects(line2))
 			{
+				//std::cout << "Fail 5!" << std::endl;
 				return false;
 			}
 		}
@@ -419,19 +427,24 @@ bool Track::checkIfTrackIsValid(sf::Vector2f const & sizeOfValidTrackArea) const
 	//Secondly: list1 and list1
 	if (checkForIntersectionInListOfLines(listOfLines1))
 	{
+		//std::cout << "Fail 6!" << std::endl;
 		return false;
 	}
 
 	//Thirdly: list2 and list2
 	if (checkForIntersectionInListOfLines(listOfLines2))
 	{
+		//std::cout << "Fail 7!" << std::endl;
 		return false;
 	}
+
 	
 	//Check here maybe for direction conservation (Inner product of neighbouring lines should be greater than 0 or even more)
 	std::function<bool(std::list<Line> const &)> checkForDirectionConservation =
 		[](std::list<Line> const & listOfLines) -> bool
 	{
+		float constexpr scalarProductLimit = 0.5f;
+
 		std::list<Line>::const_iterator lineIt1 = listOfLines.begin();
 		std::list<Line>::const_iterator lineIt2 = listOfLines.begin();
 		++lineIt2;
@@ -439,8 +452,9 @@ bool Track::checkIfTrackIsValid(sf::Vector2f const & sizeOfValidTrackArea) const
 		{
 			sf::Vector2f vec1 = lineIt1->getUnitTangentVector();
 			sf::Vector2f vec2 = lineIt2->getUnitTangentVector();
-			if (mySFML::Simple::scalarProduct(vec1, vec2) < 0.5f)
+			if (mySFML::Simple::scalarProduct(vec1, vec2) < scalarProductLimit)
 			{
+				//std::cout << "Haltepunkt!" << std::endl;
 				return false;
 			}
 			++lineIt1;
@@ -448,7 +462,7 @@ bool Track::checkIfTrackIsValid(sf::Vector2f const & sizeOfValidTrackArea) const
 		}
 		sf::Vector2f vec1 = lineIt1->getUnitTangentVector();
 		sf::Vector2f vec2 = listOfLines.front().getUnitTangentVector();
-		if (mySFML::Simple::scalarProduct(vec1, vec2) < 0.f)
+		if (mySFML::Simple::scalarProduct(vec1, vec2) < scalarProductLimit)
 		{
 			return false;
 		}
@@ -457,15 +471,17 @@ bool Track::checkIfTrackIsValid(sf::Vector2f const & sizeOfValidTrackArea) const
 
 	if (!checkForDirectionConservation(listOfLines1))
 	{
+		//std::cout << "Fail 8!" << std::endl;
 		return false;
 	}
 	if (!checkForDirectionConservation(listOfLines2))
 	{
+		//std::cout << "Fail 9!" << std::endl;
 		return false;
 	}
 
-
 	//At the end, return true in the no-intersections case
+	//std::cout << "No Fail!" << std::endl;
 	return true;
 }
 
@@ -520,12 +536,14 @@ std::list<BorderTrackSegment> Track::convertIntoListOfBorderTrackSegments(std::l
 //Construct Circle Track
 std::list<CenterWidthTrackSegment> Track::constructCircleTrack(sf::Vector2f const & center, float radius, unsigned int pointCount, float width)
 {
+	std::cout << "Construct Circle Track...";
 	std::list<CenterWidthTrackSegment> list;
 	for (unsigned int i = 0; i < pointCount; ++i)
 	{
 		list.push_back(std::make_pair(radius * mySFML::Create::createNormalVectorWithAngle(static_cast<float>(i) / (pointCount + 1u) * 2.f * myMath::Const::PIf) + center, width));
 	}
 
+	std::cout << "Finished!" << std::endl;
 	return std::move(list);
 }
 
@@ -547,6 +565,6 @@ std::list<CenterWidthTrackSegment> Track::doOneRandomDeformation(std::list<Cente
 std::list<CenterWidthTrackSegment> Track::createRandomTrack(unsigned int numberOfDeformations, sf::Vector2f const & sizeOfValidTrackArea)
 {
 	Track track(Track::constructCircleTrack(sf::Vector2f(50.f, 50.f), 40.f, 50u, 6.f));
-	track.deformRandomly(numberOfDeformations, sizeOfValidTrackArea);
+	track.deformRandomly(numberOfDeformations, sizeOfValidTrackArea, 0.1f);
 	return track.getListOfCenterWidthTrackSegments();
 }

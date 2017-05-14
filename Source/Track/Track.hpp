@@ -49,13 +49,13 @@ public:
 	void saveToFile(std::string const & path) const;
 	void loadFromFile(std::string const & path);
 
-	void deformRandomly(unsigned int numberOfDeformations, sf::Vector2f const & sizeOfValidTrackArea);
+	void deformRandomly(unsigned int numberOfDeformations, sf::Vector2f const & sizeOfValidTrackArea, float deformationStep);
 	void doubleNumberOfSegments();
 
 private:
 	void refreshVertexArray();
 	
-private:
+public:
 	bool checkIfTrackIsValid(sf::Vector2f const & sizeOfValidTrackArea) const;
 	
 private:

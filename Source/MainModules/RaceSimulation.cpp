@@ -53,7 +53,12 @@ void RaceSimulation::update(sf::Time const & time, sf::RenderWindow const * rend
 			std::cout << "RandomTrackCreation! Type in Number of Deformations: ";
 			unsigned int numberOfDeformations;
 			std::cin >> numberOfDeformations;
-			mTrack.deformRandomly(numberOfDeformations, mSize);
+
+			std::cout << "RandomTrackCreation! Type in Deformation Length: ";
+			float deformationLength;
+			std::cin >> deformationLength;
+
+			mTrack.deformRandomly(numberOfDeformations, mSize, deformationLength);
 			for (auto & car : mListOfCars)
 			{
 				car.setPosition(mTrack.calculatePositionInTrackNear(car.getPosition()));
@@ -62,6 +67,22 @@ void RaceSimulation::update(sf::Time const & time, sf::RenderWindow const * rend
 		else if (keyInfo.key == sf::Keyboard::Key::D)
 		{
 			mTrack.doubleNumberOfSegments();
+		}
+		else if (keyInfo.key == sf::Keyboard::Key::C)
+		{
+			mTrack = Track(Track::constructCircleTrack(sf::Vector2f(100.f, 100.f), 40.f, 50u, 6.f));
+		}
+		else if (keyInfo.key == sf::Keyboard::Key::V)
+		{
+			bool validity = mTrack.checkIfTrackIsValid(mSize);
+			if (validity)
+			{
+				std::cout << "Actual track is valid!" << std::endl;
+			}
+			else
+			{
+				std::cout << "Actual track is not valid!" << std::endl;
+			}
 		}
 	}
 }
