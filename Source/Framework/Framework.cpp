@@ -157,6 +157,26 @@ void Framework::update()
 	}
 
 	mStackOfGameStates.top()->update(mFrametime, pRenderWindow);
+
+	std::deque<WindowChange> windowChanges = mStackOfGameStates.top()->getWindowChanges();
+	while (!windowChanges.empty())
+	{
+		WindowChange windowChange = windowChanges.front();
+		windowChanges.pop_front();
+		switch (windowChange.type)
+		{
+		case WindowChange::Type::CHANGE_WINDOW_SIZE:
+			pRenderWindow->setSize(windowChange.info.windowSize);
+			if (windowChange.info.adjustView)
+			{
+				pRenderWindow->setView(sf::View(sf::FloatRect(0.f, 0.f, windowChange.info.windowSize.x, windowChange.info.windowSize.y)));
+			}
+			break;
+		case WindowChange::Type::CHANGE_WINDOW_POSITION:
+			pRenderWindow->setPosition(windowChange.info.windowPosition);
+			break;
+		}
+	}
 }
 
 void Framework::render()

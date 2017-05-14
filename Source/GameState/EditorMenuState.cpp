@@ -42,5 +42,10 @@ namespace GameState
 		mEditorMenu.reactOnESC();
 	}
 
+	std::deque<WindowChange> EditorMenuState::getWindowChanges()
+	{
+		return std::deque<WindowChange>();
+	}
+
 }
 

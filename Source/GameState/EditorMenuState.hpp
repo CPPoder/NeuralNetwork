@@ -22,6 +22,7 @@ namespace GameState
 		virtual void render(sf::RenderWindow* renderWindow) override;
 		virtual Change pollGameStateChange() override;
 		virtual void reactOnESC() override;
+		virtual std::deque<WindowChange> getWindowChanges() override;
 
 
 	};

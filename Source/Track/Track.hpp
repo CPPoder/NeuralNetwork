@@ -49,13 +49,13 @@ public:
 	void saveToFile(std::string const & path) const;
 	void loadFromFile(std::string const & path);
 
-	void deformRandomly(unsigned int numberOfDeformations);
+	void deformRandomly(unsigned int numberOfDeformations, sf::Vector2f const & sizeOfValidTrackArea);
 
 private:
 	void refreshVertexArray();
 	
 private:
-	bool checkIfTrackIsValid() const;
+	bool checkIfTrackIsValid(sf::Vector2f const & sizeOfValidTrackArea) const;
 	
 private:
 	static std::list<BorderTrackSegment> convertIntoListOfBorderTrackSegments(std::list<CenterWidthTrackSegment> const & listOfPositionsAndWidths);
@@ -63,7 +63,7 @@ private:
 public:
 	static std::list<CenterWidthTrackSegment> constructCircleTrack(sf::Vector2f const & center, float radius, unsigned int pointCount, float width);
 	static std::list<CenterWidthTrackSegment> doOneRandomDeformation(std::list<CenterWidthTrackSegment> const & listOfPositionsAndWidths, float maximalDeformationLength);
-	static std::list<CenterWidthTrackSegment> createRandomTrack(unsigned int numberOfDeformations);
+	static std::list<CenterWidthTrackSegment> createRandomTrack(unsigned int numberOfDeformations, sf::Vector2f const & sizeOfValidTrackArea);
 
 };
 

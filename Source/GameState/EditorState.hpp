@@ -13,6 +13,7 @@ namespace GameState
 	{
 	private:
 		Editor mEditor;
+		bool mWindowAdjusted = false;
 
 	public:
 		virtual ~EditorState() override;
@@ -21,7 +22,7 @@ namespace GameState
 		virtual void render(sf::RenderWindow* renderWindow) override;
 		virtual Change pollGameStateChange() override;
 		virtual void reactOnESC() override;
-
+		virtual std::deque<WindowChange> getWindowChanges() override;
 
 	};
 

@@ -3,6 +3,12 @@
 
 namespace GameState
 {
+	RaceState::RaceState()
+		: mRaceSimulation(sf::Vector2f(400.f, 200.f))
+	{
+
+	}
+
 	RaceState::~RaceState()
 	{
 
@@ -33,6 +39,22 @@ namespace GameState
 	void RaceState::reactOnESC()
 	{
 		mRaceSimulation.reactOnESC();
+	}
+
+	std::deque<WindowChange> RaceState::getWindowChanges()
+	{
+		sf::Vector2u windowSize(1600u, 800u);
+		if (mWindowAdjusted)
+		{
+			return std::deque<WindowChange>();
+		}
+		else
+		{
+			return std::deque<WindowChange>({ 
+				WindowChange(WindowChange::Type::CHANGE_WINDOW_SIZE, WindowChange::Info(windowSize)),
+				WindowChange(WindowChange::Type::CHANGE_WINDOW_POSITION, WindowChange::Info(sf::Vector2u(), false, sf::Vector2i(50, 50)))
+			});
+		}
 	}
 
 }

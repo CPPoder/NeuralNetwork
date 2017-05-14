@@ -20,7 +20,7 @@ public:
 
 private:
 	Event mEvent = Event::NONE;
-
+	sf::Vector2f mSize;
 
 private:
 	Track mTrack;
@@ -28,7 +28,8 @@ private:
 	std::list<Car> mListOfCars;
 
 public:
-	RaceSimulation();
+	RaceSimulation() = delete;
+	RaceSimulation(sf::Vector2f const & size);
 	~RaceSimulation();
 
 	void render(sf::RenderWindow * renderWindow);

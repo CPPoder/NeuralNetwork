@@ -3,6 +3,10 @@
 
 #include "SFML\Graphics.hpp"
 
+#include "Source\Framework\WindowChange.hpp"
+
+#include <deque>
+
 
 namespace GameState
 {
@@ -53,6 +57,7 @@ namespace GameState
 		virtual void render(sf::RenderWindow* renderWindow) = 0;
 		virtual Change pollGameStateChange() = 0;
 		virtual void reactOnESC() = 0;
+		virtual std::deque<WindowChange> getWindowChanges() = 0;
 
 	};
 

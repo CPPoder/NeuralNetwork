@@ -13,15 +13,17 @@ namespace GameState
 	{
 	private:
 		RaceSimulation mRaceSimulation;
+		bool mWindowAdjusted = false;
 
 	public:
+		RaceState();
 		virtual ~RaceState() override;
 
 		virtual void update(sf::Time const & frametime, sf::RenderWindow* renderWindow) override;
 		virtual void render(sf::RenderWindow* renderWindow) override;
 		virtual Change pollGameStateChange() override;
 		virtual void reactOnESC() override;
-
+		virtual std::deque<WindowChange> getWindowChanges() override;
 
 	};
 

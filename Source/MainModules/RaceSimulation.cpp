@@ -6,10 +6,11 @@
 #include "Source\Framework\EventManager.hpp"
 
 
-RaceSimulation::RaceSimulation()
+RaceSimulation::RaceSimulation(sf::Vector2f const & size)
 //	: mTrack(Track::constructCircleTrack(sf::Vector2f(50.f, 50.f), 40.f, 50u, 6.f))
 //	: mTrack(Track::createRandomTrack())
-	: mTrack("./Data/Tracks/test.tr")
+	: mTrack("./Data/Tracks/test.tr"),
+	  mSize(size)
 {
 	for (unsigned int i = 0; i < 1; ++i)
 	{
@@ -25,7 +26,7 @@ RaceSimulation::~RaceSimulation()
 
 void RaceSimulation::render(sf::RenderWindow * renderWindow)
 {
-	sf::View raceView(sf::FloatRect(0.f, 0.f, 100.f, 100.f));
+	sf::View raceView(sf::FloatRect(0.f, 0.f, 400.f, 200.f));
 	sf::View originalView(renderWindow->getView());
 	renderWindow->setView(raceView);
 
@@ -52,7 +53,7 @@ void RaceSimulation::update(sf::Time const & time, sf::RenderWindow const * rend
 			std::cout << "RandomTrackCreation! Type in Number of Deformations: ";
 			unsigned int numberOfDeformations;
 			std::cin >> numberOfDeformations;
-			mTrack.deformRandomly(numberOfDeformations);
+			mTrack.deformRandomly(numberOfDeformations, mSize);
 			for (auto & car : mListOfCars)
 			{
 				car.setPosition(mTrack.calculatePositionInTrackNear(car.getPosition()));

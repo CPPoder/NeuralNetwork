@@ -44,8 +44,8 @@ BrainOutput PlayerBrain::calculateBrainOutput(RaceSimulation const * raceSimPoin
 	float gasBrakeDiff = acceleration * maximalGasBrakeForce - gasBrakeForce;
 	float steeringWheelDiff = turning * maximalSteeringWheelAngle - steeringWheelAngle;
 
-	float constexpr gasBrakeCoefficient = 5.0f;
-	float constexpr steeringWheelCoefficient = 5.0f;
+	float constexpr gasBrakeCoefficient = 20.0f;
+	float constexpr steeringWheelCoefficient = 20.0f;
 
 	return BrainOutput(gasBrakeCoefficient * gasBrakeDiff, steeringWheelCoefficient * steeringWheelDiff);
 }

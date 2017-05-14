@@ -13,6 +13,7 @@ namespace GameState
 	{
 	private:
 		MainMenu mMainMenu;
+		bool mWindowAdjusted = false;
 
 	public:
 		MainMenuState();
@@ -22,7 +23,7 @@ namespace GameState
 		virtual void render(sf::RenderWindow* renderWindow) override;
 		virtual Change pollGameStateChange() override;
 		virtual void reactOnESC() override;
-
+		virtual std::deque<WindowChange> getWindowChanges() override;
 
 	};
 

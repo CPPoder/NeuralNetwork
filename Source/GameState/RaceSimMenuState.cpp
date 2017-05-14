@@ -42,5 +42,10 @@ namespace GameState
 		mRaceSimMenu.reactOnESC();
 	}
 
+	std::deque<WindowChange> RaceSimMenuState::getWindowChanges()
+	{
+		return std::deque<WindowChange>();
+	}
+
 }
 

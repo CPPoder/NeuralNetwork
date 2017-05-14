@@ -44,5 +44,18 @@ namespace GameState
 		mMainMenu.reactOnESC();
 	}
 
+	std::deque<WindowChange> MainMenuState::getWindowChanges()
+	{
+		sf::Vector2u windowSize(800u, 800u);
+		if (mWindowAdjusted)
+		{
+			return std::deque<WindowChange>();
+		}
+		else
+		{
+			return std::deque<WindowChange>({ WindowChange(WindowChange::Type::CHANGE_WINDOW_SIZE, WindowChange::Info(windowSize)) });
+		}
+	}
+
 }
 

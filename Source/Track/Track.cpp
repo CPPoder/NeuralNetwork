@@ -252,7 +252,7 @@ void Track::loadFromFile(std::string const & path)
 
 
 //Deform Track
-void Track::deformRandomly(unsigned int numberOfDeformations)
+void Track::deformRandomly(unsigned int numberOfDeformations, sf::Vector2f const & sizeOfValidTrackArea)
 {
 	std::cout << "Start Deformation of Track! (Number of Deformations: " << numberOfDeformations << ")" << std::endl;
 	std::list<CenterWidthTrackSegment> originalTrack(std::move(this->getListOfCenterWidthTrackSegments()));
@@ -266,7 +266,7 @@ void Track::deformRandomly(unsigned int numberOfDeformations)
 			std::cout << "Create Track! Progress: " << progressStep << " %" << std::endl;
 		}
 		deformedTrack = std::move(Track::doOneRandomDeformation(originalTrack, 5.f));
-		if (Track(deformedTrack).checkIfTrackIsValid())
+		if (Track(deformedTrack).checkIfTrackIsValid(sizeOfValidTrackArea))
 		{
 			originalTrack = deformedTrack;
 		}
@@ -302,7 +302,7 @@ void Track::refreshVertexArray()
 }
 
 
-bool Track::checkIfTrackIsValid() const
+bool Track::checkIfTrackIsValid(sf::Vector2f const & sizeOfValidTrackArea) const
 {
 	//Get Lists Of Lines
 	auto listsOfLines = std::move(this->getListsOfLines());
@@ -312,22 +312,22 @@ bool Track::checkIfTrackIsValid() const
 	//Check if Track is inside its frame
 	for (auto const & line : listOfLines1)
 	{
-		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex1) && mySFML::Comp::smaller(line.vertex1, sf::Vector2f(100.f, 100.f))))
+		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex1) && mySFML::Comp::smaller(line.vertex1, sizeOfValidTrackArea)))
 		{
 			return false;
 		}
-		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex2) && mySFML::Comp::smaller(line.vertex2, sf::Vector2f(100.f, 100.f))))
+		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex2) && mySFML::Comp::smaller(line.vertex2, sizeOfValidTrackArea)))
 		{
 			return false;
 		}
 	}
 	for (auto const & line : listOfLines2)
 	{
-		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex1) && mySFML::Comp::smaller(line.vertex1, sf::Vector2f(100.f, 100.f))))
+		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex1) && mySFML::Comp::smaller(line.vertex1, sizeOfValidTrackArea)))
 		{
 			return false;
 		}
-		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex2) && mySFML::Comp::smaller(line.vertex2, sf::Vector2f(100.f, 100.f))))
+		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex2) && mySFML::Comp::smaller(line.vertex2, sizeOfValidTrackArea)))
 		{
 			return false;
 		}
@@ -516,9 +516,9 @@ std::list<CenterWidthTrackSegment> Track::doOneRandomDeformation(std::list<Cente
 
 
 //Create Random Track
-std::list<CenterWidthTrackSegment> Track::createRandomTrack(unsigned int numberOfDeformations)
+std::list<CenterWidthTrackSegment> Track::createRandomTrack(unsigned int numberOfDeformations, sf::Vector2f const & sizeOfValidTrackArea)
 {
 	Track track(Track::constructCircleTrack(sf::Vector2f(50.f, 50.f), 40.f, 50u, 6.f));
-	track.deformRandomly(numberOfDeformations);
+	track.deformRandomly(numberOfDeformations, sizeOfValidTrackArea);
 	return track.getListOfCenterWidthTrackSegments();
 }
