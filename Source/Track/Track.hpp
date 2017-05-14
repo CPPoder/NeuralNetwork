@@ -50,6 +50,7 @@ public:
 	void loadFromFile(std::string const & path);
 
 	void deformRandomly(unsigned int numberOfDeformations, sf::Vector2f const & sizeOfValidTrackArea);
+	void doubleNumberOfSegments();
 
 private:
 	void refreshVertexArray();

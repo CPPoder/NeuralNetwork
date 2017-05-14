@@ -59,6 +59,10 @@ void RaceSimulation::update(sf::Time const & time, sf::RenderWindow const * rend
 				car.setPosition(mTrack.calculatePositionInTrackNear(car.getPosition()));
 			}
 		}
+		else if (keyInfo.key == sf::Keyboard::Key::D)
+		{
+			mTrack.doubleNumberOfSegments();
+		}
 	}
 }
 

@@ -50,6 +50,7 @@ namespace GameState
 		}
 		else
 		{
+			mWindowAdjusted = true;
 			return std::deque<WindowChange>({ 
 				WindowChange(WindowChange::Type::CHANGE_WINDOW_SIZE, WindowChange::Info(windowSize)),
 				WindowChange(WindowChange::Type::CHANGE_WINDOW_POSITION, WindowChange::Info(sf::Vector2u(), false, sf::Vector2i(50, 50)))

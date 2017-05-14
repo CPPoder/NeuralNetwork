@@ -279,6 +279,34 @@ void Track::deformRandomly(unsigned int numberOfDeformations, sf::Vector2f const
 	std::cout << "Deformation of Track finished!" << std::endl;
 }
 
+//Double the Number of Segments
+void Track::doubleNumberOfSegments()
+{
+	std::cout << "Double the number of Segments...";
+
+	std::list<BorderTrackSegment> newList;
+	std::list<BorderTrackSegment>::const_iterator it1 = mListOfTrackSegments.begin();
+	std::list<BorderTrackSegment>::const_iterator it2 = mListOfTrackSegments.begin();
+	++it2;
+	while (it2 != mListOfTrackSegments.end())
+	{
+		sf::Vector2f newPosL = mySFML::Simple::meanVector(it1->first, it2->first);
+		sf::Vector2f newPosR = mySFML::Simple::meanVector(it1->second, it2->second);
+		newList.push_back(*it1);
+		newList.push_back(std::make_pair(newPosL, newPosR));
+		++it1;
+		++it2;
+	}
+	sf::Vector2f newPosL = mySFML::Simple::meanVector(mListOfTrackSegments.back().first, mListOfTrackSegments.front().first);
+	sf::Vector2f newPosR = mySFML::Simple::meanVector(mListOfTrackSegments.back().second, mListOfTrackSegments.front().second);
+	newList.push_back(mListOfTrackSegments.back());
+	newList.push_back(std::make_pair(newPosL, newPosR));
+
+	this->setTrack(newList);
+
+	std::cout << "Finished!" << std::endl;
+}
+
 
 
 //////////////////////////

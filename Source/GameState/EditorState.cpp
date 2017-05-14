@@ -44,6 +44,7 @@ namespace GameState
 		}
 		else
 		{
+			mWindowAdjusted = true;
 			return std::deque<WindowChange>({ WindowChange(WindowChange::Type::CHANGE_WINDOW_SIZE, WindowChange::Info(windowSize)) });
 		}
 	}
