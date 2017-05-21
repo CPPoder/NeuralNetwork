@@ -14,7 +14,8 @@ Car::Car(sf::Vector2f const & position, sf::Vector2f const & direction, float ve
 	: mPosition(position),
 	  mVelocity(velocity),
 	  mDirection(mySFML::Simple::normalize(direction)),
-	  pBrain(Brain::constructBrain(brainType))
+	  pBrain(Brain::constructBrain(brainType)),
+	  mVelocityText(*mFonts.getFont(mySFML::Class::FontName::ARIAL), mPosition, "", 12u, sf::Color::Red)
 {
 	this->setVertexArray();
 }
@@ -35,6 +36,7 @@ void Car::render(sf::RenderWindow * renderWindow) const
 {
 	renderWindow->draw(mVertexArray);
 	renderWindow->draw(mTiresVertexArray);
+	renderWindow->draw(*mVelocityText.pointer);
 }
 
 void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, RaceSimulation const * raceSimPointer)
@@ -66,9 +68,13 @@ void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, R
 	mGasOrBrakeForce = myMath::Simple::trim(-mMaximalGasOrBrakeForce, mGasOrBrakeForce, mMaximalGasOrBrakeForce);
 	mSteeringWheelAngle = myMath::Simple::trim(-mMaximalSteeringWheelAngle, mSteeringWheelAngle, mMaximalSteeringWheelAngle);
 
+	//Determine Rolling Friction
+	float rollingFrictionValue = mMass * mRollingFrictionCoefficient * 9.81f;
+	sf::Vector2f rollingFriction = rollingFrictionValue * ((mVelocity > 0.f) ? -1.f : 1.f) * mDirection;
+
 	//Determine Total Force
 	float centripetalForce = mMass / mDistanceBetweenFrontAndBackWheels * mVelocity * mVelocity * mSteeringWheelAngle; //Has sign from angle!
-	sf::Vector2f totalForce = mGasOrBrakeForce * mDirection + centripetalForce * mySFML::Create::createOrthogonalVector(mDirection);
+	sf::Vector2f totalForce = mGasOrBrakeForce * mDirection + centripetalForce * mySFML::Create::createOrthogonalVector(mDirection) + rollingFriction;
 
 	//Cut total force to be smaller than friction force
 	float frictionForce = mFrictionCoefficient * mMass * 9.81f;
@@ -81,6 +87,12 @@ void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, R
 	{
 		mDrifting = false;
 	}
+
+	//Add Air Friction Force to total force
+	float constexpr densityOfAir = 1.3f;
+	float airFrictionForceValue = 0.5f * densityOfAir * mAirArea * mCW * mVelocity * mVelocity;
+	sf::Vector2f airFrictionForce = ((mVelocity > 0.f) ? -1.f : 1.f) * airFrictionForceValue * mDirection;
+	totalForce += airFrictionForce;
 
 	//Evolve velocities according to totalForce
 	sf::Vector2f acceleration = totalForce / mMass;
@@ -142,6 +154,11 @@ void Car::setVertexArray()
 	mTiresVertexArray.append(sf::Vertex(leftTirePos + tiresVector, tiresColor));
 	mTiresVertexArray.append(sf::Vertex(rightTirePos - tiresVector, tiresColor));
 	mTiresVertexArray.append(sf::Vertex(rightTirePos + tiresVector, tiresColor));
+
+	//Set Velocity Text
+	mVelocityText.setString(std::to_string(static_cast<int>(mVelocity)));
+	mVelocityText.pointer->setPosition(mPosition + sf::Vector2f(1.f, 1.f));
+	mVelocityText.pointer->setScale(0.4f, 0.4f);
 }
 
 

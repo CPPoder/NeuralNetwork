@@ -26,7 +26,10 @@ private:
 
 	float const mMass = 1000.f;
 	float const mFrictionCoefficient = 1.0f;
+	float const mRollingFrictionCoefficient = 0.015f;
 	float const mDistanceBetweenFrontAndBackWheels = 3.f;
+	float const mAirArea = 5.f;
+	float const mCW = 0.35f;
 
 	bool mDrifting = false;
 
@@ -34,6 +37,9 @@ private:
 
 	sf::VertexArray mVertexArray;
 	sf::VertexArray mTiresVertexArray;
+
+	mySFML::Class::Fonts mFonts;
+	mySFML::Class::Text mVelocityText;
 
 
 public:

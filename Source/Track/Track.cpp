@@ -35,7 +35,7 @@ Track::Track(std::list<BorderTrackSegment> const & listOfTrackSegments, sf::Colo
 
 //Constructor for TrackMiddles and Widths Lists
 Track::Track(std::list<CenterWidthTrackSegment> const & listOfPositionsAndWidths, sf::Color const & color)
-	: Track(std::move(this->convertIntoListOfBorderTrackSegments(listOfPositionsAndWidths)), color)
+	: Track(Track::convertIntoListOfBorderTrackSegments(listOfPositionsAndWidths), color)
 {
 }
 
@@ -98,13 +98,17 @@ std::pair<std::list<Line>, std::list<Line>> Track::getListsOfLines() const
 }
 
 //Get List of CenterWidthTrackSegments
-std::list<CenterWidthTrackSegment> Track::getListOfCenterWidthTrackSegments() const
+std::list<CenterWidthTrackSegment> Track::getListOfCenterWidthTrackSegments() const //Error is in one of the conversion functions!!!
 {
+	std::cout << "Debugging Validity Check a: " << this->checkIfTrackIsValid(sf::Vector2f(400.f, 200.f)) << std::endl;
+	this->saveToFile("./Data/Tracks/debug1.tr");
 	std::list<CenterWidthTrackSegment> list;
 	for (auto segment : mListOfTrackSegments)
 	{
 		list.push_back(std::make_pair(mySFML::Simple::meanVector(segment.first, segment.second), mySFML::Simple::lengthOf(segment.second - segment.first) / 2.f));
 	}
+	std::cout << "Debugging Validity Check b: " << Track(list).checkIfTrackIsValid(sf::Vector2f(400.f, 200.f)) << std::endl;
+	Track(list).saveToFile("./Data/Tracks/debug2.tr");
 	return std::move(list);
 }
 
@@ -256,6 +260,7 @@ void Track::deformRandomly(unsigned int numberOfDeformations, sf::Vector2f const
 {
 	std::cout << "Start Deformation of Track! (Number of Deformations: " << numberOfDeformations << ")" << std::endl;
 	std::list<CenterWidthTrackSegment> originalTrack(std::move(this->getListOfCenterWidthTrackSegments()));
+	std::cout << "Debugging Validity Check 0: " << Track(originalTrack).checkIfTrackIsValid(sizeOfValidTrackArea) << std::endl;
 	std::list<CenterWidthTrackSegment> deformedTrack;
 	int progressStep = 0;
 	int fails = 0;
@@ -277,8 +282,10 @@ void Track::deformRandomly(unsigned int numberOfDeformations, sf::Vector2f const
 			++fails;
 		}
 	}
+	//std::cout << "Debugging Validity Check 1: " << this->checkIfTrackIsValid(sizeOfValidTrackArea) << std::endl;
 	this->setTrack(Track::convertIntoListOfBorderTrackSegments(deformedTrack));
 	std::cout << "Deformation of Track finished! (" << fails << " fails of " << numberOfDeformations << ", Number of Segments: " << mListOfTrackSegments.size() << ")" << std::endl;
+	//std::cout << "Debugging Validity Check 2: " << this->checkIfTrackIsValid(sizeOfValidTrackArea) << std::endl;
 }
 
 //Double the Number of Segments
