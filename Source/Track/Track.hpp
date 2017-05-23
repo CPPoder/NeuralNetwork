@@ -12,34 +12,41 @@
 #include <list>
 #include <string>
 
+#include "Source\Track\BorderTrackBase.hpp"
+#include "Source\Track\CenterTrackBase.hpp"
 
-typedef std::pair<sf::Vector2f, sf::Vector2f> BorderTrackSegment;
-typedef std::pair<sf::Vector2f, float> CenterWidthTrackSegment;
 
 class Car;
 
 class Track
 {
 private:
-	std::list<BorderTrackSegment> mListOfTrackSegments;
+	BorderTrackBase mBorderTrack;
+	sf::FloatRect mFloatRectOfValidTrackArea;
+
 	sf::VertexArray mVertexArrayOfTrack;
 	sf::Color mTrackColor;
 
 public:
-	Track();
-	Track(std::string const & filePath);
-	Track(std::list<BorderTrackSegment> const & listOfTrackSegments, sf::Color const & color = sf::Color::White);
-	Track(std::list<CenterWidthTrackSegment> const & listOfPositionsAndWidths, sf::Color const & color = sf::Color::White);
+	Track() = delete;
+	Track(std::string const & filePath, sf::FloatRect const & validTrackArea);
+	Track(BorderTrackBase const & borderTrackBase, sf::FloatRect const & validTrackArea, sf::Color const & color = sf::Color::White);
+	Track(CenterTrackBase const & centerTrackBase, sf::FloatRect const & validTrackArea, sf::Color const & color = sf::Color::White);
 	Track(Track const &) = default;
 	Track& operator=(Track const &) = default;
 	~Track() = default;
 
-	void setTrack(std::list<BorderTrackSegment> const & listOfTrackSegments);
+	void setTrack(BorderTrackBase const & borderTrackBase, sf::FloatRect const & validTrackArea);
+	void setTrack(CenterTrackBase const & centerTrackBase, sf::FloatRect const & validTrackArea);
 	void setColor(sf::Color const & color);
+	void setValidTrackArea(sf::FloatRect const & floatRectOfValidTrackArea);
 
 	sf::Color getColor() const;
+	sf::FloatRect getValidTrackArea() const;
+	unsigned int getNumberOfSegments() const;
+	BorderTrackBase getBorderTrackBase() const;
+	CenterTrackBase getCenterTrackBase() const;
 	std::pair<std::list<Line>, std::list<Line>> getListsOfLines() const;
-	std::list<CenterWidthTrackSegment> getListOfCenterWidthTrackSegments() const;
 
 	void render(sf::RenderWindow* renderWindow);
 
@@ -49,22 +56,19 @@ public:
 	void saveToFile(std::string const & path) const;
 	void loadFromFile(std::string const & path);
 
-	void deformRandomly(unsigned int numberOfDeformations, sf::Vector2f const & sizeOfValidTrackArea, float deformationStep);
+	void deformRandomly(unsigned int numberOfDeformations, float deformationStep);
+	void doOneRandomDeformation(float deformationStep);
 	void doubleNumberOfSegments();
 
 private:
-	void refreshVertexArray();
+	void refreshState();
 	
 public:
-	bool checkIfTrackIsValid(sf::Vector2f const & sizeOfValidTrackArea) const;
-	
-private:
-	static std::list<BorderTrackSegment> convertIntoListOfBorderTrackSegments(std::list<CenterWidthTrackSegment> const & listOfPositionsAndWidths);
+	bool checkIfTrackIsValid() const;
 
 public:
-	static std::list<CenterWidthTrackSegment> constructCircleTrack(sf::Vector2f const & center, float radius, unsigned int pointCount, float width);
-	static std::list<CenterWidthTrackSegment> doOneRandomDeformation(std::list<CenterWidthTrackSegment> const & listOfPositionsAndWidths, float maximalDeformationLength);
-	static std::list<CenterWidthTrackSegment> createRandomTrack(unsigned int numberOfDeformations, sf::Vector2f const & sizeOfValidTrackArea);
+	static Track constructCircleTrack(sf::Vector2f const & center, float radius, unsigned int pointCount, float width);
+	static Track createRandomTrack(unsigned int numberOfDeformations, sf::Vector2f const & sizeOfValidTrackArea);
 
 };
 

@@ -97,20 +97,6 @@ std::pair<std::list<Line>, std::list<Line>> Track::getListsOfLines() const
 	return std::move(std::make_pair(std::move(listOfLines1), std::move(listOfLines2)));
 }
 
-//Get List of CenterWidthTrackSegments
-std::list<CenterWidthTrackSegment> Track::getListOfCenterWidthTrackSegments() const //Error is in one of the conversion functions!!!
-{
-	std::cout << "Debugging Validity Check a: " << this->checkIfTrackIsValid(sf::Vector2f(400.f, 200.f)) << std::endl;
-	this->saveToFile("./Data/Tracks/debug1.tr");
-	std::list<CenterWidthTrackSegment> list;
-	for (auto segment : mListOfTrackSegments)
-	{
-		list.push_back(std::make_pair(mySFML::Simple::meanVector(segment.first, segment.second), mySFML::Simple::lengthOf(segment.second - segment.first) / 2.f));
-	}
-	std::cout << "Debugging Validity Check b: " << Track(list).checkIfTrackIsValid(sf::Vector2f(400.f, 200.f)) << std::endl;
-	Track(list).saveToFile("./Data/Tracks/debug2.tr");
-	return std::move(list);
-}
 
 
 ////////////////////
@@ -194,6 +180,7 @@ sf::Vector2f Track::calculatePositionInTrackNear(sf::Vector2f const & position) 
 //Save to file
 void Track::saveToFile(std::string const & path) const
 {
+	need to save validArea;
 	std::ofstream fileStream(path, std::ios::trunc);
 	if (fileStream.is_open())
 	{
@@ -222,6 +209,7 @@ void Track::saveToFile(std::string const & path) const
 //Load from File
 void Track::loadFromFile(std::string const & path)
 {
+	need to load valid area;
 	std::ifstream fileStream(path);
 	if (fileStream.is_open())
 	{
@@ -492,49 +480,6 @@ bool Track::checkIfTrackIsValid(sf::Vector2f const & sizeOfValidTrackArea) const
 	return true;
 }
 
-
-/////////////////////////////////
-//Private static intern functions
-
-//Convert List of Positions and Widths into List of Track Segments
-std::list<BorderTrackSegment> Track::convertIntoListOfBorderTrackSegments(std::list<CenterWidthTrackSegment> const & listOfPositionsAndWidths)
-{
-	//Exclude pathological cases
-	if (listOfPositionsAndWidths.empty())
-	{
-		return std::list<BorderTrackSegment>();
-	}
-
-	//Setup
-	std::list<BorderTrackSegment> listOfTrackSegments;
-	std::list<CenterWidthTrackSegment>::const_iterator pairIt = listOfPositionsAndWidths.begin();
-	std::list<CenterWidthTrackSegment>::const_iterator nextIt = pairIt;
-	++nextIt;
-
-	//Construct TrackSegments
-	while (nextIt != listOfPositionsAndWidths.end())
-	{
-		sf::Vector2f pos1 = pairIt->first;
-		sf::Vector2f pos2 = nextIt->first;
-		float width = pairIt->second;
-		sf::Vector2f relVec = pos2 - pos1;
-		sf::Vector2f normalVec = mySFML::Simple::normalize(mySFML::Create::createOrthogonalVector(relVec));
-		listOfTrackSegments.push_back(std::make_pair(pos1 + width * normalVec, pos1 - width * normalVec));
-		++pairIt;
-		++nextIt;
-	}
-
-	//Construct last TrackSegment
-	sf::Vector2f pos1 = pairIt->first;
-	sf::Vector2f pos2 = listOfPositionsAndWidths.front().first;
-	float width = pairIt->second;
-	sf::Vector2f relVec = pos2 - pos1;
-	sf::Vector2f normalVec = mySFML::Simple::normalize(mySFML::Create::createOrthogonalVector(relVec));
-	listOfTrackSegments.push_back(std::make_pair(pos1 + width * normalVec, pos1 - width * normalVec));
-
-	//Return listOfTrackSegments
-	return listOfTrackSegments;
-}
 
 
 /////////////////////////
