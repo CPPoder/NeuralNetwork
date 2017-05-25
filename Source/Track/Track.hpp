@@ -11,6 +11,7 @@
 #include <utility>
 #include <list>
 #include <string>
+#include <functional>
 
 #include "Source\Track\BorderTrackBase.hpp"
 #include "Source\Track\CenterTrackBase.hpp"
@@ -22,14 +23,14 @@ class Track
 {
 private:
 	BorderTrackBase mBorderTrack;
-	sf::FloatRect mFloatRectOfValidTrackArea;
+	sf::FloatRect mValidTrackArea;
 
 	sf::VertexArray mVertexArrayOfTrack;
 	sf::Color mTrackColor;
 
 public:
 	Track() = delete;
-	Track(std::string const & filePath, sf::FloatRect const & validTrackArea);
+	Track(std::string const & filePath);
 	Track(BorderTrackBase const & borderTrackBase, sf::FloatRect const & validTrackArea, sf::Color const & color = sf::Color::White);
 	Track(CenterTrackBase const & centerTrackBase, sf::FloatRect const & validTrackArea, sf::Color const & color = sf::Color::White);
 	Track(Track const &) = default;

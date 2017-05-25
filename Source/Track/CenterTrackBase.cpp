@@ -48,3 +48,13 @@ BorderTrackBase CenterTrackBase::getBorderTrackBase() const
 	return BorderTrackBase(listOfBorderTrackSegments);
 }
 
+
+std::list<CenterTrackSegment> const & CenterTrackBase::getListOfCenterTrackSegments() const
+{
+	return mListOfCenterTrackSegments;
+}
+void CenterTrackBase::setListOfCenterTrackSegments(std::list<CenterTrackSegment> const & listOfCenterTrackSegments)
+{
+	mListOfCenterTrackSegments = listOfCenterTrackSegments;
+}
+

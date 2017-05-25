@@ -13,30 +13,25 @@
 //////////////
 //Constructors
 
-//Default Constructor
-Track::Track()
-	: Track(std::list<BorderTrackSegment>())
-{
-}
 
 //Constructor from File
 Track::Track(std::string const & filePath)
-	: Track()
 {
 	this->loadFromFile(filePath);
 }
 
-//Constructor for TrackSegment Lists
-Track::Track(std::list<BorderTrackSegment> const & listOfTrackSegments, sf::Color const & color)
-	: mTrackColor(color)
+//Constructor from BorderTrackBase
+Track::Track(BorderTrackBase const & borderTrackBase, sf::FloatRect const & validTrackArea, sf::Color const & color = sf::Color::White)
 {
-	this->setTrack(listOfTrackSegments);
+	this->setTrack(borderTrackBase, validTrackArea);
+	this->setColor(color);
 }
 
-//Constructor for TrackMiddles and Widths Lists
-Track::Track(std::list<CenterWidthTrackSegment> const & listOfPositionsAndWidths, sf::Color const & color)
-	: Track(Track::convertIntoListOfBorderTrackSegments(listOfPositionsAndWidths), color)
+//Constructor from CenterTrackBase
+Track::Track(CenterTrackBase const & centerTrackBase, sf::FloatRect const & validTrackArea, sf::Color const & color = sf::Color::White)
 {
+	this->setTrack(centerTrackBase, validTrackArea);
+	this->setColor(color);
 }
 
 
@@ -53,57 +48,96 @@ void Track::render(sf::RenderWindow* renderWindow)
 ////////
 //Setter
 
-//Set Track
-void Track::setTrack(std::list<BorderTrackSegment> const & listOfTrackSegments)
+void Track::setTrack(BorderTrackBase const & borderTrackBase, sf::FloatRect const & validTrackArea)
 {
-	mListOfTrackSegments = listOfTrackSegments;
-	//std::cout << "Check for validity of the track: " << this->checkIfTrackIsValid() << std::endl;
-	this->refreshVertexArray();
+	mBorderTrack = borderTrackBase;
+	mValidTrackArea = validTrackArea;
+	this->refreshState();
 }
 
-//Set Color
+void Track::setTrack(CenterTrackBase const & centerTrackBase, sf::FloatRect const & validTrackArea)
+{
+	mBorderTrack = centerTrackBase.getBorderTrackBase();
+	mValidTrackArea = validTrackArea;
+	this->refreshState();
+}
+
 void Track::setColor(sf::Color const & color)
 {
 	mTrackColor = color;
-	this->refreshVertexArray();
+	this->refreshState();
 }
+
+void Track::setValidTrackArea(sf::FloatRect const & floatRectOfValidTrackArea)
+{
+	mValidTrackArea = floatRectOfValidTrackArea;
+}
+
 
 
 ////////
 //Getter
 
-//Get Color
 sf::Color Track::getColor() const
 {
 	return mTrackColor;
 }
 
-//Get Lists of Lines
+sf::FloatRect Track::getValidTrackArea() const
+{
+	return mValidTrackArea;
+}
+
+unsigned int Track::getNumberOfSegments() const
+{
+	return mBorderTrack.getListOfBorderTrackSegments().size();
+}
+
+BorderTrackBase Track::getBorderTrackBase() const
+{
+	return mBorderTrack;
+}
+
+CenterTrackBase Track::getCenterTrackBase() const
+{
+	return mBorderTrack.getCenterTrackBase();
+}
+
 std::pair<std::list<Line>, std::list<Line>> Track::getListsOfLines() const
 {
-	std::list<Line> listOfLines1;
-	std::list<Line> listOfLines2;
-	std::list<BorderTrackSegment>::const_iterator trackSegmentIt1 = mListOfTrackSegments.begin();
-	std::list<BorderTrackSegment>::const_iterator trackSegmentIt2 = ++mListOfTrackSegments.begin();
-	while (trackSegmentIt2 != mListOfTrackSegments.end())
+	//Define Task
+	std::function<std::pair<Line, Line>(CenterTrackSegment const &, CenterTrackSegment const &)> linePairGetter = 
+		[](CenterTrackSegment const & segment1, CenterTrackSegment const & segment2) -> std::pair<Line, Line>
 	{
-		listOfLines1.push_back(Line(trackSegmentIt1->first, trackSegmentIt2->first));
-		listOfLines2.push_back(Line(trackSegmentIt1->second, trackSegmentIt2->second));
-		++trackSegmentIt1;
-		++trackSegmentIt2;
+		return std::make_pair(Line(segment1.first, segment2.first), Line(segment1.second, segment2.second));
+	};
+
+	//Use Task for all Sectors
+	std::list<std::pair<Line, Line>> listOfLinePairs = mBorderTrack.calculateForAllSectorsAndPutIntoList(linePairGetter);
+
+	//Transform listOfPairs into pairOfLists
+	std::list<Line> leftLines;
+	std::list<Line> rightLines;
+	for (auto const & linePair : listOfLinePairs)
+	{
+		leftLines.push_back(linePair.first);
+		rightLines.push_back(linePair.second);
 	}
-	listOfLines1.push_back(Line(trackSegmentIt1->first, mListOfTrackSegments.front().first));
-	listOfLines2.push_back(Line(trackSegmentIt1->second, mListOfTrackSegments.front().second));
-	return std::move(std::make_pair(std::move(listOfLines1), std::move(listOfLines2)));
+
+	//Return Result
+	return std::make_pair(std::move(leftLines), std::move(rightLines));
 }
+
 
 
 
 ////////////////////
 //Collision Checking
 
+//Check for Collision with Car
 bool Track::checkCollisionWith(Car const & car) const
 {
+	//Get Array of Car Lines
 	sf::VertexArray const & carVertexArray = car.getVertexArrayReference();
 	std::array<Line, 4u> arrayOfCarLines{
 		Line(carVertexArray[0].position, carVertexArray[1].position),
@@ -111,41 +145,35 @@ bool Track::checkCollisionWith(Car const & car) const
 		Line(carVertexArray[2].position, carVertexArray[3].position),
 		Line(carVertexArray[3].position, carVertexArray[0].position)
 	};
-	std::list<BorderTrackSegment>::const_iterator trackSegIt1 = mListOfTrackSegments.begin();
-	std::list<BorderTrackSegment>::const_iterator trackSegIt2 = ++mListOfTrackSegments.begin();
-	while (trackSegIt2 != mListOfTrackSegments.end())
+
+	//Get List of Track Lines
+	std::pair<std::list<Line>, std::list<Line>> pairOfLineLists = this->getListsOfLines();
+	std::list<Line> listOfTrackLines1 = pairOfLineLists.first;
+	std::list<Line> listOfTrackLines2 = pairOfLineLists.second;
+
+	//Check for Intersections
+	for (auto const & carLine : arrayOfCarLines)
 	{
-		Line line1(trackSegIt1->first, trackSegIt2->first);
-		Line line2(trackSegIt1->second, trackSegIt2->second);
-		for (auto const & line : arrayOfCarLines)
+		for (auto const & trackLine : listOfTrackLines1)
 		{
-			if (line1.intersects(line))
-			{
-				return true;
-			}
-			if (line2.intersects(line))
+			if (carLine.intersects(trackLine))
 			{
 				return true;
 			}
 		}
-		++trackSegIt1;
-		++trackSegIt2;
-	}
-	Line line1(trackSegIt1->first, mListOfTrackSegments.begin()->first);
-	Line line2(trackSegIt1->second, mListOfTrackSegments.begin()->second);
-	for (auto const & line : arrayOfCarLines)
-	{
-		if (line1.intersects(line))
+		for (auto const & trackLine : listOfTrackLines2)
 		{
-			return true;
-		}
-		if (line2.intersects(line))
-		{
-			return true;
+			if (carLine.intersects(trackLine))
+			{
+				return true;
+			}
 		}
 	}
 	return false;
 }
+
+
+
 
 //////////////////////////////////////////////////////////////
 //Calculate Position inside the Track that is near to position
@@ -155,10 +183,10 @@ sf::Vector2f Track::calculatePositionInTrackNear(sf::Vector2f const & position) 
 	sf::Vector2f nearestPosition;
 	float dist;
 	bool firstSegment = true;
-	for (auto const & segment : mListOfTrackSegments)
+	for (auto const & segment : mBorderTrack.getCenterTrackBase().getListOfCenterTrackSegments())
 	{
-		sf::Vector2f newPos = mySFML::Simple::meanVector(segment.first, segment.second);
-		float newDist = mySFML::Simple::lengthOf(newPos - position);
+		sf::Vector2f newPos = segment.first;
+		float newDist = mySFML::Simple::lengthOf(segment.second);
 		if (firstSegment)
 		{
 			firstSegment = false;
@@ -174,70 +202,127 @@ sf::Vector2f Track::calculatePositionInTrackNear(sf::Vector2f const & position) 
 	return nearestPosition;
 }
 
+
+
+
 //////////////////////////////
 //Save or Load to or from File
 
 //Save to file
 void Track::saveToFile(std::string const & path) const
 {
-	need to save validArea;
 	std::ofstream fileStream(path, std::ios::trunc);
 	if (fileStream.is_open())
 	{
 		std::cout << "Saving Track File: \"" << path << "\"...";
 
-		bool firstLine = true;
-		for (auto segment : mListOfTrackSegments)
-		{
-			if (!firstLine)
-			{
-				fileStream << std::endl;
-			}
-			firstLine = false;
-			fileStream << segment.first.x << "\t" << segment.first.y << "\t" << segment.second.x << "\t" << segment.second.y;
-		}
+		fileStream << "<BorderTrackBase:Begin>" << std::endl;
+		fileStream << mBorderTrack;
+		fileStream << "<BorderTrackBase:End>" << std::endl;
+
+		fileStream << "<ValidTrackArea:Begin>" << std::endl;
+		fileStream << mValidTrackArea.left << '\t' << mValidTrackArea.top << '\t' << mValidTrackArea.width << '\t' << mValidTrackArea.height << std::endl;
+		fileStream << "<ValidTrackArea:End>" << std::endl;
 
 		fileStream.close();
 		std::cout << "Complete!" << std::endl;
 	}
 	else
 	{
-		std::cout << "Saving Track File...Failed to open File: " << path << std::endl;
+		std::cout << "Saving Track File...Failed to open File: \"" << path << "\"!" << std::endl;
 	}
 }
 
 //Load from File
 void Track::loadFromFile(std::string const & path)
 {
-	need to load valid area;
 	std::ifstream fileStream(path);
 	if (fileStream.is_open())
 	{
 		std::cout << "Load Track File: \"" << path << "\"...";
 
+		//Extract Lines
 		std::list<std::string> listOfLines;
 		std::string getLine;
 		while (std::getline(fileStream, getLine))
 		{
 			listOfLines.push_back(getLine);
 		}
+
+		//Cut into different parts
+		std::function<std::list<std::string>(std::list<std::string> const &, std::string const &)> extractPart = 
+			[](std::list<std::string> const & listOfLines, std::string const & part) -> std::list<std::string>
+		{
+			std::list<std::string> listOfLinesInPart;
+			bool foundPartBeginMarker = false;
+			for (std::list<std::string>::const_iterator it = listOfLines.begin(); it != listOfLines.end(); ++it)
+			{
+				if (foundPartBeginMarker)
+				{
+					listOfLinesInPart.push_back(*it);
+				}
+				if (*it == "<" + part + ":Begin>")
+				{
+					foundPartBeginMarker = true;
+				}
+				if (*it == "<" + part + ":End>")
+				{
+					break;
+				}
+			}
+			if (!foundPartBeginMarker)
+			{
+				std::cout << "Error! Part Name \"" + part + "\" was not found!" << std::endl;
+				return std::list<std::string>();
+			}
+			return std::move(listOfLinesInPart);
+		};
+
+		std::list<std::string> listOfBorderTrackBaseLines = extractPart(listOfLines, "BorderTrackBase");
+		std::list<std::string> listOfValidTrackAreaLines = extractPart(listOfLines, "ValidTrackArea");
+		if (listOfBorderTrackBaseLines.empty() || listOfValidTrackAreaLines.empty())
+		{
+			std::cout << "Error! Format incorrect! Failed to load File!" << std::endl;
+			return;
+		}
+
+		//Extract data from listOfBorderTrackBaseLines
 		float x1, y1, x2, y2;
 		std::list<BorderTrackSegment> listOfBorderTrackSegments;
-		for (auto const & line : listOfLines)
+		for (auto const & line : listOfBorderTrackBaseLines)
 		{
 			std::stringstream sstream(line);
 			sstream >> x1 >> y1 >> x2 >> y2;
 			listOfBorderTrackSegments.push_back(std::make_pair(sf::Vector2f(x1, y1), sf::Vector2f(x2, y2)));
 		}
+		BorderTrackBase borderTrackBase(listOfBorderTrackSegments);
+
+		//Extract data from listOfValidTrackAreaLines
+		float x, y, w, h;
+		std::string validTrackAreaString;
+		if (listOfValidTrackAreaLines.size() == 1u)
+		{
+			validTrackAreaString = listOfValidTrackAreaLines.front();
+		}
+		else
+		{
+			std::cout << "Error! Format incorrect! Failed to load File!" << std::endl;
+			return;
+		}
+		std::stringstream sstream(validTrackAreaString);
+		sstream >> x >> y >> w >> h;
+		sf::FloatRect validArea(x, y, w, h);
 		
+		//Close File Stream
 		fileStream.close();
 
-		this->setTrack(listOfBorderTrackSegments);
+		//Set State
+		this->setTrack(borderTrackBase, validArea);
 		std::cout << "Complete!" << std::endl;
 	}
 	else
 	{
-		std::cout << "Load Track File...Failed to open File: " << path << std::endl;
+		std::cout << "Load Track File...Failed to open File: \"" << path << "\"!" << std::endl;
 	}
 }
 

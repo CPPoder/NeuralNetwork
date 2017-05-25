@@ -46,3 +46,24 @@ CenterTrackBase BorderTrackBase::getCenterTrackBase() const
 	return CenterTrackBase(listOfCenterTrackSegments);
 }
 
+
+std::list<BorderTrackSegment> const & BorderTrackBase::getListOfBorderTrackSegments() const
+{
+	return mListOfBorderTrackSegments;
+}
+void BorderTrackBase::setListOfBorderTrackSegments(std::list<BorderTrackSegment> const & listOfBorderTrackSegments)
+{
+	mListOfBorderTrackSegments = listOfBorderTrackSegments;
+}
+
+
+
+std::ostream& operator<<(std::ostream & stream, BorderTrackBase const & borderTrackBase)
+{
+	for (auto const & borderTrackSegment : borderTrackBase.mListOfBorderTrackSegments)
+	{
+		stream << borderTrackSegment.first.x << '\t' << borderTrackSegment.first.y << '\t' << borderTrackSegment.second.x << '\t' << borderTrackSegment.second.y << std::endl;
+	}
+	return stream;
+}
+

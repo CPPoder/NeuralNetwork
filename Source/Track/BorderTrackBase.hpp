@@ -7,9 +7,11 @@
 #include <list>
 #include <utility>
 #include <functional>
+#include <iostream>
 
 
 class CenterTrackBase;
+class Track;
 
 
 typedef std::pair<sf::Vector2f, sf::Vector2f> BorderTrackSegment;
@@ -29,6 +31,10 @@ public:
 
 
 	CenterTrackBase getCenterTrackBase() const;
+
+	std::list<BorderTrackSegment> const & getListOfBorderTrackSegments() const;
+	void setListOfBorderTrackSegments(std::list<BorderTrackSegment> const & listOfBorderTrackSegments);
+
 
 	BorderTrackBase& doForAllSectors(std::function<void(BorderTrackSegment &, BorderTrackSegment &)> task);
 
@@ -52,9 +58,12 @@ public:
 		return list;
 	}
 
-
+	friend std::ostream& operator<<(std::ostream & stream, BorderTrackBase const & borderTrackBase);
 
 };
+
+
+std::ostream& operator<<(std::ostream & stream, BorderTrackBase const & borderTrackBase);
 
 
 

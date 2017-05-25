@@ -9,6 +9,7 @@
 
 
 class BorderTrackBase;
+class Track;
 
 
 typedef std::pair<sf::Vector2f, sf::Vector2f> CenterTrackSegment;
@@ -28,6 +29,11 @@ public:
 
 
 	BorderTrackBase getBorderTrackBase() const;
+
+
+	std::list<CenterTrackSegment> const & getListOfCenterTrackSegments() const;
+	void setListOfCenterTrackSegments(std::list<CenterTrackSegment> const & listOfCenterTrackSegments);
+	
 
 	CenterTrackBase& doForAllSectors(std::function<void(CenterTrackSegment &, CenterTrackSegment &)> task);
 
