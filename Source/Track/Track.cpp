@@ -13,22 +13,22 @@
 //////////////
 //Constructors
 
-
 //Constructor from File
 Track::Track(std::string const & filePath)
 {
 	this->loadFromFile(filePath);
+	this->setColor(sf::Color::White);
 }
 
 //Constructor from BorderTrackBase
-Track::Track(BorderTrackBase const & borderTrackBase, sf::FloatRect const & validTrackArea, sf::Color const & color = sf::Color::White)
+Track::Track(BorderTrackBase const & borderTrackBase, sf::FloatRect const & validTrackArea, sf::Color const & color)
 {
 	this->setTrack(borderTrackBase, validTrackArea);
 	this->setColor(color);
 }
 
 //Constructor from CenterTrackBase
-Track::Track(CenterTrackBase const & centerTrackBase, sf::FloatRect const & validTrackArea, sf::Color const & color = sf::Color::White)
+Track::Track(CenterTrackBase const & centerTrackBase, sf::FloatRect const & validTrackArea, sf::Color const & color)
 {
 	this->setTrack(centerTrackBase, validTrackArea);
 	this->setColor(color);
@@ -183,7 +183,9 @@ sf::Vector2f Track::calculatePositionInTrackNear(sf::Vector2f const & position) 
 	sf::Vector2f nearestPosition;
 	float dist;
 	bool firstSegment = true;
-	for (auto const & segment : mBorderTrack.getCenterTrackBase().getListOfCenterTrackSegments())
+	CenterTrackBase centerTrackBase(mBorderTrack.getCenterTrackBase());
+	std::list<CenterTrackSegment> const & listOfCenterTrackSegments = centerTrackBase.getListOfCenterTrackSegments();
+	for (auto const & segment : listOfCenterTrackSegments)
 	{
 		sf::Vector2f newPos = segment.first;
 		float newDist = mySFML::Simple::lengthOf(segment.second);
@@ -257,6 +259,10 @@ void Track::loadFromFile(std::string const & path)
 			bool foundPartBeginMarker = false;
 			for (std::list<std::string>::const_iterator it = listOfLines.begin(); it != listOfLines.end(); ++it)
 			{
+				if (*it == "<" + part + ":End>")
+				{
+					break;
+				}
 				if (foundPartBeginMarker)
 				{
 					listOfLinesInPart.push_back(*it);
@@ -264,10 +270,6 @@ void Track::loadFromFile(std::string const & path)
 				if (*it == "<" + part + ":Begin>")
 				{
 					foundPartBeginMarker = true;
-				}
-				if (*it == "<" + part + ":End>")
-				{
-					break;
 				}
 			}
 			if (!foundPartBeginMarker)
@@ -329,12 +331,11 @@ void Track::loadFromFile(std::string const & path)
 
 
 //Deform Track
-void Track::deformRandomly(unsigned int numberOfDeformations, sf::Vector2f const & sizeOfValidTrackArea, float deformationStep)
+void Track::deformRandomly(unsigned int numberOfDeformations, float deformationStep)
 {
 	std::cout << "Start Deformation of Track! (Number of Deformations: " << numberOfDeformations << ")" << std::endl;
-	std::list<CenterWidthTrackSegment> originalTrack(std::move(this->getListOfCenterWidthTrackSegments()));
-	std::cout << "Debugging Validity Check 0: " << Track(originalTrack).checkIfTrackIsValid(sizeOfValidTrackArea) << std::endl;
-	std::list<CenterWidthTrackSegment> deformedTrack;
+	Track originalTrack(*this);
+	Track deformedTrack(originalTrack);
 	int progressStep = 0;
 	int fails = 0;
 	for (unsigned int i = 0; i < numberOfDeformations; ++i)
@@ -344,8 +345,8 @@ void Track::deformRandomly(unsigned int numberOfDeformations, sf::Vector2f const
 			progressStep += 1;
 			std::cout << "Create Track! Progress: " << progressStep << " %" << std::endl;
 		}
-		deformedTrack = std::move(Track::doOneRandomDeformation(originalTrack, deformationStep));
-		if (Track(deformedTrack).checkIfTrackIsValid(sizeOfValidTrackArea))
+		deformedTrack.doOneRandomDeformation(deformationStep);
+		if (deformedTrack.checkIfTrackIsValid())
 		{
 			originalTrack = deformedTrack;
 		}
@@ -355,23 +356,38 @@ void Track::deformRandomly(unsigned int numberOfDeformations, sf::Vector2f const
 			++fails;
 		}
 	}
-	//std::cout << "Debugging Validity Check 1: " << this->checkIfTrackIsValid(sizeOfValidTrackArea) << std::endl;
-	this->setTrack(Track::convertIntoListOfBorderTrackSegments(deformedTrack));
-	std::cout << "Deformation of Track finished! (" << fails << " fails of " << numberOfDeformations << ", Number of Segments: " << mListOfTrackSegments.size() << ")" << std::endl;
-	//std::cout << "Debugging Validity Check 2: " << this->checkIfTrackIsValid(sizeOfValidTrackArea) << std::endl;
+	*this = deformedTrack;
+	std::cout << "Deformation of Track finished! (" << fails << " fails of " << numberOfDeformations << ", Number of Segments: " << this->getNumberOfSegments() << ")" << std::endl;
+}
+
+//Do one Random Deformation
+void Track::doOneRandomDeformation(float deformationLength)
+{
+	CenterTrackBase centerTrackBase = this->getCenterTrackBase();
+	unsigned int numberOfSegments = this->getNumberOfSegments();
+	unsigned int randomSegment = myMath::Rand::randIntervali(0, numberOfSegments - 1);
+	sf::Vector2f randomDeformation = sf::Vector2f(myMath::Rand::randIntervalf(-100, 100) / 100.f * deformationLength, myMath::Rand::randIntervalf(-100, 100) / 100.f * deformationLength);
+	CenterTrackBase::iterator it = centerTrackBase.begin();
+	std::advance(it, randomSegment);
+	it->first += randomDeformation;
+	centerTrackBase.setRelativeVectorsOrthogonal();
+	this->setTrack(centerTrackBase, mValidTrackArea);
 }
 
 //Double the Number of Segments
 void Track::doubleNumberOfSegments()
 {
-	unsigned int size = mListOfTrackSegments.size();
+	unsigned int size = this->getNumberOfSegments();
 	std::cout << "Double the number of Segments from " << size << " to "  << 2 * size << "...";
 
 	std::list<BorderTrackSegment> newList;
-	std::list<BorderTrackSegment>::const_iterator it1 = mListOfTrackSegments.begin();
-	std::list<BorderTrackSegment>::const_iterator it2 = mListOfTrackSegments.begin();
+	std::list<BorderTrackSegment> const & oldList = mBorderTrack.getListOfBorderTrackSegments();
+	
+	std::list<BorderTrackSegment>::const_iterator it1 = oldList.begin();
+	std::list<BorderTrackSegment>::const_iterator it2 = it1;
 	++it2;
-	while (it2 != mListOfTrackSegments.end())
+
+	while (it2 != oldList.end())
 	{
 		sf::Vector2f newPosL = mySFML::Simple::meanVector(it1->first, it2->first);
 		sf::Vector2f newPosR = mySFML::Simple::meanVector(it1->second, it2->second);
@@ -380,12 +396,13 @@ void Track::doubleNumberOfSegments()
 		++it1;
 		++it2;
 	}
-	sf::Vector2f newPosL = mySFML::Simple::meanVector(mListOfTrackSegments.back().first, mListOfTrackSegments.front().first);
-	sf::Vector2f newPosR = mySFML::Simple::meanVector(mListOfTrackSegments.back().second, mListOfTrackSegments.front().second);
-	newList.push_back(mListOfTrackSegments.back());
+	sf::Vector2f newPosL = mySFML::Simple::meanVector(oldList.back().first, oldList.front().first);
+	sf::Vector2f newPosR = mySFML::Simple::meanVector(oldList.back().second, oldList.front().second);
+	newList.push_back(oldList.back());
 	newList.push_back(std::make_pair(newPosL, newPosR));
 
-	this->setTrack(newList);
+	BorderTrackBase newBorderTrackBase(newList);
+	this->setTrack(newBorderTrackBase, mValidTrackArea);
 
 	std::cout << "Finished!" << std::endl;
 }
@@ -396,24 +413,24 @@ void Track::doubleNumberOfSegments()
 //Private intern functions
 
 //Refresh VertexArray
-void Track::refreshVertexArray()
+void Track::refreshState()
 {
 	mVertexArrayOfTrack.setPrimitiveType(sf::PrimitiveType::TriangleStrip);
 	mVertexArrayOfTrack.clear();
-	for (auto trackSegment : mListOfTrackSegments)
+	for (auto const & trackSegment : mBorderTrack.getListOfBorderTrackSegments())
 	{
 		mVertexArrayOfTrack.append(sf::Vertex(trackSegment.first, mTrackColor));
 		mVertexArrayOfTrack.append(sf::Vertex(trackSegment.second, mTrackColor));
 	}
-	if (!mListOfTrackSegments.empty())
+	if (!mBorderTrack.getListOfBorderTrackSegments().empty())
 	{
-		mVertexArrayOfTrack.append(sf::Vertex(mListOfTrackSegments.front().first, mTrackColor));
-		mVertexArrayOfTrack.append(sf::Vertex(mListOfTrackSegments.front().second, mTrackColor));
+		mVertexArrayOfTrack.append(sf::Vertex(mBorderTrack.getListOfBorderTrackSegments().front().first, mTrackColor));
+		mVertexArrayOfTrack.append(sf::Vertex(mBorderTrack.getListOfBorderTrackSegments().front().second, mTrackColor));
 	}
 }
 
 
-bool Track::checkIfTrackIsValid(sf::Vector2f const & sizeOfValidTrackArea) const
+bool Track::checkIfTrackIsValid() const
 {
 	//Get Lists Of Lines
 	auto listsOfLines = std::move(this->getListsOfLines());
@@ -421,14 +438,16 @@ bool Track::checkIfTrackIsValid(sf::Vector2f const & sizeOfValidTrackArea) const
 	std::list<Line> listOfLines2 = std::move(listsOfLines.second);
 
 	//Check if Track is inside its frame
+	sf::Vector2f const validTrackAreaOrigin = sf::Vector2f(mValidTrackArea.left, mValidTrackArea.top);
+	sf::Vector2f const validTrackAreaEnd = validTrackAreaOrigin + sf::Vector2f(mValidTrackArea.width, mValidTrackArea.height);
 	for (auto const & line : listOfLines1)
 	{
-		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex1) && mySFML::Comp::smaller(line.vertex1, sizeOfValidTrackArea)))
+		if (!(mySFML::Comp::smaller(validTrackAreaOrigin, line.vertex1) && mySFML::Comp::smaller(line.vertex1, validTrackAreaEnd)))
 		{
 			//std::cout << "Fail 1!" << std::endl;
 			return false;
 		}
-		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex2) && mySFML::Comp::smaller(line.vertex2, sizeOfValidTrackArea)))
+		if (!(mySFML::Comp::smaller(validTrackAreaOrigin, line.vertex2) && mySFML::Comp::smaller(line.vertex2, validTrackAreaEnd)))
 		{
 			//std::cout << "Fail 2!" << std::endl;
 			return false;
@@ -436,12 +455,12 @@ bool Track::checkIfTrackIsValid(sf::Vector2f const & sizeOfValidTrackArea) const
 	}
 	for (auto const & line : listOfLines2)
 	{
-		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex1) && mySFML::Comp::smaller(line.vertex1, sizeOfValidTrackArea)))
+		if (!(mySFML::Comp::smaller(validTrackAreaOrigin, line.vertex1) && mySFML::Comp::smaller(line.vertex1, validTrackAreaEnd)))
 		{
 			//std::cout << "Fail 3!" << std::endl;
 			return false;
 		}
-		if (!(mySFML::Comp::smaller(sf::Vector2f(0.f, 0.f), line.vertex2) && mySFML::Comp::smaller(line.vertex2, sizeOfValidTrackArea)))
+		if (!(mySFML::Comp::smaller(validTrackAreaOrigin, line.vertex2) && mySFML::Comp::smaller(line.vertex2, validTrackAreaEnd)))
 		{
 			//std::cout << "Fail 4!" << std::endl;
 			return false;
@@ -571,37 +590,16 @@ bool Track::checkIfTrackIsValid(sf::Vector2f const & sizeOfValidTrackArea) const
 //Public static functions
 
 //Construct Circle Track
-std::list<CenterWidthTrackSegment> Track::constructCircleTrack(sf::Vector2f const & center, float radius, unsigned int pointCount, float width)
+Track Track::constructCircleTrack(sf::Vector2f const & center, float radius, unsigned int pointCount, float width, sf::FloatRect const & validTrackArea)
 {
 	std::cout << "Construct Circle Track...";
-	std::list<CenterWidthTrackSegment> list;
+	std::list<CenterTrackSegment> list;
 	for (unsigned int i = 0; i < pointCount; ++i)
 	{
-		list.push_back(std::make_pair(radius * mySFML::Create::createNormalVectorWithAngle(static_cast<float>(i) / (pointCount + 1u) * 2.f * myMath::Const::PIf) + center, width));
+		float angle = static_cast<float>(i) / (pointCount + 1u) * 2.f * myMath::Const::PIf;
+		list.push_back(std::make_pair(radius * mySFML::Create::createNormalVectorWithAngle(angle) + center, width * mySFML::Create::createNormalVectorWithAngle(angle + myMath::Const::PIf / 2.f)));
 	}
 
 	std::cout << "Finished!" << std::endl;
-	return std::move(list);
-}
-
-//Randomly deform Track
-std::list<CenterWidthTrackSegment> Track::doOneRandomDeformation(std::list<CenterWidthTrackSegment> const & listOfPositionsAndWidths, float maximalDeformationLength)
-{
-	std::list<CenterWidthTrackSegment> deformedTrack(listOfPositionsAndWidths);
-	unsigned int size = deformedTrack.size();
-	unsigned int randomNumber = myMath::Rand::randIntervali(0, size - 1);
-	sf::Vector2f randomDeformation = sf::Vector2f(myMath::Rand::randIntervalf(-100, 100) / 100.f * maximalDeformationLength, myMath::Rand::randIntervalf(-100, 100) / 100.f * maximalDeformationLength);
-	std::list<CenterWidthTrackSegment>::iterator it = deformedTrack.begin();
-	std::advance(it, randomNumber);
-	it->first += randomDeformation;
-	return std::move(deformedTrack);
-}
-
-
-//Create Random Track
-std::list<CenterWidthTrackSegment> Track::createRandomTrack(unsigned int numberOfDeformations, sf::Vector2f const & sizeOfValidTrackArea)
-{
-	Track track(Track::constructCircleTrack(sf::Vector2f(50.f, 50.f), 40.f, 50u, 6.f));
-	track.deformRandomly(numberOfDeformations, sizeOfValidTrackArea, 0.1f);
-	return track.getListOfCenterWidthTrackSegments();
+	return Track(BorderTrackBase(list), validTrackArea);
 }

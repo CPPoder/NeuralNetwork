@@ -29,6 +29,10 @@ public:
 
 	BorderTrackBase(std::list<BorderTrackSegment> const & listOfBorderTrackSegments);
 
+	typedef std::list<BorderTrackSegment>::iterator iterator;
+	typedef std::list<BorderTrackSegment>::const_iterator const_iterator;
+	iterator begin() { return mListOfBorderTrackSegments.begin(); }
+	iterator end() { return mListOfBorderTrackSegments.end(); }
 
 	CenterTrackBase getCenterTrackBase() const;
 

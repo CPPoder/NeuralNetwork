@@ -6,6 +6,7 @@
 
 #include <list>
 #include <utility>
+#include <functional>
 
 
 class BorderTrackBase;
@@ -26,6 +27,11 @@ public:
 	CenterTrackBase& operator=(CenterTrackBase const &) = default;
 
 	CenterTrackBase(std::list<CenterTrackSegment> const & listOfCenterTrackSegments);
+
+	typedef std::list<CenterTrackSegment>::iterator iterator;
+	typedef std::list<CenterTrackSegment>::const_iterator const_iterator;
+	iterator begin() { return mListOfCenterTrackSegments.begin(); }
+	iterator end() { return mListOfCenterTrackSegments.end(); }
 
 
 	BorderTrackBase getBorderTrackBase() const;
@@ -56,6 +62,8 @@ public:
 		}
 		return list;
 	}
+
+	void setRelativeVectorsOrthogonal();
 
 
 };

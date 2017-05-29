@@ -58,7 +58,7 @@ public:
 	void loadFromFile(std::string const & path);
 
 	void deformRandomly(unsigned int numberOfDeformations, float deformationStep);
-	void doOneRandomDeformation(float deformationStep);
+	void doOneRandomDeformation(float deformationLength);
 	void doubleNumberOfSegments();
 
 private:
@@ -68,8 +68,7 @@ public:
 	bool checkIfTrackIsValid() const;
 
 public:
-	static Track constructCircleTrack(sf::Vector2f const & center, float radius, unsigned int pointCount, float width);
-	static Track createRandomTrack(unsigned int numberOfDeformations, sf::Vector2f const & sizeOfValidTrackArea);
+	static Track constructCircleTrack(sf::Vector2f const & center, float radius, unsigned int pointCount, float width, sf::FloatRect const & validTrackArea);
 
 };
 

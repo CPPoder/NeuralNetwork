@@ -58,3 +58,39 @@ void CenterTrackBase::setListOfCenterTrackSegments(std::list<CenterTrackSegment>
 	mListOfCenterTrackSegments = listOfCenterTrackSegments;
 }
 
+void CenterTrackBase::setRelativeVectorsOrthogonal()
+{
+	std::function<std::list<CenterTrackSegment>::iterator(std::list<CenterTrackSegment>::iterator)> getNextIterator =
+		[this](std::list<CenterTrackSegment>::iterator it) -> std::list<CenterTrackSegment>::iterator
+	{
+		if (++it != mListOfCenterTrackSegments.end())
+		{
+			it = mListOfCenterTrackSegments.begin();
+		}
+		return it;
+	};
+
+	std::function<std::list<CenterTrackSegment>::iterator(std::list<CenterTrackSegment>::iterator)> getPreviousIterator =
+		[this](std::list<CenterTrackSegment>::iterator it) -> std::list<CenterTrackSegment>::iterator
+	{
+		if (it == mListOfCenterTrackSegments.begin())
+		{
+			it = mListOfCenterTrackSegments.end();
+			--it;
+		}
+		else
+		{
+			--it;
+		}
+		return it;
+	};
+
+	for (std::list<CenterTrackSegment>::iterator centerIt = mListOfCenterTrackSegments.begin(); centerIt != mListOfCenterTrackSegments.end(); ++centerIt)
+	{
+		auto prevIt = getPreviousIterator(centerIt);
+		auto nextIt = getNextIterator(centerIt);
+		centerIt->second = mySFML::Simple::meanVector(prevIt->second, nextIt->second);
+	}
+
+}
+
