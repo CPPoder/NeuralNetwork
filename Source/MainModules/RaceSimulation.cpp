@@ -7,8 +7,7 @@
 
 
 RaceSimulation::RaceSimulation(sf::Vector2f const & size)
-//	: mTrack(Track::constructCircleTrack(sf::Vector2f(50.f, 50.f), 40.f, 50u, 6.f))
-//	: mTrack(Track::createRandomTrack())
+//	: mTrack(Track::constructCircleTrack(sf::Vector2f(100.f, 100.f), 80.f, 20u, 7.f, sf::FloatRect(0.f, 0.f, mSize.x, mSize.y))), 
 	: mTrack("./Data/Tracks/test.tr"),
 	  mSize(size)
 {
@@ -70,7 +69,11 @@ void RaceSimulation::update(sf::Time const & time, sf::RenderWindow const * rend
 		}
 		else if (keyInfo.key == sf::Keyboard::Key::C)
 		{
-			mTrack = Track::constructCircleTrack(sf::Vector2f(100.f, 100.f), 40.f, 50u, 6.f, sf::FloatRect(0.f, 0.f, mSize.x, mSize.y));
+			mTrack = Track::constructCircleTrack(sf::Vector2f(100.f, 100.f), 80.f, 20u, 8.f, sf::FloatRect(0.f, 0.f, mSize.x, mSize.y));
+			for (auto & car : mListOfCars)
+			{
+				car.setPosition(mTrack.calculatePositionInTrackNear(car.getPosition()));
+			}
 		}
 		else if (keyInfo.key == sf::Keyboard::Key::V)
 		{

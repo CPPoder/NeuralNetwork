@@ -63,7 +63,7 @@ void CenterTrackBase::setRelativeVectorsOrthogonal()
 	std::function<std::list<CenterTrackSegment>::iterator(std::list<CenterTrackSegment>::iterator)> getNextIterator =
 		[this](std::list<CenterTrackSegment>::iterator it) -> std::list<CenterTrackSegment>::iterator
 	{
-		if (++it != mListOfCenterTrackSegments.end())
+		if (++it == mListOfCenterTrackSegments.end())
 		{
 			it = mListOfCenterTrackSegments.begin();
 		}
@@ -89,7 +89,15 @@ void CenterTrackBase::setRelativeVectorsOrthogonal()
 	{
 		auto prevIt = getPreviousIterator(centerIt);
 		auto nextIt = getNextIterator(centerIt);
-		centerIt->second = mySFML::Simple::meanVector(prevIt->second, nextIt->second);
+		sf::Vector2f tangent = mySFML::Simple::normalize(nextIt->first - prevIt->first);
+		sf::Vector2f normal = mySFML::Create::createOrthogonalVector(tangent);
+		float directionFactor = ((mySFML::Simple::scalarProduct(normal, centerIt->second) > 0) ? 1.f : -1.f);
+		normal *= directionFactor;
+		centerIt->second = mySFML::Simple::lengthOf(centerIt->second) * normal;
+		
+		//Old idea! May be better or worse!
+		//float meanRadius = myMath::Simple::meanValue(mySFML::Simple::lengthOf(prevIt->second), mySFML::Simple::lengthOf(nextIt->second));
+		//centerIt->second = meanRadius * mySFML::Simple::normalize(mySFML::Simple::meanVector(prevIt->second, nextIt->second));
 	}
 
 }

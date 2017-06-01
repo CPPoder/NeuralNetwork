@@ -38,7 +38,7 @@ CenterTrackBase BorderTrackBase::getCenterTrackBase() const
 		[](BorderTrackSegment const & segment1, BorderTrackSegment const & segment2) -> CenterTrackSegment
 	{
 		sf::Vector2f center = mySFML::Simple::meanVector(segment1.first, segment1.second);
-		sf::Vector2f relVec = (segment1.first - segment2.first) / 2.f;
+		sf::Vector2f relVec = (segment1.first - segment1.second) / 2.f;
 		return std::make_pair(center, relVec);
 	};
 

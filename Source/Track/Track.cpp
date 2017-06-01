@@ -106,8 +106,8 @@ CenterTrackBase Track::getCenterTrackBase() const
 std::pair<std::list<Line>, std::list<Line>> Track::getListsOfLines() const
 {
 	//Define Task
-	std::function<std::pair<Line, Line>(CenterTrackSegment const &, CenterTrackSegment const &)> linePairGetter = 
-		[](CenterTrackSegment const & segment1, CenterTrackSegment const & segment2) -> std::pair<Line, Line>
+	std::function<std::pair<Line, Line>(BorderTrackSegment const &, BorderTrackSegment const &)> linePairGetter =
+		[](BorderTrackSegment const & segment1, BorderTrackSegment const & segment2) -> std::pair<Line, Line>
 	{
 		return std::make_pair(Line(segment1.first, segment2.first), Line(segment1.second, segment2.second));
 	};
@@ -334,6 +334,7 @@ void Track::loadFromFile(std::string const & path)
 void Track::deformRandomly(unsigned int numberOfDeformations, float deformationStep)
 {
 	std::cout << "Start Deformation of Track! (Number of Deformations: " << numberOfDeformations << ")" << std::endl;
+
 	Track originalTrack(*this);
 	Track deformedTrack(originalTrack);
 	int progressStep = 0;
@@ -596,10 +597,12 @@ Track Track::constructCircleTrack(sf::Vector2f const & center, float radius, uns
 	std::list<CenterTrackSegment> list;
 	for (unsigned int i = 0; i < pointCount; ++i)
 	{
-		float angle = static_cast<float>(i) / (pointCount + 1u) * 2.f * myMath::Const::PIf;
-		list.push_back(std::make_pair(radius * mySFML::Create::createNormalVectorWithAngle(angle) + center, width * mySFML::Create::createNormalVectorWithAngle(angle + myMath::Const::PIf / 2.f)));
+		float angle = static_cast<float>(i) / pointCount * 2.f * myMath::Const::PIf;
+		sf::Vector2f position = radius * mySFML::Create::createNormalVectorWithAngle(angle) + center;
+		sf::Vector2f relVec = width * mySFML::Create::createNormalVectorWithAngle(angle);
+		list.push_back(std::make_pair(position, relVec));
 	}
 
 	std::cout << "Finished!" << std::endl;
-	return Track(BorderTrackBase(list), validTrackArea);
+	return Track(CenterTrackBase(list), validTrackArea);
 }
