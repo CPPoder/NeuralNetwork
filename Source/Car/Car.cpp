@@ -156,7 +156,7 @@ void Car::setVertexArray()
 	mTiresVertexArray.append(sf::Vertex(rightTirePos + tiresVector, tiresColor));
 
 	//Set Velocity Text
-	mVelocityText.setString(std::to_string(static_cast<int>(mVelocity)));
+	mVelocityText.setString(std::to_string(static_cast<int>(mVelocity * 3.6f)));
 	mVelocityText.pointer->setPosition(mPosition + sf::Vector2f(1.f, 1.f));
 	mVelocityText.pointer->setScale(0.4f, 0.4f);
 }

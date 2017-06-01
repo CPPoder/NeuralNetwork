@@ -403,7 +403,9 @@ void Track::doubleNumberOfSegments()
 	newList.push_back(std::make_pair(newPosL, newPosR));
 
 	BorderTrackBase newBorderTrackBase(newList);
-	this->setTrack(newBorderTrackBase, mValidTrackArea);
+	CenterTrackBase newCenterTrackBase(newBorderTrackBase.getCenterTrackBase());
+	newCenterTrackBase.setRelativeVectorsOrthogonal();
+	this->setTrack(newCenterTrackBase, mValidTrackArea);
 
 	std::cout << "Finished!" << std::endl;
 }
