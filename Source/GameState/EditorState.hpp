@@ -12,10 +12,12 @@ namespace GameState
 	class EditorState final : public GameState
 	{
 	private:
+		sf::Vector2u const mEditorWindowSize = sf::Vector2u(1200u, 800u);
 		Editor mEditor;
 		bool mWindowAdjusted = false;
 
 	public:
+		EditorState();
 		virtual ~EditorState() override;
 
 		virtual void update(sf::Time const & frametime, sf::RenderWindow* renderWindow) override;

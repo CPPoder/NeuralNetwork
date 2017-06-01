@@ -54,8 +54,8 @@ public:
 	bool checkCollisionWith(Car const & car) const;
 	sf::Vector2f calculatePositionInTrackNear(sf::Vector2f const & position) const;
 
-	void saveToFile(std::string const & path) const;
-	void loadFromFile(std::string const & path);
+	bool saveToFile(std::string const & path) const;
+	bool loadFromFile(std::string const & path);
 
 	void deformRandomly(unsigned int numberOfDeformations, float deformationStep);
 	void doOneRandomDeformation(float deformationLength);

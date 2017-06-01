@@ -3,6 +3,12 @@
 
 namespace GameState
 {
+	EditorState::EditorState()
+		: mEditor(mEditorWindowSize)
+	{
+
+	}
+
 	EditorState::~EditorState()
 	{
 
@@ -10,12 +16,12 @@ namespace GameState
 
 	void EditorState::update(sf::Time const & frametime, sf::RenderWindow* renderWindow)
 	{
-		
+		mEditor.update(frametime, renderWindow);
 	}
 
 	void EditorState::render(sf::RenderWindow* renderWindow)
 	{
-		
+		mEditor.render(renderWindow);
 	}
 
 	Change EditorState::pollGameStateChange()
@@ -37,7 +43,6 @@ namespace GameState
 
 	std::deque<WindowChange> EditorState::getWindowChanges()
 	{
-		sf::Vector2u windowSize(800u, 800u);
 		if (mWindowAdjusted)
 		{
 			return std::deque<WindowChange>();
@@ -45,7 +50,10 @@ namespace GameState
 		else
 		{
 			mWindowAdjusted = true;
-			return std::deque<WindowChange>({ WindowChange(WindowChange::Type::CHANGE_WINDOW_SIZE, WindowChange::Info(windowSize)) });
+			return std::deque<WindowChange>({
+				WindowChange(WindowChange::Type::CHANGE_WINDOW_SIZE, WindowChange::Info(mEditorWindowSize)),
+				WindowChange(WindowChange::Type::CHANGE_WINDOW_POSITION, WindowChange::Info(sf::Vector2u(), false, sf::Vector2i(250, 100)))
+			});
 		}
 	}
 

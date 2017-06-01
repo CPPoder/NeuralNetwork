@@ -211,7 +211,7 @@ sf::Vector2f Track::calculatePositionInTrackNear(sf::Vector2f const & position) 
 //Save or Load to or from File
 
 //Save to file
-void Track::saveToFile(std::string const & path) const
+bool Track::saveToFile(std::string const & path) const
 {
 	std::ofstream fileStream(path, std::ios::trunc);
 	if (fileStream.is_open())
@@ -228,15 +228,17 @@ void Track::saveToFile(std::string const & path) const
 
 		fileStream.close();
 		std::cout << "Complete!" << std::endl;
+		return true;
 	}
 	else
 	{
 		std::cout << "Saving Track File...Failed to open File: \"" << path << "\"!" << std::endl;
+		return false;
 	}
 }
 
 //Load from File
-void Track::loadFromFile(std::string const & path)
+bool Track::loadFromFile(std::string const & path)
 {
 	std::ifstream fileStream(path);
 	if (fileStream.is_open())
@@ -275,6 +277,7 @@ void Track::loadFromFile(std::string const & path)
 			if (!foundPartBeginMarker)
 			{
 				std::cout << "Error! Part Name \"" + part + "\" was not found!" << std::endl;
+
 				return std::list<std::string>();
 			}
 			return std::move(listOfLinesInPart);
@@ -285,7 +288,7 @@ void Track::loadFromFile(std::string const & path)
 		if (listOfBorderTrackBaseLines.empty() || listOfValidTrackAreaLines.empty())
 		{
 			std::cout << "Error! Format incorrect! Failed to load File!" << std::endl;
-			return;
+			return false;
 		}
 
 		//Extract data from listOfBorderTrackBaseLines
@@ -309,7 +312,7 @@ void Track::loadFromFile(std::string const & path)
 		else
 		{
 			std::cout << "Error! Format incorrect! Failed to load File!" << std::endl;
-			return;
+			return false;
 		}
 		std::stringstream sstream(validTrackAreaString);
 		sstream >> x >> y >> w >> h;
@@ -321,10 +324,12 @@ void Track::loadFromFile(std::string const & path)
 		//Set State
 		this->setTrack(borderTrackBase, validArea);
 		std::cout << "Complete!" << std::endl;
+		return true;
 	}
 	else
 	{
 		std::cout << "Load Track File...Failed to open File: \"" << path << "\"!" << std::endl;
+		return false;
 	}
 }
 
