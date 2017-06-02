@@ -45,9 +45,19 @@ private:
 	//Menu Objects
 	sf::RectangleShape mGUIBackgroundRectShape;
 
-	sf::Vector2f const mButtonSize = sf::Vector2f(50.f, 25.f);
-	sf::Vector2f const mLoadButtonPos = sf::Vector2f(100.f, 25.f);
-	sf::Vector2f const mRelDistBetweenButtons = sf::Vector2f(0.f, 50.f);
+	sf::Vector2f const mLoadTextFieldPos = sf::Vector2f(20.f, 30.f);
+	sf::Vector2f const mTextFieldSize = sf::Vector2f(225.f, 25.f);
+	sf::Vector2f const mButtonSize = sf::Vector2f(75.f, 25.f);
+	sf::Vector2f const mRelDistBetweenTextFields = sf::Vector2f(0.f, 40.f);
+	sf::Vector2f const mRelDistBetweenTextFieldAndButton = sf::Vector2f(10.f, 0.f);
+	unsigned int const mCharacterSize = 16u;
+
+	sf::Vector2f const mSaveTextFieldPos = mLoadTextFieldPos + mRelDistBetweenTextFields;
+	sf::Vector2f const mLoadButtonPos = mLoadTextFieldPos + sf::Vector2f(mTextFieldSize.x, 0.f) + mRelDistBetweenTextFieldAndButton;
+	sf::Vector2f const mSaveButtonPos = mLoadButtonPos + mRelDistBetweenTextFields;
+
+	TextField mLoadTextField;
+	TextField mSaveTextField;
 	Button mLoadButton;
 	Button mSaveButton;
 	

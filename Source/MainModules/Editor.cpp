@@ -4,8 +4,10 @@
 
 Editor::Editor(sf::Vector2u const & editorWindowSize)
 	: mEditorWindowSize(editorWindowSize),
-	  mLoadButton(mLoadButtonPos, mButtonSize, "Load", mySFML::Class::FontName::ARIAL),
-	  mSaveButton(mLoadButtonPos + mRelDistBetweenButtons, mButtonSize, "Save", mySFML::Class::FontName::ARIAL)
+	  mLoadTextField(mLoadTextFieldPos, mTextFieldSize, "./Data/Tracks/", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize, true, InputBehaviour::BOUNDED_FROM_BELOW, 14u),
+	  mSaveTextField(mSaveTextFieldPos, mTextFieldSize, "./Data/Tracks/", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize, true, InputBehaviour::BOUNDED_FROM_BELOW, 14u),
+	  mLoadButton(mLoadButtonPos, mButtonSize, "Load", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize),
+	  mSaveButton(mSaveButtonPos, mButtonSize, "Save", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize)
 {
 	this->setViews();
 
@@ -39,6 +41,8 @@ void Editor::render(sf::RenderWindow * renderWindow)
 void Editor::renderGUI(sf::RenderWindow * renderWindow)
 {
 	renderWindow->draw(mGUIBackgroundRectShape);
+	mLoadTextField.render(renderWindow);
+	mSaveTextField.render(renderWindow);
 	mLoadButton.render(renderWindow);
 	mSaveButton.render(renderWindow);
 }
@@ -49,6 +53,8 @@ void Editor::renderTrack(sf::RenderWindow * renderWindow)
 
 void Editor::update(sf::Time const & time, sf::RenderWindow * renderWindow)
 {
+	mLoadTextField.updateState(renderWindow, &mGUIView);
+	mSaveTextField.updateState(renderWindow, &mGUIView);
 	mLoadButton.updateState(renderWindow, &mGUIView);
 	mSaveButton.updateState(renderWindow, &mGUIView);
 }
