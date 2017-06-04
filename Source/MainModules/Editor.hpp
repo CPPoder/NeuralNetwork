@@ -61,6 +61,11 @@ private:
 	Button mLoadButton;
 	Button mSaveButton;
 	
+	sf::Vector2f const mStatusTextFieldPos = sf::Vector2f(20.f, 115.f);
+	sf::Vector2f const mStatusTextFieldSize = sf::Vector2f(310.f, 25.f);
+	TextField mStatusTextField;
+
+
 
 public:
 	//Constructors, Destructor & Assignment Operator
@@ -73,10 +78,14 @@ public:
 	void render(sf::RenderWindow * renderWindow);
 	void update(sf::Time const & time, sf::RenderWindow * renderWindow);
 
-	//Track Loading (Also Manages Resources)
+private:
+	//Track Loading & Discarding (Also Manages Resources)
 	void loadTrack(std::string const & trackPath);
+	void discardTrack();
 
+	void showStatus(std::string const & status);
 
+public:
 	//Functions for external communication
 	Event pollEditorEvent();
 	void reactOnESC();

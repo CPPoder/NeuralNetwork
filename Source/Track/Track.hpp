@@ -24,6 +24,7 @@ class Track
 private:
 	BorderTrackBase mBorderTrack;
 	sf::FloatRect mValidTrackArea;
+	bool mTrackIsInitialized = false;
 
 	sf::VertexArray mVertexArrayOfTrack;
 	sf::Color mTrackColor;
@@ -48,6 +49,7 @@ public:
 	BorderTrackBase getBorderTrackBase() const;
 	CenterTrackBase getCenterTrackBase() const;
 	std::pair<std::list<Line>, std::list<Line>> getListsOfLines() const;
+	bool getIfTrackIsWellInitialized() const;
 
 	void render(sf::RenderWindow* renderWindow);
 

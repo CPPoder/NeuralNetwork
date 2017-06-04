@@ -19,5 +19,24 @@ const TextFieldSettings::ColorSettings TextFieldSettings::ColorSettings::standar
 	sf::Color(20, 20, 20)
 );
 
+const TextFieldSettings::ColorSettings TextFieldSettings::ColorSettings::inactiveColorSettings = TextFieldSettings::ColorSettings
+(
+	//Normal
+	sf::Color(100, 100, 100),	//Background
+	sf::Color(0, 0, 0),	//Outline
+	sf::Color(20, 20, 20),	//Text
+
+	//Blinking
+	sf::Color(130, 130, 130),
+	sf::Color(30, 30, 30),
+	sf::Color(50, 50, 50),
+
+	//Inactive
+	sf::Color(50, 50, 50),
+	sf::Color(0, 0, 0),
+	sf::Color(100, 100, 100)
+);
+
 const TextFieldSettings TextFieldSettings::standardTextFieldSettings = TextFieldSettings(TextFieldSettings::ColorSettings::standardColorSettings);
+const TextFieldSettings TextFieldSettings::inactiveTextFieldSettings = TextFieldSettings(TextFieldSettings::ColorSettings::inactiveColorSettings);
 

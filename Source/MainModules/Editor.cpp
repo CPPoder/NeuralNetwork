@@ -7,7 +7,8 @@ Editor::Editor(sf::Vector2u const & editorWindowSize)
 	  mLoadTextField(mLoadTextFieldPos, mTextFieldSize, "./Data/Tracks/", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize, true, InputBehaviour::BOUNDED_FROM_BELOW, 14u),
 	  mSaveTextField(mSaveTextFieldPos, mTextFieldSize, "./Data/Tracks/", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize, true, InputBehaviour::BOUNDED_FROM_BELOW, 14u),
 	  mLoadButton(mLoadButtonPos, mButtonSize, "Load", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize),
-	  mSaveButton(mSaveButtonPos, mButtonSize, "Save", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize)
+	  mSaveButton(mSaveButtonPos, mButtonSize, "Save", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize),
+	  mStatusTextField(mStatusTextFieldPos, mStatusTextFieldSize, "", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize, false, InputBehaviour::FREE, 0u, &TextFieldSettings::inactiveTextFieldSettings)
 {
 	this->setViews();
 
@@ -45,18 +46,60 @@ void Editor::renderGUI(sf::RenderWindow * renderWindow)
 	mSaveTextField.render(renderWindow);
 	mLoadButton.render(renderWindow);
 	mSaveButton.render(renderWindow);
+	mStatusTextField.render(renderWindow);
 }
 void Editor::renderTrack(sf::RenderWindow * renderWindow)
 {
-
+	if (pCurrentTrack != nullptr)
+	{
+		pCurrentTrack->render(renderWindow);
+	}
 }
 
 void Editor::update(sf::Time const & time, sf::RenderWindow * renderWindow)
 {
+	//Update States
 	mLoadTextField.updateState(renderWindow, &mGUIView);
 	mSaveTextField.updateState(renderWindow, &mGUIView);
 	mLoadButton.updateState(renderWindow, &mGUIView);
 	mSaveButton.updateState(renderWindow, &mGUIView);
+	mStatusTextField.updateState(renderWindow, &mGUIView);
+
+	//Check for MouseReleasedEvents
+	bool loadButtonReleased = mLoadButton.getMouseReleasedEventOccured(renderWindow, &mGUIView);
+	bool saveButtonReleased = mSaveButton.getMouseReleasedEventOccured(renderWindow, &mGUIView);
+	if (loadButtonReleased)
+	{
+		this->loadTrack(mLoadTextField.getTextString());
+		if (!pCurrentTrack->getIfTrackIsWellInitialized())
+		{
+			this->discardTrack();
+			this->showStatus("Loading failed!");
+		}
+		else
+		{
+			this->showStatus("Loading executed well!");
+		}
+	}
+	if (saveButtonReleased)
+	{
+		if (pCurrentTrack != nullptr)
+		{
+			bool savingExecutedWell = pCurrentTrack->saveToFile(mSaveTextField.getTextString());
+			if (savingExecutedWell)
+			{
+				this->showStatus("Saving executed well!");
+			}
+			else
+			{
+				this->showStatus("Saving failed!");
+			}
+		}
+		else
+		{
+			this->showStatus("Saving failed! (No current Track!)");
+		}
+	}
 }
 
 
@@ -68,6 +111,21 @@ void Editor::loadTrack(std::string const & trackPath)
 		pCurrentTrack = nullptr;
 	}
 	pCurrentTrack = new Track(trackPath);
+}
+
+void Editor::discardTrack()
+{
+	if (pCurrentTrack != nullptr)
+	{
+		delete pCurrentTrack;
+		pCurrentTrack = nullptr;
+	}
+}
+
+
+void Editor::showStatus(std::string const & status)
+{
+	mStatusTextField.setTextString(status);
 }
 
 

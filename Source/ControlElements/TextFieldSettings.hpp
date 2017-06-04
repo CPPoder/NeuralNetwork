@@ -44,6 +44,7 @@ struct TextFieldSettings
 		{}
 
 		static const ColorSettings standardColorSettings;
+		static const ColorSettings inactiveColorSettings;
 
 	}; //Class ColorSettings
 
@@ -54,6 +55,7 @@ struct TextFieldSettings
 	{}
 
 	static const TextFieldSettings standardTextFieldSettings;
+	static const TextFieldSettings inactiveTextFieldSettings;
 
 
 

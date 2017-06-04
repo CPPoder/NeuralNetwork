@@ -16,13 +16,17 @@
 //Constructor from File
 Track::Track(std::string const & filePath)
 {
-	this->loadFromFile(filePath);
+	if (this->loadFromFile(filePath))
+	{
+		mTrackIsInitialized = true;
+	}
 	this->setColor(sf::Color::White);
 }
 
 //Constructor from BorderTrackBase
 Track::Track(BorderTrackBase const & borderTrackBase, sf::FloatRect const & validTrackArea, sf::Color const & color)
 {
+	mTrackIsInitialized = true;
 	this->setTrack(borderTrackBase, validTrackArea);
 	this->setColor(color);
 }
@@ -30,6 +34,7 @@ Track::Track(BorderTrackBase const & borderTrackBase, sf::FloatRect const & vali
 //Constructor from CenterTrackBase
 Track::Track(CenterTrackBase const & centerTrackBase, sf::FloatRect const & validTrackArea, sf::Color const & color)
 {
+	mTrackIsInitialized = true;
 	this->setTrack(centerTrackBase, validTrackArea);
 	this->setColor(color);
 }
@@ -126,6 +131,11 @@ std::pair<std::list<Line>, std::list<Line>> Track::getListsOfLines() const
 
 	//Return Result
 	return std::make_pair(std::move(leftLines), std::move(rightLines));
+}
+
+bool Track::getIfTrackIsWellInitialized() const
+{
+	return mTrackIsInitialized;
 }
 
 
