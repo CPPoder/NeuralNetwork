@@ -52,7 +52,7 @@ void Editor::renderTrack(sf::RenderWindow * renderWindow)
 {
 	if (pCurrentTrack != nullptr)
 	{
-		pCurrentTrack->render(renderWindow);
+		pCurrentTrack->render(renderWindow, TrackRenderOptions::DEFAULT_FOR_EDITOR);
 	}
 }
 

@@ -17,8 +17,26 @@
 #include "Source\Track\CenterTrackBase.hpp"
 
 
+//Predeclare Car
 class Car;
 
+//Create Bitfield for Track Rendering Options
+namespace TrackRenderOptions
+{
+	enum
+	{
+		DRAW_AREA = 1,
+		DRAW_SEGMENT_LINES = 2,
+		DRAW_BORDER_CIRCLES = 4,
+		DRAW_CENTER_CIRCLES = 8,
+
+		DEFAULT_FOR_SIMULATION = DRAW_AREA,
+		DEFAULT_FOR_EDITOR = DRAW_AREA | DRAW_SEGMENT_LINES | DRAW_BORDER_CIRCLES | DRAW_CENTER_CIRCLES
+	};
+};
+
+
+//Create actual Track
 class Track
 {
 private:
@@ -51,8 +69,15 @@ public:
 	std::pair<std::list<Line>, std::list<Line>> getListsOfLines() const;
 	bool getIfTrackIsWellInitialized() const;
 
-	void render(sf::RenderWindow* renderWindow);
+	void render(sf::RenderWindow* renderWindow, unsigned int options = TrackRenderOptions::DEFAULT_FOR_SIMULATION);
 
+private:
+	void renderSegmentLines(sf::RenderWindow* renderWindow);
+	void renderBorderCircles(sf::RenderWindow* renderWindow);
+	void renderCenterCircles(sf::RenderWindow* renderWindow);
+
+
+public:
 	bool checkCollisionWith(Car const & car) const;
 	sf::Vector2f calculatePositionInTrackNear(sf::Vector2f const & position) const;
 

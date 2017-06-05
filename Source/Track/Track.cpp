@@ -44,9 +44,72 @@ Track::Track(CenterTrackBase const & centerTrackBase, sf::FloatRect const & vali
 //Render
 
 //Render
-void Track::render(sf::RenderWindow* renderWindow)
+void Track::render(sf::RenderWindow* renderWindow, unsigned int options)
 {
-	renderWindow->draw(mVertexArrayOfTrack);
+	if ((options & TrackRenderOptions::DRAW_AREA) != 0u)
+	{
+		renderWindow->draw(mVertexArrayOfTrack);
+	}
+	if ((options & TrackRenderOptions::DRAW_SEGMENT_LINES) != 0u)
+	{
+		this->renderSegmentLines(renderWindow);
+	}
+	if ((options & TrackRenderOptions::DRAW_BORDER_CIRCLES) != 0u)
+	{
+		this->renderBorderCircles(renderWindow);
+	}
+	if ((options & TrackRenderOptions::DRAW_CENTER_CIRCLES) != 0u)
+	{
+		this->renderCenterCircles(renderWindow);
+	}
+}
+
+void Track::renderSegmentLines(sf::RenderWindow* renderWindow)
+{
+	sf::Color const segmentLinesColor = sf::Color::Black;
+	sf::VertexArray vertexArrayOfSegmentLines(sf::PrimitiveType::Lines);
+	for (auto const & trackSegment : mBorderTrack.getListOfBorderTrackSegments())
+	{
+		vertexArrayOfSegmentLines.append(sf::Vertex(trackSegment.first, segmentLinesColor));
+		vertexArrayOfSegmentLines.append(sf::Vertex(trackSegment.second, segmentLinesColor));
+	}
+	if (!mBorderTrack.getListOfBorderTrackSegments().empty())
+	{
+		vertexArrayOfSegmentLines.append(sf::Vertex(mBorderTrack.getListOfBorderTrackSegments().front().first, segmentLinesColor));
+		vertexArrayOfSegmentLines.append(sf::Vertex(mBorderTrack.getListOfBorderTrackSegments().front().second, segmentLinesColor));
+	}
+	renderWindow->draw(vertexArrayOfSegmentLines);
+}
+
+void Track::renderBorderCircles(sf::RenderWindow* renderWindow)
+{
+	float constexpr radius = 1.5f;
+	sf::Color const color = sf::Color(128, 128, 128);
+	sf::CircleShape circleShape(radius, 10u);
+	circleShape.setOrigin(radius, radius);
+	circleShape.setFillColor(color);
+	for (auto const & borderTrackSegment : mBorderTrack)
+	{
+		circleShape.setPosition(borderTrackSegment.first);
+		renderWindow->draw(circleShape);
+		circleShape.setPosition(borderTrackSegment.second);
+		renderWindow->draw(circleShape);
+	}
+}
+
+void Track::renderCenterCircles(sf::RenderWindow* renderWindow)
+{
+	float constexpr radius = 1.5f;
+	sf::Color const color = sf::Color(64, 64, 64);
+	sf::CircleShape circleShape(radius, 10u);
+	circleShape.setOrigin(radius, radius);
+	circleShape.setFillColor(color);
+	CenterTrackBase centerTrackBase(mBorderTrack.getCenterTrackBase());
+	for (auto const & centerTrackSegment : centerTrackBase)
+	{
+		circleShape.setPosition(centerTrackSegment.first);
+		renderWindow->draw(circleShape);
+	}
 }
 
 
