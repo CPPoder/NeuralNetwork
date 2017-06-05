@@ -9,6 +9,8 @@
 #include "Source\ControlElements\CheckBox.hpp"
 #include "Source\ControlElements\TextField.hpp"
 
+#include "Source\Framework\EventManager.hpp"
+
 #include "Source\Math\mySFMLVectorFunctions.hpp"
 
 #include <iostream>
@@ -94,8 +96,10 @@ public:
 private:
 	//Views & Rendering
 	void setViews();
+	void changeTrackView(sf::RenderWindow const * renderWindow);
 	void renderGUI(sf::RenderWindow * renderWindow);
 	void renderTrack(sf::RenderWindow * renderWindow);
+	bool checkIfMouseIsInTrackViewport(sf::Vector2i const & mousePos) const;
 
 };
 

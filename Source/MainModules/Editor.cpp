@@ -80,6 +80,7 @@ void Editor::update(sf::Time const & time, sf::RenderWindow * renderWindow)
 		{
 			this->showStatus("Loading executed well!");
 		}
+		this->setViews();
 	}
 	if (saveButtonReleased)
 	{
@@ -100,6 +101,9 @@ void Editor::update(sf::Time const & time, sf::RenderWindow * renderWindow)
 			this->showStatus("Saving failed! (No current Track!)");
 		}
 	}
+
+	//Change Track View (Zoom, Movement)
+	this->changeTrackView(renderWindow);
 }
 
 
@@ -148,7 +152,55 @@ void Editor::setViews()
 	newGUIView.setViewport(sf::FloatRect(0.f, 0.f, mGUIRatio, 1.f));
 	mGUIView = newGUIView;
 
-	sf::View newTrackView(sf::FloatRect(mGUIRatio * mEditorWindowSize.x, 0.f, (1.f - mGUIRatio) * mEditorWindowSize.x, mEditorWindowSize.y));
+	float trackViewRatio = mEditorWindowSize.y / ((1.f - mGUIRatio) * mEditorWindowSize.x);
+	float widthOfTrackView;
+	if (pCurrentTrack != nullptr)
+	{
+		widthOfTrackView = pCurrentTrack->getValidTrackArea().width;
+	}
+	else
+	{
+		widthOfTrackView = static_cast<float>(mEditorWindowSize.x);
+	}
+	sf::View newTrackView(sf::FloatRect(0.f, 0.f, widthOfTrackView, trackViewRatio * widthOfTrackView));
 	newTrackView.setViewport(sf::FloatRect(mGUIRatio, 0.f, (1.f - mGUIRatio), 1.f));
 	mTrackView = newTrackView;
+}
+
+
+void Editor::changeTrackView(sf::RenderWindow const * renderWindow)
+{
+	//Scrolling
+	if (EventManager::checkForEvent(EventManager::EventType::MOUSE_WHEEL_SCROLLED))
+	{
+		EventManager::MouseWheelInfo mouseWheelInfo = EventManager::getMouseWheelScrolledInfo();
+		if (this->checkIfMouseIsInTrackViewport(mouseWheelInfo.position))
+		{
+			float constexpr scrollingConstant = 0.9f;
+			float scroll = pow(scrollingConstant, mouseWheelInfo.delta);
+			mTrackView.zoom(scroll);
+		}
+	}
+
+	//Moving
+	if (EventManager::checkForEvent(EventManager::EventType::MOUSE_DRAGGED))
+	{
+		EventManager::MouseDraggedInfo mouseDraggedInfo = EventManager::getMouseDraggedInfo();
+		if (mouseDraggedInfo.button == sf::Mouse::Button::Middle)
+		{
+			if (this->checkIfMouseIsInTrackViewport(mouseDraggedInfo.oldPosition))
+			{
+				sf::Vector2f oldPos = renderWindow->mapPixelToCoords(mouseDraggedInfo.oldPosition, mTrackView);
+				sf::Vector2f newPos = renderWindow->mapPixelToCoords(mouseDraggedInfo.newPosition, mTrackView);
+				mTrackView.move(oldPos - newPos);
+			}
+		}
+	}
+}
+
+
+bool Editor::checkIfMouseIsInTrackViewport(sf::Vector2i const & mousePos) const
+{
+	sf::FloatRect trackRectangle(mGUIRatio * mEditorWindowSize.x, 0.f, (1.f - mGUIRatio) * mEditorWindowSize.x, mEditorWindowSize.y);
+	return trackRectangle.contains(static_cast<sf::Vector2f>(mousePos));
 }
