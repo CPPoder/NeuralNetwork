@@ -44,6 +44,13 @@ private:
 	//Track, which is currently loaded
 	Track* pCurrentTrack = nullptr;
 
+	//Mode
+	enum class Mode
+	{
+		MODIFY_BORDER_TRACK_SEGMENTS,
+		MODIFY_CENTER_TRACK_SEGMENTS
+	} mMode = Mode::MODIFY_BORDER_TRACK_SEGMENTS;
+
 	//Menu Objects
 	sf::RectangleShape mGUIBackgroundRectShape;
 
@@ -100,6 +107,11 @@ private:
 	void renderGUI(sf::RenderWindow * renderWindow);
 	void renderTrack(sf::RenderWindow * renderWindow);
 	bool checkIfMouseIsInTrackViewport(sf::Vector2i const & mousePos) const;
+
+	//Track Manipulation
+	void manipulateTrack(sf::RenderWindow const * renderWindow);
+	void modifyBorderTrackSegments(sf::RenderWindow const * renderWindow);
+	void modifyCenterTrackSegments(sf::RenderWindow const * renderWindow);
 
 };
 

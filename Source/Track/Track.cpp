@@ -489,6 +489,63 @@ void Track::doubleNumberOfSegments()
 }
 
 
+//Returns an Iterator to the BorderTrackSegment which is in circle of radius radius around position via reference (Return value: true, if such Segment was found, bool& first: true, if point is in std::pair::first)
+bool Track::getIteratorToBorderTrackSegmentWhichHasBorder(sf::Vector2f const & position, float radius, BorderTrackBase::iterator & iterator, bool& first)
+{
+	//Determine all possible candidates
+	std::list<std::pair<BorderTrackBase::iterator, std::pair<bool, float>>> listOfFunctioningIteratorFirstAndDistancePairs;
+	for (BorderTrackBase::iterator it = mBorderTrack.begin(); it != mBorderTrack.end(); ++it)
+	{
+		float firstDist = mySFML::Simple::lengthOf(it->first - position);
+		if (firstDist < radius)
+		{
+			listOfFunctioningIteratorFirstAndDistancePairs.push_back(std::make_pair(it, std::make_pair(true, firstDist)));
+		}
+		float secondDist = mySFML::Simple::lengthOf(it->second - position);
+		if (secondDist < radius)
+		{
+			listOfFunctioningIteratorFirstAndDistancePairs.push_back(std::make_pair(it, std::make_pair(false, secondDist)));
+		}
+	}
+
+	//Handle special cases
+	if (listOfFunctioningIteratorFirstAndDistancePairs.empty())
+	{
+		return false;
+	}
+
+	//Filter out the best candidate
+	BorderTrackBase::iterator bestIt;
+	bool bestFirst;
+	float bestDistance;
+	bool firstLoop = true;
+	for (auto const & pair : listOfFunctioningIteratorFirstAndDistancePairs)
+	{
+		if (firstLoop)
+		{
+			firstLoop = false;
+			bestIt = pair.first;
+			bestFirst = pair.second.first;
+			bestDistance = pair.second.second;
+		}
+		else
+		{
+			if (pair.second.second < bestDistance)
+			{
+				bestIt = pair.first;
+				bestFirst = pair.second.first;
+				bestDistance = pair.second.second;
+			}
+		}
+	}
+
+	//Return per Return value and Reference
+	iterator = bestIt;
+	first = bestFirst;
+	return true;
+}
+
+
 
 //////////////////////////
 //Private intern functions

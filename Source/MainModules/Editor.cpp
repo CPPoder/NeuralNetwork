@@ -102,6 +102,12 @@ void Editor::update(sf::Time const & time, sf::RenderWindow * renderWindow)
 		}
 	}
 
+	//Manipulate Track
+	if (pCurrentTrack != nullptr)
+	{
+		this->manipulateTrack(renderWindow);
+	}
+
 	//Change Track View (Zoom, Movement)
 	this->changeTrackView(renderWindow);
 }
@@ -204,3 +210,84 @@ bool Editor::checkIfMouseIsInTrackViewport(sf::Vector2i const & mousePos) const
 	sf::FloatRect trackRectangle(mGUIRatio * mEditorWindowSize.x, 0.f, (1.f - mGUIRatio) * mEditorWindowSize.x, mEditorWindowSize.y);
 	return trackRectangle.contains(static_cast<sf::Vector2f>(mousePos));
 }
+
+
+
+void Editor::manipulateTrack(sf::RenderWindow const * renderWindow)
+{
+	switch (mMode)
+	{
+	case Mode::MODIFY_BORDER_TRACK_SEGMENTS:
+		this->modifyBorderTrackSegments(renderWindow);
+		break;
+	case Mode::MODIFY_CENTER_TRACK_SEGMENTS:
+		this->modifyCenterTrackSegments(renderWindow);
+		break;
+	}
+}
+
+
+void Editor::modifyBorderTrackSegments(sf::RenderWindow const * renderWindow)
+{
+	static bool mouseWasPressed = false;
+	static bool circleWasHit = false;
+	static sf::Vector2f mousePos;
+	float constexpr circlesSensitiveRadius = 3.f;
+
+	if (EventManager::checkForEvent(EventManager::EventType::MOUSE_PRESSED))
+	{
+		EventManager::MouseInfo mouseInfo = EventManager::getPressedMouseInfo();	
+		if (mouseInfo.button == sf::Mouse::Button::Left)
+		{
+			mouseWasPressed = true;
+			mousePos = renderWindow->mapPixelToCoords(mouseInfo.position, mTrackView);
+			bool dummyBool;
+			if (pCurrentTrack->getIteratorToBorderTrackSegmentWhichHasBorder(mousePos, circlesSensitiveRadius, pCurrentTrack->getBorderTrackBase().begin(), dummyBool))
+			{
+				circleWasHit = true;
+			}
+		}
+	}
+
+	if (EventManager::checkForEvent(EventManager::EventType::MOUSE_RELEASED))
+	{
+		EventManager::MouseInfo mouseInfo = EventManager::getReleasedMouseInfo();
+		if (mouseInfo.button == sf::Mouse::Button::Left)
+		{
+			mouseWasPressed = false;
+			circleWasHit = false;
+		}
+	}
+
+	if (mouseWasPressed && circleWasHit)
+	{
+		//Get new mousePos
+		sf::Vector2f newMousePos = renderWindow->mapPixelToCoords(sf::Mouse::getPosition(*renderWindow), mTrackView);
+
+		//Find old circle
+		BorderTrackBase::iterator it;
+		bool first;
+		if (pCurrentTrack->getIteratorToBorderTrackSegmentWhichHasBorder(mousePos, circlesSensitiveRadius, it, first))
+		{
+			//Move circle
+			if (first)
+			{
+				it->first = newMousePos;
+			}
+			else
+			{
+				it->second = newMousePos;
+			}
+			pCurrentTrack->refreshState();
+
+			//Set mousePos = newMousePos
+			mousePos = newMousePos;
+		}
+	}
+}
+
+void Editor::modifyCenterTrackSegments(sf::RenderWindow const * renderWindow)
+{
+
+}
+

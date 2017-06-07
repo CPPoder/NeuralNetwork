@@ -87,8 +87,9 @@ public:
 	void deformRandomly(unsigned int numberOfDeformations, float deformationStep);
 	void doOneRandomDeformation(float deformationLength);
 	void doubleNumberOfSegments();
+	bool getIteratorToBorderTrackSegmentWhichHasBorder(sf::Vector2f const & position, float radius, BorderTrackBase::iterator & iterator, bool& first);
 
-private:
+public:
 	void refreshState();
 	
 public:
