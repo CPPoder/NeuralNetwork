@@ -88,6 +88,7 @@ public:
 	void doOneRandomDeformation(float deformationLength);
 	void doubleNumberOfSegments();
 	bool getIteratorToBorderTrackSegmentWhichHasBorder(sf::Vector2f const & position, float radius, BorderTrackBase::iterator & iterator, bool& first);
+	bool getIteratorToBorderTrackSegmentWhichHasCenter(sf::Vector2f const & position, float radius, BorderTrackBase::iterator & iterator, int& type);
 
 public:
 	void refreshState();

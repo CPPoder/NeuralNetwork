@@ -546,6 +546,12 @@ bool Track::getIteratorToBorderTrackSegmentWhichHasBorder(sf::Vector2f const & p
 }
 
 
+bool Track::getIteratorToBorderTrackSegmentWhichHasCenter(sf::Vector2f const & position, float radius, BorderTrackBase::iterator & iterator, int& type)
+{
+
+}
+
+
 
 //////////////////////////
 //Private intern functions
