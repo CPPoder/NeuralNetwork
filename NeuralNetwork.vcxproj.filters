@@ -189,6 +189,15 @@
     <ClInclude Include="Source\MainModules\RaceSimMenu.hpp">
       <Filter>Headerdateien\MainModules</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Framework\WindowChange.hpp">
+      <Filter>Headerdateien\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Track\BorderTrackBase.hpp">
+      <Filter>Headerdateien\Track</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Track\CenterTrackBase.hpp">
+      <Filter>Headerdateien\Track</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -295,6 +304,15 @@
     </ClCompile>
     <ClCompile Include="Source\MainModules\RaceSimMenu.cpp">
       <Filter>Quelldateien\MainModules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Framework\WindowChange.cpp">
+      <Filter>Quelldateien\Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Track\BorderTrackBase.cpp">
+      <Filter>Quelldateien\Track</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Track\CenterTrackBase.cpp">
+      <Filter>Quelldateien\Track</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

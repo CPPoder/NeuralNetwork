@@ -172,6 +172,7 @@
     <ClInclude Include="Source\Framework\Framework.hpp" />
     <ClInclude Include="Source\Framework\SoundManager.hpp" />
     <ClInclude Include="Source\Framework\TextureManager.hpp" />
+    <ClInclude Include="Source\Framework\WindowChange.hpp" />
     <ClInclude Include="Source\GameState\EditorMenuState.hpp" />
     <ClInclude Include="Source\GameState\EditorState.hpp" />
     <ClInclude Include="Source\GameState\GameState.hpp" />
@@ -187,6 +188,8 @@
     <ClInclude Include="Source\Math\myUsefulMath.hpp" />
     <ClInclude Include="Source\Math\ourMatrices.hpp" />
     <ClInclude Include="Source\Math\ourVectors.hpp" />
+    <ClInclude Include="Source\Track\BorderTrackBase.hpp" />
+    <ClInclude Include="Source\Track\CenterTrackBase.hpp" />
     <ClInclude Include="Source\Track\Track.hpp" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -212,6 +215,7 @@
     <ClCompile Include="Source\Framework\main.cpp" />
     <ClCompile Include="Source\Framework\SoundManager.cpp" />
     <ClCompile Include="Source\Framework\TextureManager.cpp" />
+    <ClCompile Include="Source\Framework\WindowChange.cpp" />
     <ClCompile Include="Source\GameState\EditorMenuState.cpp" />
     <ClCompile Include="Source\GameState\EditorState.cpp" />
     <ClCompile Include="Source\GameState\GameState.cpp" />
@@ -225,6 +229,8 @@
     <ClCompile Include="Source\MainModules\RaceSimulation.cpp" />
     <ClCompile Include="Source\Math\mySFMLVectorFunctions.cpp" />
     <ClCompile Include="Source\Math\myUsefulMath.cpp" />
+    <ClCompile Include="Source\Track\BorderTrackBase.cpp" />
+    <ClCompile Include="Source\Track\CenterTrackBase.cpp" />
     <ClCompile Include="Source\Track\Track.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
