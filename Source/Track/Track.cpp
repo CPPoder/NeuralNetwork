@@ -489,22 +489,27 @@ void Track::doubleNumberOfSegments()
 }
 
 
-//Returns an Iterator to the BorderTrackSegment which is in circle of radius radius around position via reference (Return value: true, if such Segment was found, bool& first: true, if point is in std::pair::first)
-bool Track::getIteratorToBorderTrackSegmentWhichHasBorder(sf::Vector2f const & position, float radius, BorderTrackBase::iterator & iterator, bool& first)
+//Returns an Iterator to the BorderTrackSegment which is in circle of radius radius around position via reference (Return value: true, if such Segment was found, int& type: 1, if point is centerPoint; 2, if point is borderPoint and in pair::first; 3, if point is borderPoint and in pair::second)
+bool Track::getIteratorToBorderTrackSegmentWhichHasBorder(sf::Vector2f const & position, float radius, BorderTrackBase::iterator & iterator, int& type)
 {
 	//Determine all possible candidates
-	std::list<std::pair<BorderTrackBase::iterator, std::pair<bool, float>>> listOfFunctioningIteratorFirstAndDistancePairs;
+	std::list<std::pair<BorderTrackBase::iterator, std::pair<int, float>>> listOfFunctioningIteratorFirstAndDistancePairs;
 	for (BorderTrackBase::iterator it = mBorderTrack.begin(); it != mBorderTrack.end(); ++it)
 	{
 		float firstDist = mySFML::Simple::lengthOf(it->first - position);
 		if (firstDist < radius)
 		{
-			listOfFunctioningIteratorFirstAndDistancePairs.push_back(std::make_pair(it, std::make_pair(true, firstDist)));
+			listOfFunctioningIteratorFirstAndDistancePairs.push_back(std::make_pair(it, std::make_pair(2, firstDist)));
 		}
 		float secondDist = mySFML::Simple::lengthOf(it->second - position);
 		if (secondDist < radius)
 		{
-			listOfFunctioningIteratorFirstAndDistancePairs.push_back(std::make_pair(it, std::make_pair(false, secondDist)));
+			listOfFunctioningIteratorFirstAndDistancePairs.push_back(std::make_pair(it, std::make_pair(3, secondDist)));
+		}
+		float midDist = mySFML::Simple::lengthOf(mySFML::Simple::meanVector(it->first, it->second) - position);
+		if (midDist < radius)
+		{
+			listOfFunctioningIteratorFirstAndDistancePairs.push_back(std::make_pair(it, std::make_pair(1, midDist)));
 		}
 	}
 
@@ -516,7 +521,7 @@ bool Track::getIteratorToBorderTrackSegmentWhichHasBorder(sf::Vector2f const & p
 
 	//Filter out the best candidate
 	BorderTrackBase::iterator bestIt;
-	bool bestFirst;
+	int bestType;
 	float bestDistance;
 	bool firstLoop = true;
 	for (auto const & pair : listOfFunctioningIteratorFirstAndDistancePairs)
@@ -525,7 +530,7 @@ bool Track::getIteratorToBorderTrackSegmentWhichHasBorder(sf::Vector2f const & p
 		{
 			firstLoop = false;
 			bestIt = pair.first;
-			bestFirst = pair.second.first;
+			bestType = pair.second.first;
 			bestDistance = pair.second.second;
 		}
 		else
@@ -533,7 +538,7 @@ bool Track::getIteratorToBorderTrackSegmentWhichHasBorder(sf::Vector2f const & p
 			if (pair.second.second < bestDistance)
 			{
 				bestIt = pair.first;
-				bestFirst = pair.second.first;
+				bestType = pair.second.first;
 				bestDistance = pair.second.second;
 			}
 		}
@@ -541,14 +546,8 @@ bool Track::getIteratorToBorderTrackSegmentWhichHasBorder(sf::Vector2f const & p
 
 	//Return per Return value and Reference
 	iterator = bestIt;
-	first = bestFirst;
+	type = bestType;
 	return true;
-}
-
-
-bool Track::getIteratorToBorderTrackSegmentWhichHasCenter(sf::Vector2f const & position, float radius, BorderTrackBase::iterator & iterator, int& type)
-{
-
 }
 
 
