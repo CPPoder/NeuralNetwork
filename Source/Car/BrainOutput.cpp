@@ -7,9 +7,9 @@ BrainOutput::BrainOutput()
 {
 }
 
-BrainOutput::BrainOutput(float _gasBrakeForceDerivative, float _steeringWheelAngleDerivative)
-	: gasBrakeForceDerivative(_gasBrakeForceDerivative),
-	  steeringWheelAngleDerivative(_steeringWheelAngleDerivative)
+BrainOutput::BrainOutput(float _gasBrakeFactorDerivative, float _steeringWheelFactorDerivative)
+	: gasBrakeFactorDerivative(_gasBrakeFactorDerivative),
+	  steeringWheelFactorDerivative(_steeringWheelFactorDerivative)
 {
 }
 

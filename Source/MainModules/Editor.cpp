@@ -102,6 +102,24 @@ void Editor::update(sf::Time const & time, sf::RenderWindow * renderWindow)
 		}
 	}
 
+	//Change Mode
+	if (EventManager::checkForEvent(EventManager::EventType::KEY_RELEASED))
+	{
+		EventManager::KeyInfo keyInfo = EventManager::getReleasedKeyInfo();
+		if (keyInfo.key == sf::Keyboard::Key::M)
+		{
+			switch (mMode)
+			{
+			case Mode::MODIFY_BORDER_TRACK_SEGMENTS:
+				mMode = Mode::MODIFY_CENTER_TRACK_SEGMENTS;
+				break;
+			case Mode::MODIFY_CENTER_TRACK_SEGMENTS:
+				mMode = Mode::MODIFY_BORDER_TRACK_SEGMENTS;
+				break;
+			}
+		}
+	}
+
 	//Manipulate Track
 	if (pCurrentTrack != nullptr)
 	{

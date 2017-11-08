@@ -36,13 +36,11 @@ BrainOutput PlayerBrain::calculateBrainOutput(RaceSimulation const * raceSimPoin
 		turning += 1.f;
 	}
 
-	float maximalGasBrakeForce = carPointer->getMaximalGasBrakeForce();
-	float maximalSteeringWheelAngle = carPointer->getMaximalSteeringWheelAngle();
-	float gasBrakeForce = carPointer->getGasBrakeForce();
-	float steeringWheelAngle = carPointer->getSteeringWheelAngle();
+	float gasBrakeFactor = carPointer->getGasOrBrakeFactor();
+	float steeringWheelFactor = carPointer->getSteeringWheelFactor();
 
-	float gasBrakeDiff = acceleration * maximalGasBrakeForce - gasBrakeForce;
-	float steeringWheelDiff = turning * maximalSteeringWheelAngle - steeringWheelAngle;
+	float gasBrakeDiff = acceleration - gasBrakeFactor;
+	float steeringWheelDiff = turning - steeringWheelFactor;
 
 	float constexpr gasBrakeCoefficient = 20.0f;
 	float constexpr steeringWheelCoefficient = 20.0f;

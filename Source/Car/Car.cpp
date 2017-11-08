@@ -42,39 +42,58 @@ void Car::render(sf::RenderWindow * renderWindow) const
 void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, RaceSimulation const * raceSimPointer)
 {
 	//Save the day for long times
-	sf::Time saveTime;
-	if (time > sf::seconds(1.f))
-	{
-		saveTime = sf::seconds(1.f);
-	}
-	else
-	{
-		saveTime = time;
-	}
+	sf::Time saveTime = ( (time > sf::seconds(1.f)) ? sf::seconds(1.f) : saveTime = time );
 
 	//Save current State
 	sf::Vector2f positionBackup = mPosition;
 	sf::Vector2f directionBackup = mDirection;
 	float velocityBackup = mVelocity;
 
-	//Determine GasBrakeForce- & WheelAngle-Derivatives from Brain
+	//Let the brain calculate the brain output
 	BrainOutput brainOutput = pBrain->calculateBrainOutput(raceSimPointer, this);
-	mGasBrakeForceDerivative = brainOutput.gasBrakeForceDerivative;
-	mSteeringWheelAngleDerivative = brainOutput.steeringWheelAngleDerivative;
 	
-	//Determine GasBrakeForce & WheelAngle
-	mGasOrBrakeForce += mGasBrakeForceDerivative * saveTime.asSeconds();
-	mSteeringWheelAngle += mSteeringWheelAngleDerivative * saveTime.asSeconds();
-	mGasOrBrakeForce = myMath::Simple::trim(-mMaximalGasOrBrakeForce, mGasOrBrakeForce, mMaximalGasOrBrakeForce);
-	mSteeringWheelAngle = myMath::Simple::trim(-mMaximalSteeringWheelAngle, mSteeringWheelAngle, mMaximalSteeringWheelAngle);
+	//Update factors using brainOutput
+	mGasOrBrakeFactor += brainOutput.gasBrakeFactorDerivative * saveTime.asSeconds();
+	mSteeringWheelFactor += brainOutput.steeringWheelFactorDerivative * saveTime.asSeconds();
+	mGasOrBrakeFactor = myMath::Simple::trim(-1.f, mGasOrBrakeFactor, 1.f);
+	mSteeringWheelFactor = myMath::Simple::trim(-1.f, mSteeringWheelFactor, 1.f);
+
+	//Determine GasForce & BrakeForce (If v>0: Up is gas, down is brake; If v<0: The other way arround!)
+	float absoluteGasForce = myMath::Simple::abs(mGasOrBrakeFactor * mMaximalPower / myMath::Simple::max(mVelocity, 0.0001f) * (1.f - mDamage)); //W=F*s => P=F*v => F=P/v
+	float absoluteBrakeForce = myMath::Simple::abs(mGasOrBrakeFactor * mMaximalBrakeForce * (1.f - mDamage));
+	float gasOrBrakeForce;
+	if (mGasOrBrakeFactor > 0.f)
+	{
+		//Accelerate, either with gas or brake
+		if (mVelocity >= 0.f)
+		{
+			gasOrBrakeForce = absoluteGasForce;
+		}
+		else
+		{
+			gasOrBrakeForce = absoluteBrakeForce;
+		}
+	}
+	else
+	{
+		//De-Accelerate, either with gas or brake
+		if (mVelocity >= 0.f)
+		{
+			gasOrBrakeForce = -absoluteBrakeForce;
+		}
+		else
+		{
+			gasOrBrakeForce = -absoluteGasForce;
+		}
+	}
 
 	//Determine Rolling Friction
 	float rollingFrictionValue = mMass * mRollingFrictionCoefficient * 9.81f;
 	sf::Vector2f rollingFriction = rollingFrictionValue * ((mVelocity > 0.f) ? -1.f : 1.f) * mDirection;
 
 	//Determine Total Force
-	float centripetalForce = mMass / mDistanceBetweenFrontAndBackWheels * mVelocity * mVelocity * mSteeringWheelAngle; //Has sign from angle!
-	sf::Vector2f totalForce = mGasOrBrakeForce * mDirection + centripetalForce * mySFML::Create::createOrthogonalVector(mDirection) + rollingFriction;
+	float centripetalForce = mMass / mDistanceBetweenFrontAndBackWheels * mVelocity * mVelocity * mSteeringWheelFactor * mMaximalSteeringWheelAngle; //Has sign from angle!
+	sf::Vector2f totalForce = gasOrBrakeForce * mDirection + centripetalForce * mySFML::Create::createOrthogonalVector(mDirection) + rollingFriction;
 
 	//Cut total force to be smaller than friction force
 	float frictionForce = mFrictionCoefficient * mMass * 9.81f;
@@ -114,6 +133,11 @@ void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, R
 	//Check for collision and handle
 	if (this->checkForBoundaryCollision(raceSimPointer))
 	{
+		//Handle damage
+		float constexpr damageConstant = 0.0005f;
+		mDamage += mVelocity * mVelocity * damageConstant;
+		mDamage = myMath::Simple::trim(0.f, mDamage, 1.f);
+
 		//Restore old state
 		mPosition = positionBackup;
 		mDirection = directionBackup;
@@ -121,6 +145,11 @@ void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, R
 
 		this->setVertexArray();
 	}
+
+	//Debug
+	//std::cout << "Pos: " << mPosition.x << " " << mPosition.y << std::endl;
+	std::cout << "Damage: " << mDamage << std::endl;
+	//std::cout << "Velocity: " << mVelocity << std::endl;
 }
 
 
@@ -146,7 +175,7 @@ void Car::setVertexArray()
 	sf::Vector2f leftTirePos = mPosition + leftVector + upVecToTires;
 	sf::Vector2f rightTirePos = mPosition - leftVector + upVecToTires;
 	float carAngle = mySFML::Simple::angleOf(mDirection);
-	float tiresAngle = carAngle - mSteeringWheelAngle; //- due to mSteeringWheelAngle's definition
+	float tiresAngle = carAngle - mSteeringWheelFactor * mMaximalSteeringWheelAngle; //- due to mSteeringWheelAngle's definition
 	sf::Vector2f tiresVector = mySFML::Create::createNormalVectorWithAngle(-tiresAngle) * tiresLength / 2.f; //CreateNormalVector does it in mathematical coordinates!!!
 	mTiresVertexArray.setPrimitiveType(sf::PrimitiveType::Lines);
 	mTiresVertexArray.clear();
@@ -178,17 +207,21 @@ float Car::getVelocity() const
 {
 	return mVelocity;
 }
-float Car::getGasBrakeForce() const
+float Car::getGasOrBrakeFactor() const
 {
-	return mGasOrBrakeForce;
+	return mGasOrBrakeFactor;
 }
-float Car::getSteeringWheelAngle() const
+float Car::getSteeringWheelFactor() const
 {
-	return mSteeringWheelAngle;
+	return mSteeringWheelFactor;
 }
-float Car::getMaximalGasBrakeForce() const
+float Car::getMaximalPower() const
 {
-	return mMaximalGasOrBrakeForce;
+	return mMaximalPower;
+}
+float Car::getMaximalBrakeForce() const
+{
+	return mMaximalBrakeForce;
 }
 float Car::getMaximalSteeringWheelAngle() const
 {
@@ -205,6 +238,10 @@ float Car::getFrictionCoefficient() const
 float Car::getDistanceBetweenFrontAndBackWheels() const
 {
 	return mDistanceBetweenFrontAndBackWheels;
+}
+float Car::getDamage() const
+{
+	return mDamage;
 }
 sf::VertexArray const & Car::getVertexArrayReference() const
 {

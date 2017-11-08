@@ -5,12 +5,12 @@
 struct BrainOutput
 {
 public:
-	float gasBrakeForceDerivative;
-	float steeringWheelAngleDerivative;
+	float gasBrakeFactorDerivative;
+	float steeringWheelFactorDerivative;
 
 public:
 	BrainOutput();
-	BrainOutput(float _gasBrakeForceDerivative, float _steeringWheelAngleDerivative);
+	BrainOutput(float _gasBrakeFactorDerivative, float _steeringWheelFactorDerivative);
 	~BrainOutput() = default;
 	BrainOutput(BrainOutput const &) = default;
 	BrainOutput& operator=(BrainOutput const &) = default;
