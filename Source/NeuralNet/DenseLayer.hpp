@@ -1,9 +1,9 @@
 #ifndef DENSELAYER_HPP
 #define DENSELAYER_HPP
 
-#include "SequentialNet.hpp"
-#include "Layer.hpp"
-#include "Activation.hpp"
+#include "Source\NeuralNet\SequentialNet.hpp"
+#include "Source\NeuralNet\Layer.hpp"
+#include "Source\NeuralNet\Activation.hpp"
 
 
 class DenseLayer final : public Layer

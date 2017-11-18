@@ -18,14 +18,6 @@ struct InvalidLayerPointerException
 	InvalidLayerPointerException(std::string const & message, Layer const* layerPointer);
 };
 
-struct CompileNeuralNetException
-{
-
-};
-
-
-
-
 
 
 #endif //NEURALNETEXCEPTIONS_HPP

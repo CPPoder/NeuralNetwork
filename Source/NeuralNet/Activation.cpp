@@ -1,4 +1,4 @@
-#include "Activation.hpp"
+#include "Source\NeuralNet\Activation.hpp"
 
 Activation::Activation(std::function<NetNodeType(NetNodeType const & x)> f)
 	: f(f)

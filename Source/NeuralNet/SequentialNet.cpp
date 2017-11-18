@@ -1,5 +1,5 @@
-#include "SequentialNet.hpp"
-#include "DenseLayer.hpp"
+#include "Source\NeuralNet\SequentialNet.hpp"
+#include "Source\NeuralNet\DenseLayer.hpp"
 
 
 SequentialNet::SequentialNet(Mat::VectorSize inputLayerSize)

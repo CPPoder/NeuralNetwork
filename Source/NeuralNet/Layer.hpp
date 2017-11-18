@@ -2,7 +2,7 @@
 #define LAYER_HPP
 
 #include "Matrix.hpp"
-#include "NeuralNet.hpp"
+#include "Source\NeuralNet\NeuralNet.hpp"
 
 
 

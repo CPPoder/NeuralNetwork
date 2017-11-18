@@ -3,8 +3,8 @@
 
 
 #include "Matrix.hpp"
-#include "Mutation.hpp"
-#include "NeuralNetExceptions.hpp"
+#include "Source\NeuralNet\Mutation.hpp"
+#include "Source\NeuralNet\NeuralNetExceptions.hpp"
 
 
 class Layer;

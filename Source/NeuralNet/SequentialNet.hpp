@@ -4,7 +4,7 @@
 
 #include <vector>
 
-#include "NeuralNet.hpp"
+#include "Source\NeuralNet\NeuralNet.hpp"
 
 
 

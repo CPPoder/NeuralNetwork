@@ -4,7 +4,7 @@
 #include <functional>
 #include <cmath>
 
-#include "NeuralNet.hpp"
+#include "Source\NeuralNet\NeuralNet.hpp"
 
 
 

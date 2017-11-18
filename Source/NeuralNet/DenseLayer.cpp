@@ -1,4 +1,4 @@
-#include "DenseLayer.hpp"
+#include "Source\NeuralNet\DenseLayer.hpp"
 
 
 DenseLayer::DenseLayer(Mat::VectorSize const & layerSize, Activation activation)
