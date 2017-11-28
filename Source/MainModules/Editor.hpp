@@ -74,6 +74,14 @@ private:
 	sf::Vector2f const mStatusTextFieldSize = sf::Vector2f(310.f, 25.f);
 	TextField mStatusTextField;
 
+	sf::Vector2f const mModeCheckBoxPos = sf::Vector2f(50.f, 200.f);
+	CheckBox mModeCheckBox;
+	mySFML::Class::Text mModeText;
+
+	sf::Vector2f const mCreateCircleTrackButtonPos = sf::Vector2f(50.f, 300.f);
+	sf::Vector2f const mCreateCircleTrackButtonSize = sf::Vector2f(200.f, 40.f);
+	Button mCreateCircleTrackButton;
+
 
 
 public:
@@ -111,6 +119,7 @@ private:
 	//Track Manipulation
 	void manipulateTrack(sf::RenderWindow const * renderWindow);
 	void modifyBorderOrCenterTrackSegments(sf::RenderWindow const * renderWindow);
+	void createCircleTrack();
 
 };
 

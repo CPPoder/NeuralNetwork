@@ -4,11 +4,14 @@
 
 Editor::Editor(sf::Vector2u const & editorWindowSize)
 	: mEditorWindowSize(editorWindowSize),
-	  mLoadTextField(mLoadTextFieldPos, mTextFieldSize, "./Data/Tracks/", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize, true, InputBehaviour::BOUNDED_FROM_BELOW, 14u),
-	  mSaveTextField(mSaveTextFieldPos, mTextFieldSize, "./Data/Tracks/", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize, true, InputBehaviour::BOUNDED_FROM_BELOW, 14u),
-	  mLoadButton(mLoadButtonPos, mButtonSize, "Load", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize),
-	  mSaveButton(mSaveButtonPos, mButtonSize, "Save", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize),
-	  mStatusTextField(mStatusTextFieldPos, mStatusTextFieldSize, "", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize, false, InputBehaviour::FREE, 0u, &TextFieldSettings::inactiveTextFieldSettings)
+	mLoadTextField(mLoadTextFieldPos, mTextFieldSize, "./Data/Tracks/", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize, true, InputBehaviour::BOUNDED_FROM_BELOW, 14u),
+	mSaveTextField(mSaveTextFieldPos, mTextFieldSize, "./Data/Tracks/", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize, true, InputBehaviour::BOUNDED_FROM_BELOW, 14u),
+	mLoadButton(mLoadButtonPos, mButtonSize, "Load", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize),
+	mSaveButton(mSaveButtonPos, mButtonSize, "Save", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize),
+	mStatusTextField(mStatusTextFieldPos, mStatusTextFieldSize, "", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize, false, InputBehaviour::FREE, 0u, &TextFieldSettings::inactiveTextFieldSettings),
+	mModeCheckBox(mModeCheckBoxPos, (mMode == Mode::MODIFY_CENTER_TRACK_SEGMENTS)),
+	mModeText(*mFonts.getFont(mySFML::Class::FontName::ARIAL), mModeCheckBoxPos + sf::Vector2f(30.f, -2.f), "Modify Center Track Segments", 17u),
+	mCreateCircleTrackButton(mCreateCircleTrackButtonPos, mCreateCircleTrackButtonSize, "Create Circle Track", mySFML::Class::FontName::ARIAL, 2.f, mCharacterSize)
 {
 	this->setViews();
 
@@ -47,6 +50,9 @@ void Editor::renderGUI(sf::RenderWindow * renderWindow)
 	mLoadButton.render(renderWindow);
 	mSaveButton.render(renderWindow);
 	mStatusTextField.render(renderWindow);
+	mModeCheckBox.render(renderWindow);
+	renderWindow->draw(*mModeText.pointer);
+	mCreateCircleTrackButton.render(renderWindow);
 }
 void Editor::renderTrack(sf::RenderWindow * renderWindow)
 {
@@ -64,6 +70,8 @@ void Editor::update(sf::Time const & time, sf::RenderWindow * renderWindow)
 	mLoadButton.updateState(renderWindow, &mGUIView);
 	mSaveButton.updateState(renderWindow, &mGUIView);
 	mStatusTextField.updateState(renderWindow, &mGUIView);
+	mModeCheckBox.updateState(renderWindow, &mGUIView);
+	mCreateCircleTrackButton.updateState(renderWindow, &mGUIView);
 
 	//Check for MouseReleasedEvents
 	bool loadButtonReleased = mLoadButton.getMouseReleasedEventOccured(renderWindow, &mGUIView);
@@ -103,27 +111,25 @@ void Editor::update(sf::Time const & time, sf::RenderWindow * renderWindow)
 	}
 
 	//Change Mode
-	if (EventManager::checkForEvent(EventManager::EventType::KEY_RELEASED))
+	if (mModeCheckBox.getIsTicked())
 	{
-		EventManager::KeyInfo keyInfo = EventManager::getReleasedKeyInfo();
-		if (keyInfo.key == sf::Keyboard::Key::M)
-		{
-			switch (mMode)
-			{
-			case Mode::MODIFY_BORDER_TRACK_SEGMENTS:
-				mMode = Mode::MODIFY_CENTER_TRACK_SEGMENTS;
-				break;
-			case Mode::MODIFY_CENTER_TRACK_SEGMENTS:
-				mMode = Mode::MODIFY_BORDER_TRACK_SEGMENTS;
-				break;
-			}
-		}
+		mMode = Mode::MODIFY_CENTER_TRACK_SEGMENTS;
+	}
+	else
+	{
+		mMode = Mode::MODIFY_BORDER_TRACK_SEGMENTS;
 	}
 
 	//Manipulate Track
 	if (pCurrentTrack != nullptr)
 	{
 		this->manipulateTrack(renderWindow);
+	}
+
+	//Create circle track
+	if (mCreateCircleTrackButton.getMouseReleasedEventOccured(renderWindow, &mGUIView))
+	{
+		this->createCircleTrack();
 	}
 
 	//Change Track View (Zoom, Movement)
@@ -322,5 +328,19 @@ void Editor::modifyBorderOrCenterTrackSegments(sf::RenderWindow const * renderWi
 		}
 	}
 }
+
+
+void Editor::createCircleTrack()
+{
+	if (pCurrentTrack != nullptr)
+	{
+		delete pCurrentTrack;
+		pCurrentTrack = nullptr;
+	}
+	pCurrentTrack = new Track(Track::constructCircleTrack(sf::Vector2f(100.f, 100.f), 80.f, 20u, 6.f, sf::FloatRect(0.f, 0.f, 400.f, 200.f)));
+	this->setViews();
+}
+
+
 
 

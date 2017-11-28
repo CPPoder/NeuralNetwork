@@ -25,7 +25,8 @@ RaceSimulation::~RaceSimulation()
 
 void RaceSimulation::render(sf::RenderWindow * renderWindow)
 {
-	sf::View raceView(sf::FloatRect(0.f, 0.f, 400.f, 200.f));
+	//sf::View raceView(sf::FloatRect(0.f, 0.f, 400.f, 200.f));
+	sf::View raceView(sf::FloatRect(0.f, 0.f, 800.f, 400.f));
 	sf::View originalView(renderWindow->getView());
 	renderWindow->setView(raceView);
 

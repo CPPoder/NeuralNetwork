@@ -59,7 +59,8 @@ void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, R
 	mSteeringWheelFactor = myMath::Simple::trim(-1.f, mSteeringWheelFactor, 1.f);
 
 	//Determine GasForce & BrakeForce (If v>0: Up is gas, down is brake; If v<0: The other way arround!)
-	float absoluteGasForce = myMath::Simple::abs(mGasOrBrakeFactor * mMaximalPower / myMath::Simple::max(mVelocity, 0.0001f) * (1.f - mDamage)); //W=F*s => P=F*v => F=P/v
+	float cuttedV = ((mVelocity >= 0) ? myMath::Simple::max(mVelocity, 0.0001f) : myMath::Simple::min(mVelocity, -0.0001f));
+	float absoluteGasForce = myMath::Simple::abs(mGasOrBrakeFactor * mMaximalPower / cuttedV * (1.f - mDamage)); //W=F*s => P=F*v => F=P/v
 	float absoluteBrakeForce = myMath::Simple::abs(mGasOrBrakeFactor * mMaximalBrakeForce * (1.f - mDamage));
 	float gasOrBrakeForce;
 	if (mGasOrBrakeFactor > 0.f)
@@ -148,7 +149,7 @@ void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, R
 
 	//Debug
 	//std::cout << "Pos: " << mPosition.x << " " << mPosition.y << std::endl;
-	std::cout << "Damage: " << mDamage << std::endl;
+	//std::cout << "Damage: " << mDamage << std::endl;
 	//std::cout << "Velocity: " << mVelocity << std::endl;
 }
 
