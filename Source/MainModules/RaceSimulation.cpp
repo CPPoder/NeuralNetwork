@@ -25,10 +25,21 @@ RaceSimulation::~RaceSimulation()
 
 void RaceSimulation::render(sf::RenderWindow * renderWindow)
 {
+	//Standard view
 	//sf::View raceView(sf::FloatRect(0.f, 0.f, 400.f, 200.f));
 	sf::View raceView(sf::FloatRect(0.f, 0.f, 800.f, 400.f));
+
+	//Car following view
+	Car const & car = mListOfCars.front();
+	sf::View carView;
+	carView.setSize(200.f, 100.f);
+	carView.setCenter(car.getPosition() + 0.8f * car.getVelocity() * car.getDirection());
+	carView.setRotation(90.f-mySFML::Simple::angleOf(car.getDirection()) / myMath::Const::PIf * 180.f);
+	carView.zoom(std::sqrt(0.1f + car.getVelocity() * car.getVelocity() / 1000.f));
+
 	sf::View originalView(renderWindow->getView());
-	renderWindow->setView(raceView);
+	//renderWindow->setView(raceView);
+	renderWindow->setView(carView);
 
 	mTrack.render(renderWindow);
 	for (auto & car : mListOfCars)
