@@ -408,6 +408,72 @@ bool Track::loadFromFile(std::string const & path)
 
 
 
+
+void Track::addSegmentNearestTo(sf::Vector2f const & pos)
+{
+	//Find nearest center
+	BorderTrackBase::iterator nearestIt;
+	float nearestDist;
+	sf::Vector2f nearestCenter;
+	bool first = true;
+	for (BorderTrackBase::iterator it = mBorderTrack.begin(); it != mBorderTrack.end(); ++it)
+	{
+		sf::Vector2f center = (it->first + it->second) / 2.f;
+		float dist = mySFML::Simple::lengthOf(pos - center);
+		if (first)
+		{
+			nearestIt = it;
+			nearestDist = dist;
+			nearestCenter = center;
+			first = false;
+		}
+		else
+		{
+			if (dist < nearestDist)
+			{
+				nearestIt = it;
+				nearestDist = dist;
+				nearestCenter = center;
+			}
+		}
+	}
+
+	//Find nearer neighbour
+	BorderTrackBase::iterator nextIt = nearestIt;
+	BorderTrackBase::iterator previousIt = nearestIt;
+	++nextIt;
+	if (nextIt == mBorderTrack.end())
+	{
+		nextIt = mBorderTrack.begin();
+	}
+	if (previousIt == mBorderTrack.begin())
+	{
+		previousIt = mBorderTrack.end();
+	}
+	--previousIt;
+	sf::Vector2f nextCenter = (nextIt->first + nextIt->second) / 2.f;
+	sf::Vector2f previousCenter = (previousIt->first + previousIt->second) / 2.f;
+	float nextDist = mySFML::Simple::lengthOf(nextCenter - pos);
+	float previousDist = mySFML::Simple::lengthOf(previousCenter - pos);
+	bool nextIsNearer = (nextDist < previousDist);
+	bool innerProductOfNextPositive = (mySFML::Simple::scalarProduct(nextCenter - nearestCenter, pos - nearestCenter) > 0.f);
+	BorderTrackBase::iterator secondNearestIt = (innerProductOfNextPositive ? nextIt : previousIt );
+
+	//Add segment
+	BorderTrackSegment newSegment = std::make_pair(mySFML::Simple::meanVector(nearestIt->first, secondNearestIt->first), mySFML::Simple::meanVector(nearestIt->second, secondNearestIt->second));
+	if (innerProductOfNextPositive)
+	{
+		mBorderTrack.addSegmentBefore(nextIt, newSegment);
+	}
+	else
+	{
+		mBorderTrack.addSegmentBefore(nearestIt, newSegment);
+	}
+}
+
+
+
+
 //Deform Track
 void Track::deformRandomly(unsigned int numberOfDeformations, float deformationStep)
 {

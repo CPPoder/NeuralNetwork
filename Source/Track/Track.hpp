@@ -84,6 +84,8 @@ public:
 	bool saveToFile(std::string const & path) const;
 	bool loadFromFile(std::string const & path);
 
+	void addSegmentNearestTo(sf::Vector2f const & pos);
+
 	void deformRandomly(unsigned int numberOfDeformations, float deformationStep);
 	void doOneRandomDeformation(float deformationLength);
 	void doubleNumberOfSegments();

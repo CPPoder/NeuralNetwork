@@ -132,6 +132,22 @@ void Editor::update(sf::Time const & time, sf::RenderWindow * renderWindow)
 		this->createCircleTrack();
 	}
 
+	//Add segment to track with right click
+	if (EventManager::checkForEvent(EventManager::EventType::MOUSE_RELEASED))
+	{
+		//std::cout << "Debug!" << std::endl;
+		EventManager::MouseInfo info = EventManager::getReleasedMouseInfo();
+		if (info.button == sf::Mouse::Button::Right)
+		{
+			if (pCurrentTrack != nullptr)
+			{
+				sf::Vector2f mousePos = renderWindow->mapPixelToCoords(info.position, mTrackView);
+				//std::cout << "Add at: " << mousePos.x << " " << mousePos.y << std::endl;
+				pCurrentTrack->addSegmentNearestTo(mousePos);
+			}
+		}
+	}
+
 	//Change Track View (Zoom, Movement)
 	this->changeTrackView(renderWindow);
 }

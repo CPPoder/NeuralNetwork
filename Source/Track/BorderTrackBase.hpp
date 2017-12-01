@@ -34,6 +34,8 @@ public:
 	iterator begin() { return mListOfBorderTrackSegments.begin(); }
 	iterator end() { return mListOfBorderTrackSegments.end(); }
 
+	void addSegmentBefore(std::list<BorderTrackSegment>::iterator pos, BorderTrackSegment const & segment) { mListOfBorderTrackSegments.insert(pos, segment); }
+
 	CenterTrackBase getCenterTrackBase() const;
 
 	std::list<BorderTrackSegment> const & getListOfBorderTrackSegments() const;
