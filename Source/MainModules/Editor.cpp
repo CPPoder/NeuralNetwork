@@ -135,14 +135,12 @@ void Editor::update(sf::Time const & time, sf::RenderWindow * renderWindow)
 	//Add segment to track with right click
 	if (EventManager::checkForEvent(EventManager::EventType::MOUSE_RELEASED))
 	{
-		//std::cout << "Debug!" << std::endl;
 		EventManager::MouseInfo info = EventManager::getReleasedMouseInfo();
 		if (info.button == sf::Mouse::Button::Right)
 		{
 			if (pCurrentTrack != nullptr)
 			{
 				sf::Vector2f mousePos = renderWindow->mapPixelToCoords(info.position, mTrackView);
-				//std::cout << "Add at: " << mousePos.x << " " << mousePos.y << std::endl;
 				pCurrentTrack->addSegmentNearestTo(mousePos);
 			}
 		}
@@ -202,7 +200,7 @@ void Editor::setViews()
 	float widthOfTrackView;
 	if (pCurrentTrack != nullptr)
 	{
-		widthOfTrackView = pCurrentTrack->getValidTrackArea().width;
+		widthOfTrackView = pCurrentTrack->getBounds().width;
 	}
 	else
 	{
@@ -353,7 +351,7 @@ void Editor::createCircleTrack()
 		delete pCurrentTrack;
 		pCurrentTrack = nullptr;
 	}
-	pCurrentTrack = new Track(Track::constructCircleTrack(sf::Vector2f(100.f, 100.f), 80.f, 20u, 6.f, sf::FloatRect(0.f, 0.f, 400.f, 200.f)));
+	pCurrentTrack = new Track(Track::constructCircleTrack(sf::Vector2f(100.f, 100.f), 80.f, 20u, 6.f));
 	this->setViews();
 }
 

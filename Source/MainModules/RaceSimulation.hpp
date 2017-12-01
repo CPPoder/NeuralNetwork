@@ -5,6 +5,7 @@
 
 #include "Source\Track\Track.hpp"
 #include "Source\Car\Car.hpp"
+#include "Source\MainModules\World.hpp"
 
 #include <list>
 
@@ -20,16 +21,12 @@ public:
 
 private:
 	Event mEvent = Event::NONE;
-	sf::Vector2f mSize;
 
 private:
-	Track mTrack;
-
-	std::list<Car> mListOfCars;
+	World mWorld;
 
 public:
-	RaceSimulation() = delete;
-	RaceSimulation(sf::Vector2f const & size);
+	RaceSimulation();
 	~RaceSimulation();
 
 	void render(sf::RenderWindow * renderWindow);
@@ -37,9 +34,6 @@ public:
 
 	Event pollRaceSimulationEvent();
 	void reactOnESC();
-
-public:
-	Track const & getTrackReference() const;
 
 
 };

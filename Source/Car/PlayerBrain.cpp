@@ -9,7 +9,7 @@ BrainType PlayerBrain::getBrainType() const
 	return BrainType::PLAYER;
 }
 
-BrainOutput PlayerBrain::calculateBrainOutput(RaceSimulation const * raceSimPointer, Car const * carPointer)
+BrainOutput PlayerBrain::calculateBrainOutput(World const * worldPointer, Car const * carPointer)
 {
 	bool up = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up);
 	bool left = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left);

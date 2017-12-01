@@ -104,38 +104,13 @@ namespace mySFML {
 				std::cerr << "template <typename T> T mySFML::angleOf(sf::Vector2<T> vector) : Error! vector is (0,0)!" << std::endl;
 				return T(0);
 			}
-			sf::Vector2<T> normVec = mySFML::Simple::normalize(vector);
-			normVec = sf::Vector2<T>(normVec.x, -normVec.y);
-			float angle;
-			if (myMath::Simple::abs(normVec.y) < myMath::Const::SQRT2f / 2.f)
-			{
-				angle = atan(normVec.y / normVec.x);
-			}
 			else
 			{
-				bool secondOrFourthQuadrant = ((normVec.x < 0 && normVec.y > 0) || (normVec.x > 0 && normVec.y < 0));
-				if (!secondOrFourthQuadrant)
-				{
-					angle = (myMath::Const::PId / 2.0 - atan(normVec.x / normVec.y));
-				}
-				else
-				{
-					angle = (myMath::Const::PId * 3.0 / 2.0 - atan(normVec.x / normVec.y));
-				}
+				T angle = atan2(vector.x, vector.y) - myMath::Const::PIf / 2.f;
+				while (angle >= 2.f * myMath::Const::PIf) angle -= 2.f * myMath::Const::PIf;
+				while (angle <= 0.f) angle += 2.f * myMath::Const::PIf;
+				return angle;
 			}
-			if (vector.x < 0)
-			{
-				angle += myMath::Const::PId;
-			}
-			while (angle > 2.0 * myMath::Const::PId)
-			{
-				angle -= 2.0 * myMath::Const::PId;
-			}
-			while (angle < 0.0)
-			{
-				angle += 2.0 * myMath::Const::PId;
-			}
-			return angle;
 		}
 
 		///////////

@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "Source\Car\Car.hpp"
 
-#include "Source\MainModules\RaceSimulation.hpp"
+#include "Source\MainModules\World.hpp"
 #include "Source\Math\myUsefulMath.hpp"
+#include "Source\Track\Track.hpp"
 
 
 Car::Car()
@@ -39,7 +40,7 @@ void Car::render(sf::RenderWindow * renderWindow) const
 	renderWindow->draw(*mVelocityText.pointer);
 }
 
-void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, RaceSimulation const * raceSimPointer)
+void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, World const * worldPointer)
 {
 	//Save the day for long times
 	sf::Time saveTime = ( (time > sf::seconds(1.f)) ? sf::seconds(1.f) : saveTime = time );
@@ -50,7 +51,7 @@ void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, R
 	float velocityBackup = mVelocity;
 
 	//Let the brain calculate the brain output
-	BrainOutput brainOutput = pBrain->calculateBrainOutput(raceSimPointer, this);
+	BrainOutput brainOutput = pBrain->calculateBrainOutput(worldPointer, this);
 	
 	//Update factors using brainOutput
 	mGasOrBrakeFactor += brainOutput.gasBrakeFactorDerivative * saveTime.asSeconds();
@@ -132,7 +133,7 @@ void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, R
 	this->setVertexArray();
 
 	//Check for collision and handle
-	if (this->checkForBoundaryCollision(raceSimPointer))
+	if (this->checkForBoundaryCollision(worldPointer))
 	{
 		//Handle damage
 		float constexpr damageConstant = 0.0005f;
@@ -263,8 +264,8 @@ void Car::setPosition(sf::Vector2f const & position)
 ///////////////////////////
 //CheckForBoundaryCollision
 
-bool Car::checkForBoundaryCollision(RaceSimulation const * raceSimPointer) const
+bool Car::checkForBoundaryCollision(World const * worldPointer) const
 {
-	Track const & trackReference = raceSimPointer->getTrackReference();
+	Track const & trackReference = worldPointer->getTrackReference();
 	return trackReference.checkCollisionWith(*this);
 }

@@ -41,7 +41,6 @@ class Track
 {
 private:
 	BorderTrackBase mBorderTrack;
-	sf::FloatRect mValidTrackArea;
 	bool mTrackIsInitialized = false;
 
 	sf::VertexArray mVertexArrayOfTrack;
@@ -50,24 +49,23 @@ private:
 public:
 	Track() = delete;
 	Track(std::string const & filePath);
-	Track(BorderTrackBase const & borderTrackBase, sf::FloatRect const & validTrackArea, sf::Color const & color = sf::Color::White);
-	Track(CenterTrackBase const & centerTrackBase, sf::FloatRect const & validTrackArea, sf::Color const & color = sf::Color::White);
+	Track(BorderTrackBase const & borderTrackBase, sf::Color const & color = sf::Color::White);
+	Track(CenterTrackBase const & centerTrackBase, sf::Color const & color = sf::Color::White);
 	Track(Track const &) = default;
 	Track& operator=(Track const &) = default;
 	~Track() = default;
 
-	void setTrack(BorderTrackBase const & borderTrackBase, sf::FloatRect const & validTrackArea);
-	void setTrack(CenterTrackBase const & centerTrackBase, sf::FloatRect const & validTrackArea);
+	void setTrack(BorderTrackBase const & borderTrackBase);
+	void setTrack(CenterTrackBase const & centerTrackBase);
 	void setColor(sf::Color const & color);
-	void setValidTrackArea(sf::FloatRect const & floatRectOfValidTrackArea);
 
 	sf::Color getColor() const;
-	sf::FloatRect getValidTrackArea() const;
 	unsigned int getNumberOfSegments() const;
 	BorderTrackBase getBorderTrackBase() const;
 	CenterTrackBase getCenterTrackBase() const;
 	std::pair<std::list<Line>, std::list<Line>> getListsOfLines() const;
 	bool getIfTrackIsWellInitialized() const;
+	sf::FloatRect getBounds() const;
 
 	void render(sf::RenderWindow* renderWindow, unsigned int options = TrackRenderOptions::DEFAULT_FOR_SIMULATION);
 
@@ -86,19 +84,13 @@ public:
 
 	void addSegmentNearestTo(sf::Vector2f const & pos);
 
-	void deformRandomly(unsigned int numberOfDeformations, float deformationStep);
-	void doOneRandomDeformation(float deformationLength);
-	void doubleNumberOfSegments();
 	bool getIteratorToBorderTrackSegmentWhichHasBorder(sf::Vector2f const & position, float radius, BorderTrackBase::iterator & iterator, int& type);
 
 public:
 	void refreshState();
-	
-public:
-	bool checkIfTrackIsValid() const;
 
 public:
-	static Track constructCircleTrack(sf::Vector2f const & center, float radius, unsigned int pointCount, float width, sf::FloatRect const & validTrackArea);
+	static Track constructCircleTrack(sf::Vector2f const & center, float radius, unsigned int pointCount, float width);
 
 };
 

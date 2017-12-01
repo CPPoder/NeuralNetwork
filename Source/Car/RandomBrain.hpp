@@ -16,7 +16,7 @@ public:
 
 	virtual BrainType getBrainType() const override;
 
-	virtual BrainOutput calculateBrainOutput(RaceSimulation const * raceSimPointer, Car const * carPointer) override;
+	virtual BrainOutput calculateBrainOutput(World const * worldPointer, Car const * carPointer) override;
 
 
 };

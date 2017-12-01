@@ -4,7 +4,7 @@
 namespace GameState
 {
 	RaceState::RaceState()
-		: mRaceSimulation(sf::Vector2f(400.f, 200.f))
+		: mRaceSimulation()
 	{
 
 	}

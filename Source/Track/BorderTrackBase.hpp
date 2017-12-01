@@ -33,6 +33,10 @@ public:
 	typedef std::list<BorderTrackSegment>::const_iterator const_iterator;
 	iterator begin() { return mListOfBorderTrackSegments.begin(); }
 	iterator end() { return mListOfBorderTrackSegments.end(); }
+	const_iterator cbegin() const { return mListOfBorderTrackSegments.cbegin(); }
+	const_iterator cend() const { return mListOfBorderTrackSegments.cend(); }
+	const_iterator begin() const { return this->cbegin(); }
+	const_iterator end() const { return this->cend(); }
 
 	void addSegmentBefore(std::list<BorderTrackSegment>::iterator pos, BorderTrackSegment const & segment) { mListOfBorderTrackSegments.insert(pos, segment); }
 

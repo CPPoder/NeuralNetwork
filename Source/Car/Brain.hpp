@@ -6,7 +6,7 @@
 #include "Source\Car\BrainOutput.hpp"
 #include "Source\Car\BrainType.hpp"
 
-class RaceSimulation;
+class World;
 class Car;
 
 
@@ -22,7 +22,7 @@ public:
 
 	virtual BrainType getBrainType() const = 0;
 
-	virtual BrainOutput calculateBrainOutput(RaceSimulation const * raceSimPointer, Car const * carPointer) = 0;
+	virtual BrainOutput calculateBrainOutput(World const * worldPointer, Car const * carPointer) = 0;
 
 	static Brain* constructBrain(BrainType brainType);
 

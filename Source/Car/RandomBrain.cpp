@@ -10,7 +10,7 @@ BrainType RandomBrain::getBrainType() const
 	return BrainType::RANDOM;
 }
 
-BrainOutput RandomBrain::calculateBrainOutput(RaceSimulation const * raceSimPointer, Car const * carPointer)
+BrainOutput RandomBrain::calculateBrainOutput(World const * worldPointer, Car const * carPointer)
 {
 	float gasBrakeQuotient = static_cast<float>(myMath::Rand::randIntervali(-100, 100)) / 100.f;
 	float steeringWheelQuotient = static_cast<float>(myMath::Rand::randIntervali(-100, 100)) / 100.f;

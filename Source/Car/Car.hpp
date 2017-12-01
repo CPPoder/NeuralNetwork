@@ -8,6 +8,7 @@
 #include "Source\Car\Brain.hpp"
 #include "Source\Car\PlayerBrain.hpp"
 
+class World;
 
 class Car
 {
@@ -66,7 +67,7 @@ public:
 
 	//Render & Update
 	void render(sf::RenderWindow * renderWindow) const;
-	void update(sf::Time const & time, sf::RenderWindow const * renderWindow, RaceSimulation const * raceSimPointer);
+	void update(sf::Time const & time, sf::RenderWindow const * renderWindow, World const * worldPointer);
 
 public:
 	//State Getter
@@ -101,7 +102,7 @@ private:
 	void setVertexArray();
 
 public:
-	bool checkForBoundaryCollision(RaceSimulation const * raceSimPointer) const;
+	bool checkForBoundaryCollision(World const * worldPointer) const;
 
 
 

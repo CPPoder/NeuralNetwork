@@ -6,120 +6,31 @@
 #include "Source\Framework\EventManager.hpp"
 
 
-RaceSimulation::RaceSimulation(sf::Vector2f const & size)
-//	: mTrack(Track::constructCircleTrack(sf::Vector2f(100.f, 100.f), 80.f, 20u, 7.f, sf::FloatRect(0.f, 0.f, mSize.x, mSize.y))), 
-	: mTrack("./Data/Tracks/test.tr"),
-	  mSize(size)
+RaceSimulation::RaceSimulation()
 {
-	for (unsigned int i = 0; i < 1; ++i)
+	Track track("./Data/Tracks/test.tr");
+	std::list<Car> listOfCars;
+	listOfCars.push_back(Car(track.calculatePositionInTrackNear(sf::Vector2f(10.f, 50.f)), sf::Vector2f(0.f, 1.f), 0.f, BrainType::PLAYER));
+	for (unsigned int i = 0; i < 0; ++i)
 	{
-		mListOfCars.push_back(Car(mTrack.calculatePositionInTrackNear(sf::Vector2f(10.f, 50.f)), sf::Vector2f(0.f, 1.f), 0.f, BrainType::PLAYER));
+		listOfCars.push_back(Car(track.calculatePositionInTrackNear(sf::Vector2f(10.f, 50.f)), sf::Vector2f(0.f, 1.f), 0.f, BrainType::RANDOM));
 	}
+	mWorld = World(track, listOfCars);
 }
 
 RaceSimulation::~RaceSimulation()
 {
-	mTrack.saveToFile("./Data/Tracks/test.tr");
 }
 
 
 void RaceSimulation::render(sf::RenderWindow * renderWindow)
 {
-	//Standard view
-	//sf::View raceView(sf::FloatRect(0.f, 0.f, 400.f, 200.f));
-	sf::View raceView(sf::FloatRect(0.f, 0.f, 800.f, 400.f));
-
-	//Car following view
-	static sf::View usedView = sf::View();
-	Car const & car = mListOfCars.front();
-	sf::View carView;
-	carView.setSize(200.f, 100.f);
-	carView.setCenter(car.getPosition() + 0.8f * car.getVelocity() * car.getDirection());
-	carView.setRotation(90.f-mySFML::Simple::angleOf(car.getDirection()) / myMath::Const::PIf * 180.f);
-	carView.zoom(std::sqrt(0.1f + car.getVelocity() * car.getVelocity() / 1000.f));
-	float constexpr mix = 0.95f;
-	usedView.setCenter(mix*usedView.getCenter() + (1-mix)*carView.getCenter());
-	usedView.setSize(mix*usedView.getSize() + (1 - mix)*carView.getSize());
-	if (std::abs(usedView.getRotation() - carView.getRotation()) <= 180.f)
-	{
-		usedView.setRotation(mix*usedView.getRotation() + (1 - mix)*carView.getRotation());
-	}
-	else
-	{
-		if (carView.getRotation() > usedView.getRotation())
-		{
-			usedView.setRotation(mix*usedView.getRotation() + (1 - mix)*(carView.getRotation() - 360.f));
-		}
-		else
-		{
-			usedView.setRotation(mix*(usedView.getRotation() - 360.f) + (1 - mix)*carView.getRotation());
-		}
-	}
-	//std::cout << usedView.getRotation() << " " << carView.getRotation() << std::endl;
-
-	sf::View originalView(renderWindow->getView());
-	//renderWindow->setView(raceView);
-	renderWindow->setView(usedView);
-
-	mTrack.render(renderWindow);
-	for (auto & car : mListOfCars)
-	{
-		car.render(renderWindow);
-	}
-
-	renderWindow->setView(originalView);
+	mWorld.render(renderWindow);
 }
 
 void RaceSimulation::update(sf::Time const & time, sf::RenderWindow const * renderWindow)
 {
-	for (auto & car : mListOfCars)
-	{
-		car.update(time, renderWindow, this);
-	}
-	if (EventManager::checkForEvent(EventManager::EventType::KEY_RELEASED))
-	{
-		EventManager::KeyInfo keyInfo = EventManager::getReleasedKeyInfo();
-		if (keyInfo.key == sf::Keyboard::Key::Tab)
-		{
-			std::cout << "RandomTrackCreation! Type in Number of Deformations: ";
-			unsigned int numberOfDeformations;
-			std::cin >> numberOfDeformations;
-
-			std::cout << "RandomTrackCreation! Type in Deformation Length: ";
-			float deformationLength;
-			std::cin >> deformationLength;
-
-			mTrack.deformRandomly(numberOfDeformations, deformationLength);
-			for (auto & car : mListOfCars)
-			{
-				car.setPosition(mTrack.calculatePositionInTrackNear(car.getPosition()));
-			}
-		}
-		else if (keyInfo.key == sf::Keyboard::Key::D)
-		{
-			mTrack.doubleNumberOfSegments();
-		}
-		else if (keyInfo.key == sf::Keyboard::Key::C)
-		{
-			mTrack = Track::constructCircleTrack(sf::Vector2f(100.f, 100.f), 80.f, 20u, 6.f, sf::FloatRect(0.f, 0.f, mSize.x, mSize.y));
-			for (auto & car : mListOfCars)
-			{
-				car.setPosition(mTrack.calculatePositionInTrackNear(car.getPosition()));
-			}
-		}
-		else if (keyInfo.key == sf::Keyboard::Key::V)
-		{
-			bool validity = mTrack.checkIfTrackIsValid();
-			if (validity)
-			{
-				std::cout << "Actual track is valid!" << std::endl;
-			}
-			else
-			{
-				std::cout << "Actual track is not valid!" << std::endl;
-			}
-		}
-	}
+	mWorld.update(time, renderWindow);
 }
 
 
@@ -138,11 +49,4 @@ void RaceSimulation::reactOnESC()
 }
 
 
-
-
-
-Track const & RaceSimulation::getTrackReference() const
-{
-	return mTrack;
-}
 
