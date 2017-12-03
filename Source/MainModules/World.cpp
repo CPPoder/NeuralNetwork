@@ -30,7 +30,7 @@ void World::render(sf::RenderWindow * renderWindow)
 	Car const & car = mListOfCars.front();
 	sf::View carView;
 	carView.setSize(200.f, 100.f);
-	carView.setCenter(car.getPosition() + 0.8f * car.getVelocity() * car.getDirection());
+	carView.setCenter(car.getPosition() + 1.2f * car.getVelocity() * car.getDirection());
 	carView.setRotation(90.f - mySFML::Simple::angleOf(car.getDirection()) / myMath::Const::PIf * 180.f);
 	carView.zoom(std::sqrt(0.1f + car.getVelocity() * car.getVelocity() / 1000.f));
 	float constexpr mix = 0.95f;

@@ -14,7 +14,8 @@ public:
 		NONE,
 		EXIT,
 		START_SIMULATION,
-		OPEN_EDITOR
+		OPEN_EDITOR,
+		OPEN_LEARNING
 	};
 
 private:
@@ -25,6 +26,7 @@ private:
 	mySFML::Class::Text mTitleText;
 
 	Button mStartSimulationButton;
+	Button mStartLearnButton;
 	Button mStartEditorButton;
 	Button mExitButton;
 	

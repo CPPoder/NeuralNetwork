@@ -24,18 +24,22 @@ Track::Track(std::string const & filePath)
 }
 
 //Constructor from BorderTrackBase
-Track::Track(BorderTrackBase const & borderTrackBase, sf::Color const & color)
+Track::Track(BorderTrackBase const & borderTrackBase, sf::Vector2f const & startPosition, bool trackDirectionIsForwards, sf::Color const & color)
 {
 	mTrackIsInitialized = true;
 	this->setTrack(borderTrackBase);
+	this->setStartPosition(startPosition);
+	this->setTrackDirectionIsForwards(trackDirectionIsForwards);
 	this->setColor(color);
 }
 
 //Constructor from CenterTrackBase
-Track::Track(CenterTrackBase const & centerTrackBase, sf::Color const & color)
+Track::Track(CenterTrackBase const & centerTrackBase, sf::Vector2f const & startPosition, bool trackDirectionIsForwards, sf::Color const & color)
 {
 	mTrackIsInitialized = true;
 	this->setTrack(centerTrackBase);
+	this->setStartPosition(startPosition);
+	this->setTrackDirectionIsForwards(trackDirectionIsForwards);
 	this->setColor(color);
 }
 
@@ -128,6 +132,16 @@ void Track::setTrack(CenterTrackBase const & centerTrackBase)
 	this->refreshState();
 }
 
+void Track::setStartPosition(sf::Vector2f const & startPosition)
+{
+	mStartPosition = startPosition;
+}
+
+void Track::setTrackDirectionIsForwards(bool isForwards)
+{
+	mTrackDirectionIsForwards = isForwards;
+}
+
 void Track::setColor(sf::Color const & color)
 {
 	mTrackColor = color;
@@ -208,6 +222,68 @@ sf::FloatRect Track::getBounds() const
 	return sf::FloatRect(min.x, min.y, max.x - min.x, max.y - min.y);
 }
 
+bool Track::getIfTrackDirectionIsForwards() const
+{
+	return mTrackDirectionIsForwards;
+}
+
+sf::Vector2f Track::getForwardDirectionAt(sf::Vector2f const & position) const
+{
+	//Find nearest segment
+	bool first = true;
+	float smallestDist;
+	BorderTrackBase::const_iterator nearestSegment;
+	for (BorderTrackBase::const_iterator it = mBorderTrack.cbegin(); it != mBorderTrack.cend(); ++it)
+	{
+		sf::Vector2f center = mySFML::Simple::meanVector(it->first, it->second);
+		if (first)
+		{
+			first = false;
+			nearestSegment = it;
+			smallestDist = mySFML::Simple::lengthOf(position - center);
+		}
+		else
+		{
+			float newDist = mySFML::Simple::lengthOf(position - center);
+			if (newDist < smallestDist)
+			{
+				smallestDist = newDist;
+				nearestSegment = it;
+			}
+		}
+	}
+
+	//Depending on mTrackDirectionIsForwards take either next or previous segment as second segment
+	BorderTrackBase::const_iterator secondSegment = nearestSegment;
+	if (mTrackDirectionIsForwards)
+	{
+		if (++secondSegment == mBorderTrack.cend())
+		{
+			secondSegment = mBorderTrack.cbegin();
+		}
+	}
+	else
+	{
+		if (secondSegment == mBorderTrack.cbegin())
+		{
+			secondSegment = --mBorderTrack.cend();
+		}
+		else
+		{
+			--secondSegment;
+		}
+	}
+
+	//Calculate forward direction
+	sf::Vector2f firstPos = mySFML::Simple::meanVector(nearestSegment->first, nearestSegment->second);
+	sf::Vector2f secondPos = mySFML::Simple::meanVector(secondSegment->first, secondSegment->second);
+	return mySFML::Simple::normalize(secondPos - firstPos);
+}
+
+sf::Vector2f Track::getStartPosition() const
+{
+	return mStartPosition;
+}
 
 
 
@@ -260,28 +336,29 @@ bool Track::checkCollisionWith(Car const & car) const
 
 sf::Vector2f Track::calculatePositionInTrackNear(sf::Vector2f const & position) const
 {
-	sf::Vector2f nearestPosition;
-	float dist;
-	bool firstSegment = true;
-	CenterTrackBase centerTrackBase(mBorderTrack.getCenterTrackBase());
-	std::list<CenterTrackSegment> const & listOfCenterTrackSegments = centerTrackBase.getListOfCenterTrackSegments();
-	for (auto const & segment : listOfCenterTrackSegments)
+	bool first = true;
+	float smallestDist;
+	sf::Vector2f bestPos;
+	for (auto const & segment : mBorderTrack)
 	{
-		sf::Vector2f newPos = segment.first;
-		float newDist = mySFML::Simple::lengthOf(segment.second);
-		if (firstSegment)
+		sf::Vector2f center = mySFML::Simple::meanVector(segment.first, segment.second);
+		if (first)
 		{
-			firstSegment = false;
-			nearestPosition = newPos;
-			dist = newDist;
+			first = false;
+			bestPos = center;
+			smallestDist = mySFML::Simple::lengthOf(position - center);
 		}
-		else if (newDist < dist)
+		else
 		{
-			nearestPosition = newPos;
-			dist = newDist;
+			float newDist = mySFML::Simple::lengthOf(position - center);
+			if (newDist < smallestDist)
+			{
+				smallestDist = newDist;
+				bestPos = center;
+			}
 		}
 	}
-	return nearestPosition;
+	return bestPos;
 }
 
 
@@ -301,6 +378,14 @@ bool Track::saveToFile(std::string const & path) const
 		fileStream << "<BorderTrackBase:Begin>" << std::endl;
 		fileStream << mBorderTrack;
 		fileStream << "<BorderTrackBase:End>" << std::endl;
+
+		fileStream << "<ForwardDirection:Begin>" << std::endl;
+		fileStream << mTrackDirectionIsForwards << std::endl;
+		fileStream << "<ForwardDirection:End>" << std::endl;
+
+		fileStream << "<StartPosition:Begin>" << std::endl;
+		fileStream << mStartPosition.x << " " << mStartPosition.y << std::endl;
+		fileStream << "<StartPosition:End>" << std::endl;
 
 		fileStream.close();
 		std::cout << "Complete!" << std::endl;
@@ -360,7 +445,10 @@ bool Track::loadFromFile(std::string const & path)
 		};
 
 		std::list<std::string> listOfBorderTrackBaseLines = extractPart(listOfLines, "BorderTrackBase");
-		if (listOfBorderTrackBaseLines.empty())
+		std::list<std::string> listOfForwardDirectionLines = extractPart(listOfLines, "ForwardDirection");
+		std::list<std::string> listOfStartPositionLines = extractPart(listOfLines, "StartPosition");
+
+		if (listOfBorderTrackBaseLines.empty() || listOfForwardDirectionLines.size() != 1 || listOfStartPositionLines.size() != 1)
 		{
 			std::cout << "Error! Format incorrect! Failed to load File!" << std::endl;
 			return false;
@@ -376,12 +464,21 @@ bool Track::loadFromFile(std::string const & path)
 			listOfBorderTrackSegments.push_back(std::make_pair(sf::Vector2f(x1, y1), sf::Vector2f(x2, y2)));
 		}
 		BorderTrackBase borderTrackBase(listOfBorderTrackSegments);
+
+		//Extract data from listOfForwardDirectionLines
+		bool forwardDirection = std::stoi(listOfForwardDirectionLines.front());
+		
+		//Extract data from listOfStartPositionLines
+		float startX, startY;
+		std::stringstream stream(listOfStartPositionLines.front());
+		stream >> startX >> startY;
+		sf::Vector2f startPosition(startX, startY);
 		
 		//Close File Stream
 		fileStream.close();
 
 		//Set State
-		this->setTrack(borderTrackBase);
+		*this = Track(borderTrackBase, startPosition, forwardDirection);
 		std::cout << "Complete!" << std::endl;
 		return true;
 	}
@@ -560,5 +657,5 @@ Track Track::constructCircleTrack(sf::Vector2f const & center, float radius, uns
 	}
 
 	std::cout << "Finished!" << std::endl;
-	return Track(CenterTrackBase(list));
+	return Track(CenterTrackBase(list), list.front().first, true);
 }

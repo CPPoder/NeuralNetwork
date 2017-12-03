@@ -5,6 +5,7 @@
 #include "Source\MainModules\World.hpp"
 
 
+
 class LearnModule
 {
 public:
@@ -18,7 +19,7 @@ private:
 	Event mEvent = Event::NONE;
 
 private:
-	//Some World stuff
+	World* pWorld = nullptr;
 
 public:
 	LearnModule();

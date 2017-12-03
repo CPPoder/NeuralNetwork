@@ -3,7 +3,8 @@
 
 LearnModule::LearnModule()
 {
-
+	//Create Car with some Neural network brain
+	//Create World with this car
 }
 
 LearnModule::~LearnModule()
@@ -13,12 +14,29 @@ LearnModule::~LearnModule()
 
 void LearnModule::render(sf::RenderWindow * renderWindow)
 {
-	//Render occasionally
+	if (pWorld != nullptr)
+	{
+		pWorld->render(renderWindow);
+	}
 }
 
 void LearnModule::update(sf::Time const & time, sf::RenderWindow const * renderWindow)
 {
-	//Learn!!!
+	if (pWorld == nullptr)
+	{
+		Track track("./Data/Tracks/test.tr");
+		Car neuralNetCar(track.calculatePositionInTrackNear(sf::Vector2f()), sf::Vector2f(1.0f, 0.f), 0.f, BrainType::RANDOM);
+		pWorld = new World(track, { neuralNetCar });
+	}
+	
+	sf::Clock clock;
+	int counter = 0;
+	while (clock.getElapsedTime().asSeconds() < 1.f / 50.f) //50FPS
+	{
+		pWorld->update(sf::seconds(1.f / 50.f), renderWindow);
+		++counter;
+	}
+	std::cout << counter << std::endl;
 }
 
 

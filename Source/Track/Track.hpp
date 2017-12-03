@@ -41,6 +41,9 @@ class Track
 {
 private:
 	BorderTrackBase mBorderTrack;
+	bool mTrackDirectionIsForwards = true;
+	sf::Vector2f mStartPosition = sf::Vector2f();
+
 	bool mTrackIsInitialized = false;
 
 	sf::VertexArray mVertexArrayOfTrack;
@@ -49,14 +52,16 @@ private:
 public:
 	Track() = delete;
 	Track(std::string const & filePath);
-	Track(BorderTrackBase const & borderTrackBase, sf::Color const & color = sf::Color::White);
-	Track(CenterTrackBase const & centerTrackBase, sf::Color const & color = sf::Color::White);
+	Track(BorderTrackBase const & borderTrackBase, sf::Vector2f const & startPosition, bool trackDirectionIsForwards = true, sf::Color const & color = sf::Color::White);
+	Track(CenterTrackBase const & centerTrackBase, sf::Vector2f const & startPosition, bool trackDirectionIsForwards = true, sf::Color const & color = sf::Color::White);
 	Track(Track const &) = default;
 	Track& operator=(Track const &) = default;
 	~Track() = default;
 
 	void setTrack(BorderTrackBase const & borderTrackBase);
 	void setTrack(CenterTrackBase const & centerTrackBase);
+	void setStartPosition(sf::Vector2f const & startPosition);
+	void setTrackDirectionIsForwards(bool isForwards);
 	void setColor(sf::Color const & color);
 
 	sf::Color getColor() const;
@@ -66,6 +71,9 @@ public:
 	std::pair<std::list<Line>, std::list<Line>> getListsOfLines() const;
 	bool getIfTrackIsWellInitialized() const;
 	sf::FloatRect getBounds() const;
+	bool getIfTrackDirectionIsForwards() const;
+	sf::Vector2f getForwardDirectionAt(sf::Vector2f const & position) const;
+	sf::Vector2f getStartPosition() const;
 
 	void render(sf::RenderWindow* renderWindow, unsigned int options = TrackRenderOptions::DEFAULT_FOR_SIMULATION);
 
