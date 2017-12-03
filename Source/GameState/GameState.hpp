@@ -30,7 +30,9 @@ namespace GameState
 			RACE,
 			RACE_MENU,
 			EDITOR,
-			EDITOR_MENU
+			EDITOR_MENU,
+			LEARN,
+			LEARN_MENU
 		} toState;
 
 

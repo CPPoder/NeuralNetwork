@@ -14,8 +14,10 @@
 #include "Source\GameState\MainMenuState.hpp"
 #include "Source\GameState\RaceState.hpp"
 #include "Source\GameState\EditorState.hpp"
+#include "Source\GameState\LearnState.hpp"
 #include "Source\GameState\EditorMenuState.hpp"
 #include "Source\GameState\RaceSimMenuState.hpp"
+#include "Source\GameState\LearnMenuState.hpp"
 
 #include "Source\Framework\TextureManager.hpp"
 #include "Source\Framework\SoundManager.hpp"
@@ -58,6 +60,7 @@ public:
 
 public:
 	static sf::RenderWindow const * getRenderWindow();
+	static void setFramerateLimit(bool active, int fps = 50);
 
 };
 

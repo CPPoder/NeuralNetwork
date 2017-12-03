@@ -112,11 +112,17 @@ void Framework::update()
 	case GameState::Change::State::EDITOR:
 		gameStatePointer = new GameState::EditorState;
 		break;
+	case GameState::Change::State::LEARN:
+		gameStatePointer = new GameState::LearnState;
+		break;
 	case GameState::Change::State::EDITOR_MENU:
 		gameStatePointer = new GameState::EditorMenuState;
 		break;
 	case GameState::Change::State::RACE_MENU:
 		gameStatePointer = new GameState::RaceSimMenuState;
+		break;
+	case GameState::Change::State::LEARN_MENU:
+		gameStatePointer = new GameState::LearnMenuState;
 		break;
 	}
 
@@ -281,4 +287,18 @@ sf::RenderWindow const * Framework::getRenderWindow()
 
 //Initialize pRenderWindow
 sf::RenderWindow * Framework::pRenderWindow = nullptr;
+
+
+
+void Framework::setFramerateLimit(bool active, int fps)
+{
+	if (active)
+	{
+		pRenderWindow->setFramerateLimit(fps);
+	}
+	else
+	{
+		pRenderWindow->setFramerateLimit(0);
+	}
+}
 
