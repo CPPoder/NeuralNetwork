@@ -250,6 +250,18 @@ namespace mySFML {
 			return sf::Vector2f(cos(angleInRadiant), sin(angleInRadiant));
 		}
 
+		/////////////////////
+		//CreateRotatedVector
+		sf::Vector2f createRotatedVector(sf::Vector2f const & initialVec, float angle)
+		{
+			//cos	-sin
+			//sin	cos
+			sf::Vector2f res;
+			res.x = cos(angle)*initialVec.x - sin(angle)*initialVec.y;
+			res.y = sin(angle)*initialVec.x + cos(angle)*initialVec.y;
+			return res;
+		}
+
 	} //Namespace Create
 
 

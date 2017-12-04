@@ -5,7 +5,8 @@
 enum class BrainType
 {
 	PLAYER,
-	RANDOM
+	RANDOM,
+	NET
 };
 
 

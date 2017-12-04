@@ -329,6 +329,36 @@ bool Track::checkCollisionWith(Car const & car) const
 }
 
 
+std::list<sf::Vector2f> Track::getIntersectionsWithBorder(Line const & line) const
+{
+	std::list<sf::Vector2f> intersections;
+	sf::Vector2f placeholder;
+
+	//Get List of Track Lines
+	std::pair<std::list<Line>, std::list<Line>> pairOfLineLists = this->getListsOfLines();
+	std::list<Line> listOfTrackLines1 = pairOfLineLists.first;
+	std::list<Line> listOfTrackLines2 = pairOfLineLists.second;
+
+	//Check for intersections
+	for (auto const & trackLine : listOfTrackLines1)
+	{
+		if (line.intersects(trackLine, placeholder))
+		{
+			intersections.push_back(placeholder);
+		}
+	}
+	for (auto const & trackLine : listOfTrackLines2)
+	{
+		if (line.intersects(trackLine, placeholder))
+		{
+			intersections.push_back(placeholder);
+		}
+	}
+
+	return intersections;
+}
+
+
 
 
 //////////////////////////////////////////////////////////////

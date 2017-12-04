@@ -276,6 +276,10 @@ namespace mySFML {
 		//CreateNormalVectorWithAngle
 		sf::Vector2f createNormalVectorWithAngle(float angleInRadiant);
 
+		/////////////////////
+		//CreateRotatedVector
+		sf::Vector2f createRotatedVector(sf::Vector2f const & initialVec, float angle);
+
 	} //Namespace Create
 
 } //Namespace mySFML

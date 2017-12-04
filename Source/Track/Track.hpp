@@ -85,6 +85,7 @@ private:
 
 public:
 	bool checkCollisionWith(Car const & car) const;
+	std::list<sf::Vector2f> getIntersectionsWithBorder(Line const & line) const;
 	sf::Vector2f calculatePositionInTrackNear(sf::Vector2f const & position) const;
 
 	bool saveToFile(std::string const & path) const;
