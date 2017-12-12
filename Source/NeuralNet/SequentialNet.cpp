@@ -45,11 +45,11 @@ void SequentialNet::compile()
 
 	for (unsigned int layerNum = 1; layerNum < vecOfLayerSizes.size(); ++layerNum) //Skip input layer! std::vector gives access to previous layerSizes!
 	{
-		DenseLayer* denseLayerPointer = dynamic_cast<DenseLayer*>(this->mVecOfLayers.at(layerNum));
+		DenseLayer* denseLayerPointer = dynamic_cast<DenseLayer*>(this->mVecOfLayers.at(layerNum - 1));
 		if (denseLayerPointer != nullptr)
 		{
 			Mat::VectorSize sizeOfPreviousLayer = vecOfLayerSizes.at(layerNum - 1);
-			Mat::VectorSize sizeOfThisLayer = vecOfLayerSizes.at(layerNum - 1);
+			Mat::VectorSize sizeOfThisLayer = vecOfLayerSizes.at(layerNum);
 			denseLayerPointer->setMatrix(Mat::Matrix<NetNodeType>(Mat::MN(sizeOfThisLayer, sizeOfPreviousLayer)));
 			denseLayerPointer->setBias(Mat::Vector<NetNodeType>(sizeOfThisLayer));
 		}
@@ -64,10 +64,11 @@ void SequentialNet::compile()
 
 NetOutput SequentialNet::apply(NetInput const & input) const
 {
-	Mat::Vector<NetNodeType> vec;
+	Mat::Vector<NetNodeType> vec = input;
 	for (auto layerPointer : mVecOfLayers)
 	{
-		vec = layerPointer->apply(std::move(vec));
+		//vec = layerPointer->apply(std::move(vec));
+		vec = layerPointer->apply(vec);
 	}
 	return vec;
 }

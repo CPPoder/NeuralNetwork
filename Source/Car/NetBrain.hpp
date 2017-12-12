@@ -33,6 +33,7 @@ public:
 	static constexpr unsigned int sNumOfAngles = 16u; //16 different angles
 	static constexpr unsigned int sFullNumOfAngles = 2u * sNumOfAngles + 2u; //Every angle in both directions + front and back
 	static constexpr unsigned int sNetInputSize = sFullNumOfAngles + 5u; //borderCollisions + forwardProjection + (velocity, damage, actualGasBrake, actualSteering)
+	static constexpr unsigned int sNetOutputSize = 2u; //gasBrakeDerivative & steeringWheelDerivative
 	static const std::array<float, sNumOfAngles> sArrayOfAngles;
 	static const std::array<float, sFullNumOfAngles> sFullArrayOfAngles;
 

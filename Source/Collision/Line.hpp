@@ -18,6 +18,7 @@ public:
 	Line();
 	Line(sf::Vector2f const & _vertex1, sf::Vector2f const & _vertex2);
 
+	float getLength() const;
 	sf::Vector2f getUnitTangentVector() const;
 	sf::Vector2f getUnitNormalVector() const;
 	float projectPointOnLine(sf::Vector2f const & point) const;

@@ -14,6 +14,11 @@ Line::Line(sf::Vector2f const & _vertex1, sf::Vector2f const & _vertex2)
 
 
 
+float Line::getLength() const
+{
+	return mySFML::Simple::lengthOf(this->vertex1 - this->vertex2);
+}
+
 sf::Vector2f Line::getUnitTangentVector() const
 {
 	return mySFML::Simple::normalize(vertex2 - vertex1);

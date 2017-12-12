@@ -32,7 +32,7 @@ void LearnModule::update(sf::Time const & time, sf::RenderWindow const * renderW
 	
 	sf::Clock clock;
 	int counter = 0;
-	while (clock.getElapsedTime().asSeconds() < 1.f / 500.f) //50FPS for rendering
+	while (clock.getElapsedTime().asSeconds() < 1.f / 50.f) //50FPS for rendering
 	{
 		pWorld->update(sf::seconds(1.f / 50.f), renderWindow); //Update jumps of 1/50 seconds
 		++counter;

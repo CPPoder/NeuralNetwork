@@ -6,13 +6,24 @@
 
 #include "Source\Car\Car.hpp"
 #include "Source\MainModules\World.hpp"
+#include "Source\NeuralNet\DenseLayer.hpp"
 
 
 
 NetBrain::NetBrain()
 	: mSequentialNet(NetBrain::sNetInputSize)
 {
-	//Add dense layers here!
+	//Create net with one hidden layer!
+	//This layer shall have between input number and output number of neurons! Choose:
+	
+	//Add hidden layer
+	mSequentialNet.addLayer(DenseLayer((sNetInputSize + sNetOutputSize) / 2u, Activation::RectifiedLinearUnit));
+
+	//Add output layer
+	mSequentialNet.addLayer(DenseLayer(sNetOutputSize, Activation::Sigmoid));
+
+	//Compile net
+	mSequentialNet.compile();
 }
 
 
@@ -58,13 +69,23 @@ BrainOutput NetBrain::calculateBrainOutput(World const * worldPointer, Car const
 
 	//////////////////////////////////
 	//Use those variables as net input
-	unsigned int inputSize = mListOfSeeingLines.size() + 1 + 4; //borderCollisions + forwardProjection + (velocity, damage, actual(GasBrake/Steering))
+	NetInput netInput(sNetInputSize);
+	std::list<Line>::const_iterator it = mListOfSeeingLines.cbegin();
+	for (unsigned int i = 0; i < sFullNumOfAngles; ++i, ++it)
+	{
+		netInput.at(i) = it->getLength();
+	}
+	netInput.at(sFullNumOfAngles) = forwardProjection;
+	netInput.at(sFullNumOfAngles + 1) = velocity;
+	netInput.at(sFullNumOfAngles + 2) = damage;
+	netInput.at(sFullNumOfAngles + 3) = actualGasBrake;
+	netInput.at(sFullNumOfAngles + 4) = actualSteering;
+	NetOutput netOutput = mSequentialNet.apply(netInput);
 
 
-	float gasBrakeQuotient = static_cast<float>(myMath::Rand::randIntervali(-100, 100)) / 100.f;
-	float steeringWheelQuotient = static_cast<float>(myMath::Rand::randIntervali(-100, 100)) / 100.f;
+	
 
-	//return BrainOutput(gasBrakeQuotient, steeringWheelQuotient);
+	return BrainOutput(netOutput.at(0), netOutput.at(1));
 
 
 
@@ -102,7 +123,7 @@ BrainOutput NetBrain::calculateBrainOutput(World const * worldPointer, Car const
 	float constexpr gasBrakeCoefficient = 20.0f;
 	float constexpr steeringWheelCoefficient = 20.0f;
 
-	return BrainOutput(gasBrakeCoefficient * gasBrakeDiff, steeringWheelCoefficient * steeringWheelDiff);
+	//return BrainOutput(gasBrakeCoefficient * gasBrakeDiff, steeringWheelCoefficient * steeringWheelDiff);
 
 
 }
