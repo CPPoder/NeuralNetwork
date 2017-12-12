@@ -67,6 +67,7 @@ public:
 
 	//Render & Update
 	void render(sf::RenderWindow * renderWindow) const;
+	void renderSeeingLinesIfNetBrain(sf::RenderWindow * renderWindow, sf::View view) const;
 	void update(sf::Time const & time, sf::RenderWindow const * renderWindow, World const * worldPointer);
 
 public:

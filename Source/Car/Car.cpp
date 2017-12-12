@@ -4,6 +4,7 @@
 #include "Source\MainModules\World.hpp"
 #include "Source\Math\myUsefulMath.hpp"
 #include "Source\Track\Track.hpp"
+#include "Source\Car\NetBrain.hpp"
 
 
 Car::Car()
@@ -38,6 +39,18 @@ void Car::render(sf::RenderWindow * renderWindow) const
 	renderWindow->draw(mVertexArray);
 	renderWindow->draw(mTiresVertexArray);
 	renderWindow->draw(*mVelocityText.pointer);
+}
+
+void Car::renderSeeingLinesIfNetBrain(sf::RenderWindow * renderWindow, sf::View view) const
+{
+	if (pBrain->getBrainType() == BrainType::NET)
+	{
+		NetBrain* netBrain = dynamic_cast<NetBrain*>(pBrain);
+		if (netBrain != nullptr)
+		{
+			netBrain->renderSeeingLines(renderWindow, view);
+		}
+	}
 }
 
 void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, World const * worldPointer)

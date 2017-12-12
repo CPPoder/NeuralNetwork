@@ -16,6 +16,7 @@ class World
 private:
 	Track mTrack;
 	std::list<Car> mListOfCars;
+	sf::View mUsedView = sf::View();
 
 public:
 	World();
@@ -31,6 +32,7 @@ public:
 public:
 	Track const & getTrackReference() const;
 	std::list<Car> const & getCarsReference() const;
+	sf::View getUsedView() const;
 
 };
 
