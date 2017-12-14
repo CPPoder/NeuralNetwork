@@ -20,11 +20,13 @@ public:
 	NetBrain();
 	virtual ~NetBrain() override = default;
 	NetBrain(NetBrain const &) = default;
-	NetBrain& operator=(NetBrain const &) = default;
+	NetBrain& operator=(NetBrain const & netBrain);
 
 	virtual BrainType getBrainType() const override;
 
 	virtual BrainOutput calculateBrainOutput(World const * worldPointer, Car const * carPointer) override;
+
+	void mutate();
 
 public:
 	void renderSeeingLines(sf::RenderWindow* renderWindow, sf::View view) const;

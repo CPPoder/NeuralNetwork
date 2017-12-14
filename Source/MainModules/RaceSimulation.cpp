@@ -18,6 +18,7 @@ RaceSimulation::RaceSimulation()
 		listOfCars.push_back(Car(track.calculatePositionInTrackNear(track.getStartPosition()), sf::Vector2f(0.f, 1.f), 0.f, BrainType::RANDOM));
 	}
 	mWorld = World(track, listOfCars);
+	mWorld.setUsedViewToWantedView();
 }
 
 RaceSimulation::~RaceSimulation()

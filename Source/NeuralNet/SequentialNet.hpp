@@ -19,7 +19,7 @@ public:
 	virtual ~SequentialNet() override;
 	SequentialNet(SequentialNet const &) = delete;
 	SequentialNet(SequentialNet&&) = delete;
-	SequentialNet& operator=(SequentialNet const &) = delete;
+	SequentialNet& operator=(SequentialNet const & sequentialNet);
 
 public:
 	virtual void addLayer(Layer const & layer) override;

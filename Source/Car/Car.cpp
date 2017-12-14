@@ -22,6 +22,14 @@ Car::Car(sf::Vector2f const & position, sf::Vector2f const & direction, float ve
 	this->setVertexArray();
 }
 
+Car::Car(sf::Vector2f const & position, sf::Vector2f const & direction, float velocity, NetBrain const & netBrain)
+	: Car(position, direction, velocity, BrainType::NET)
+{
+	//If this constructor is called, pBrain is actually a NetBrain pointer!
+	//Therefore, it should be sufficient to simply assign netBrain to pBrain's content
+	*pBrain = netBrain;
+}
+
 Car::~Car()
 {
 	delete pBrain;

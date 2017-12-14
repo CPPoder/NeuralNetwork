@@ -6,6 +6,7 @@
 #include "Source\Math\mySFMLVectorFunctions.hpp"
 
 #include "Source\Car\Brain.hpp"
+#include "Source\Car\NetBrain.hpp"
 #include "Source\Car\PlayerBrain.hpp"
 
 class World;
@@ -61,6 +62,7 @@ public:
 	//Constructors & Destructors
 	Car();
 	Car(sf::Vector2f const & position, sf::Vector2f const & direction, float velocity, BrainType brainType);
+	Car(sf::Vector2f const & position, sf::Vector2f const & direction, float velocity, NetBrain const & netBrain);
 	~Car();
 	Car(Car const & car);
 	Car& operator=(Car const & car) = delete;

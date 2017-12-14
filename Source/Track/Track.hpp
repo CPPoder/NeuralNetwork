@@ -74,6 +74,7 @@ public:
 	bool getIfTrackDirectionIsForwards() const;
 	sf::Vector2f getForwardDirectionAt(sf::Vector2f const & position) const;
 	sf::Vector2f getStartPosition() const;
+	float getDistanceFromStartTo(sf::Vector2f const & pos) const;
 
 	void render(sf::RenderWindow* renderWindow, unsigned int options = TrackRenderOptions::DEFAULT_FOR_SIMULATION);
 

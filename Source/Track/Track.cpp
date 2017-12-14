@@ -285,6 +285,74 @@ sf::Vector2f Track::getStartPosition() const
 	return mStartPosition;
 }
 
+float Track::getDistanceFromStartTo(sf::Vector2f const & pos) const
+{
+	//Find nearest segment
+	BorderTrackBase::const_iterator nearestSegmentToPos = mBorderTrack.getIteratorToNearestSegment(pos);
+	BorderTrackBase::const_iterator nearestSegmentToStart = mBorderTrack.getIteratorToNearestSegment(mStartPosition);
+	
+	//Define helpful functions
+	std::function<BorderTrackBase::const_iterator(BorderTrackBase::const_iterator)> getNextIt = 
+		[this](BorderTrackBase::const_iterator it)
+	{
+		if (++it == mBorderTrack.cend())
+		{
+			it = mBorderTrack.cbegin();
+		}
+		return it;
+	};
+	std::function<BorderTrackBase::const_iterator(BorderTrackBase::const_iterator)> getPrevIt =
+		[this](BorderTrackBase::const_iterator it)
+	{
+		if (it == mBorderTrack.cbegin())
+		{
+			it = mBorderTrack.cend();
+		}
+		--it;
+		return it;
+	};
+	std::function<sf::Vector2f(BorderTrackSegment const &)> getCenterOfBorderTrackSegment = 
+		[](BorderTrackSegment const & segment)
+	{
+		return mySFML::Simple::meanVector(segment.first, segment.second);
+	};
+
+	//Find inner iterators (Start iterator must be behind start! End iterator must be before pos!)
+	sf::Vector2f vecFromStartToFirstSegment = getCenterOfBorderTrackSegment(*nearestSegmentToStart) - mStartPosition;
+	sf::Vector2f vecFromPosToSecondSegment = getCenterOfBorderTrackSegment(*nearestSegmentToPos) - pos;
+	sf::Vector2f forwardDirectionAtFirstSegment = this->getForwardDirectionAt(getCenterOfBorderTrackSegment(*nearestSegmentToStart));
+	sf::Vector2f forwardDirectionAtSecondSegment = this->getForwardDirectionAt(getCenterOfBorderTrackSegment(*nearestSegmentToPos));
+	BorderTrackBase::const_iterator firstInnerIterator = nearestSegmentToStart;
+	BorderTrackBase::const_iterator secondInnerIterator = nearestSegmentToPos;
+	if (mySFML::Simple::scalarProduct(forwardDirectionAtFirstSegment, vecFromStartToFirstSegment) < 0.f)
+	{
+		firstInnerIterator = getNextIt(firstInnerIterator);
+	}
+	if (mySFML::Simple::scalarProduct(forwardDirectionAtSecondSegment, vecFromPosToSecondSegment) > 0.f)
+	{
+		secondInnerIterator = getPrevIt(secondInnerIterator);
+	}
+
+	//Calculate length of path from firstInnerIterator to secondInnerIterator
+	float length = 0.f;
+	for (BorderTrackBase::const_iterator it = firstInnerIterator; it != secondInnerIterator; it = getNextIt(it))
+	{
+		sf::Vector2f firstPos = getCenterOfBorderTrackSegment(*it);
+		sf::Vector2f secondPos = getCenterOfBorderTrackSegment(*getNextIt(it));
+		length += mySFML::Simple::lengthOf(firstPos - secondPos);
+	}
+
+	//Add path from start to firstInnerIterator
+	length += mySFML::Simple::lengthOf(getCenterOfBorderTrackSegment(*firstInnerIterator) - mStartPosition);
+
+	//Add path from secondInnerIterator to pos
+	length += mySFML::Simple::lengthOf(getCenterOfBorderTrackSegment(*secondInnerIterator) - pos);
+
+	//Return result
+	return length;
+
+}
+
 
 
 ////////////////////

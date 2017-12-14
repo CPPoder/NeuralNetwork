@@ -27,6 +27,14 @@ NetBrain::NetBrain()
 }
 
 
+NetBrain& NetBrain::operator=(NetBrain const & netBrain)
+{
+	mSequentialNet = netBrain.mSequentialNet;
+	mListOfSeeingLines = netBrain.mListOfSeeingLines;
+	return *this;
+}
+
+
 
 BrainType NetBrain::getBrainType() const
 {
@@ -126,6 +134,14 @@ BrainOutput NetBrain::calculateBrainOutput(World const * worldPointer, Car const
 	//return BrainOutput(gasBrakeCoefficient * gasBrakeDiff, steeringWheelCoefficient * steeringWheelDiff);
 
 
+}
+
+
+
+
+void NetBrain::mutate()
+{
+	mSequentialNet.mutate(Mutation());
 }
 
 

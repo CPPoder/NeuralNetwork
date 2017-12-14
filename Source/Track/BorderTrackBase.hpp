@@ -38,6 +38,8 @@ public:
 	const_iterator begin() const { return this->cbegin(); }
 	const_iterator end() const { return this->cend(); }
 
+	BorderTrackBase::const_iterator getIteratorToNearestSegment(sf::Vector2f const & pos) const;
+
 	void addSegmentBefore(std::list<BorderTrackSegment>::iterator pos, BorderTrackSegment const & segment) { mListOfBorderTrackSegments.insert(pos, segment); }
 
 	CenterTrackBase getCenterTrackBase() const;

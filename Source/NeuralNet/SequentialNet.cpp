@@ -18,6 +18,44 @@ SequentialNet::~SequentialNet()
 }
 
 
+SequentialNet& SequentialNet::operator=(SequentialNet const & sequentialNet)
+{
+	//Be careful here! Make a deep copy of layers and destroy old ones!
+	//Beacause there are only denseLayers, create only those!
+
+	//Avoid self assignment
+	if (this == &sequentialNet)
+	{
+		return *this;
+	}
+
+	//Delete old layers
+	for (auto layerPointer : this->mVecOfLayers)
+	{
+		delete layerPointer;
+	}
+	this->mVecOfLayers.clear();
+	
+	//Copy
+	mInputLayerSize = sequentialNet.mInputLayerSize;
+	for (auto layerPointer : sequentialNet.mVecOfLayers)
+	{
+		DenseLayer const * denseLayerPointer = dynamic_cast<DenseLayer const *>(layerPointer); //Only possible, because this the the only inherited type
+		if (denseLayerPointer != nullptr)
+		{
+			mVecOfLayers.push_back(new DenseLayer(*denseLayerPointer));
+		}
+		else
+		{
+			throw InvalidLayerPointerException("SequentialNet::addLayer(Layer const & layer): Could not dynamic_cast layer to DenseLayer const *!", layerPointer);
+		}
+	}
+
+	//Return
+	return *this;
+}
+
+
 void SequentialNet::addLayer(Layer const & layer)
 {
 	Layer const * layerPointer = &layer;

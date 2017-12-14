@@ -3,6 +3,7 @@
 
 
 #include "Source\MainModules\World.hpp"
+#include "Source\Car\NetBrain.hpp"
 
 
 
@@ -19,6 +20,12 @@ private:
 	Event mEvent = Event::NONE;
 
 private:
+	NetBrain mBestNetBrain;
+	NetBrain mCurrentNetBrain;
+	float mBestRate;
+	bool mFirstSample = true;
+	sf::Time mSimulatedTimeOfCurrentSample;
+
 	World* pWorld = nullptr;
 
 public:

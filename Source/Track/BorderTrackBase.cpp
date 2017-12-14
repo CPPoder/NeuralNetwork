@@ -58,6 +58,36 @@ void BorderTrackBase::setListOfBorderTrackSegments(std::list<BorderTrackSegment>
 
 
 
+
+BorderTrackBase::const_iterator BorderTrackBase::getIteratorToNearestSegment(sf::Vector2f const & pos) const
+{
+	bool first = true;
+	float smallestDist;
+	BorderTrackBase::const_iterator nearestSegment;
+	for (BorderTrackBase::const_iterator it = this->cbegin(); it != this->cend(); ++it)
+	{
+		sf::Vector2f center = mySFML::Simple::meanVector(it->first, it->second);
+		if (first)
+		{
+			first = false;
+			nearestSegment = it;
+			smallestDist = mySFML::Simple::lengthOf(pos - center);
+		}
+		else
+		{
+			float newDist = mySFML::Simple::lengthOf(pos - center);
+			if (newDist < smallestDist)
+			{
+				smallestDist = newDist;
+				nearestSegment = it;
+			}
+		}
+	}
+	return nearestSegment;
+}
+
+
+
 std::ostream& operator<<(std::ostream & stream, BorderTrackBase const & borderTrackBase)
 {
 	for (auto const & borderTrackSegment : borderTrackBase.mListOfBorderTrackSegments)

@@ -30,9 +30,17 @@ public:
 	void update(sf::Time const & time, sf::RenderWindow const * renderWindow);
 
 public:
+	void clearCars();
+	void addCar(Car const & car);
+
+public:
 	Track const & getTrackReference() const;
 	std::list<Car> const & getCarsReference() const;
 	sf::View getUsedView() const;
+
+public:
+	sf::View getWantedView() const;
+	void setUsedViewToWantedView();
 
 };
 
