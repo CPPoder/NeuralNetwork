@@ -22,6 +22,8 @@ public:
 	virtual Mat::Vector<NetNodeType> apply(Mat::Vector<NetNodeType> const & in) const = 0;
 	virtual Mat::Vector<NetNodeType>&& apply(Mat::Vector<NetNodeType> && in) const = 0;
 
+	virtual void mutate() = 0;
+
 
 };
 

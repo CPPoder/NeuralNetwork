@@ -27,6 +27,7 @@ public:
 	static const Activation RectifiedLinearUnit;
 	static const Activation Sigmoid;
 	static const Activation Theta;
+	static const Activation Atan;
 
 
 

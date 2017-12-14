@@ -21,6 +21,34 @@ World::World(Track const & track, std::list<Car> const & listOfCars)
 
 void World::render(sf::RenderWindow * renderWindow)
 {
+	//Set mUsedView for rendering (save original view)
+	sf::View originalView(renderWindow->getView());
+	renderWindow->setView(mUsedView);
+
+	//Do actual rendering
+	mTrack.render(renderWindow);
+	for (auto & car : mListOfCars)
+	{
+		car.render(renderWindow);
+	}
+
+	//Restore original view
+	renderWindow->setView(originalView);
+}
+
+void World::update(sf::Time const & time, sf::RenderWindow const * renderWindow)
+{
+	/////////////
+	//Update cars
+	for (auto & car : mListOfCars)
+	{
+		car.update(time, renderWindow, this);
+	}
+
+
+	//////////////////
+	//Update used view
+
 	//Get wanted view
 	sf::View wantedView = this->getWantedView();
 
@@ -42,28 +70,6 @@ void World::render(sf::RenderWindow * renderWindow)
 		{
 			mUsedView.setRotation(mix*(mUsedView.getRotation() - 360.f) + (1 - mix)*wantedView.getRotation());
 		}
-	}
-
-	//Set mUsedView for rendering (save original view)
-	sf::View originalView(renderWindow->getView());
-	renderWindow->setView(mUsedView);
-
-	//Do actual rendering
-	mTrack.render(renderWindow);
-	for (auto & car : mListOfCars)
-	{
-		car.render(renderWindow);
-	}
-
-	//Restore original view
-	renderWindow->setView(originalView);
-}
-
-void World::update(sf::Time const & time, sf::RenderWindow const * renderWindow)
-{
-	for (auto & car : mListOfCars)
-	{
-		car.update(time, renderWindow, this);
 	}
 }
 
@@ -98,7 +104,8 @@ sf::View World::getUsedView() const
 sf::View World::getWantedView() const
 {
 	//Standard view
-	sf::View raceView(sf::FloatRect(0.f, 0.f, 800.f, 400.f));
+	sf::View raceView(sf::FloatRect(200.f, 0.f, 200.f, 100.f));
+	return raceView;
 
 	//Car following view
 	Car const & car = mListOfCars.front();

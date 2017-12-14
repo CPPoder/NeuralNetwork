@@ -20,10 +20,17 @@ NetBrain::NetBrain()
 	mSequentialNet.addLayer(DenseLayer((sNetInputSize + sNetOutputSize) / 2u, Activation::RectifiedLinearUnit));
 
 	//Add output layer
-	mSequentialNet.addLayer(DenseLayer(sNetOutputSize, Activation::Sigmoid));
+	mSequentialNet.addLayer(DenseLayer(sNetOutputSize, Activation::Atan));
 
 	//Compile net
 	mSequentialNet.compile();
+}
+
+NetBrain::NetBrain(NetBrain const & netBrain)
+	: mSequentialNet(NetBrain::sNetInputSize)
+{
+	mSequentialNet = netBrain.mSequentialNet;
+	mListOfSeeingLines = netBrain.mListOfSeeingLines;
 }
 
 

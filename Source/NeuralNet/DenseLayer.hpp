@@ -24,6 +24,8 @@ public:
 	virtual Mat::Vector<NetNodeType> apply(Mat::Vector<NetNodeType> const & in) const override;
 	virtual Mat::Vector<NetNodeType>&& apply(Mat::Vector<NetNodeType> && in) const override;
 
+	virtual void mutate() override;
+
 public:
 	Mat::Matrix<NetNodeType> const & getMatrix() const;
 	void setMatrix(Mat::Matrix<NetNodeType> const & matrix);

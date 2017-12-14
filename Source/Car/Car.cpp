@@ -25,9 +25,8 @@ Car::Car(sf::Vector2f const & position, sf::Vector2f const & direction, float ve
 Car::Car(sf::Vector2f const & position, sf::Vector2f const & direction, float velocity, NetBrain const & netBrain)
 	: Car(position, direction, velocity, BrainType::NET)
 {
-	//If this constructor is called, pBrain is actually a NetBrain pointer!
-	//Therefore, it should be sufficient to simply assign netBrain to pBrain's content
-	*pBrain = netBrain;
+	delete pBrain;
+	pBrain = new NetBrain(netBrain);
 }
 
 Car::~Car()
@@ -39,6 +38,12 @@ Car::~Car()
 Car::Car(Car const & car)
 	: Car(car.mPosition, car.mDirection, car.mVelocity, car.pBrain->getBrainType())
 {
+	NetBrain* netBrain = dynamic_cast<NetBrain*>(car.pBrain);
+	if (netBrain != nullptr)
+	{
+		delete pBrain;
+		pBrain = new NetBrain(*netBrain);
+	}
 }
 
 
@@ -170,7 +175,7 @@ void Car::update(sf::Time const & time, sf::RenderWindow const * renderWindow, W
 	}
 
 	//Debug
-	//std::cout << "Pos: " << mPosition.x << " " << mPosition.y << std::endl;
+	//std::cout << "Pos: " << mPosition.x << " " << mPosition.y << '\t' << "Dir: " << mDirection.x << " " << mDirection.y << std::endl;
 	//std::cout << "Damage: " << mDamage << std::endl;
 	//std::cout << "Velocity: " << mVelocity << std::endl;
 }

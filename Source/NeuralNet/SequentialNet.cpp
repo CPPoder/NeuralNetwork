@@ -1,5 +1,6 @@
 #include "Source\NeuralNet\SequentialNet.hpp"
 #include "Source\NeuralNet\DenseLayer.hpp"
+#include "Source\Math\Random.hpp"
 
 
 SequentialNet::SequentialNet(Mat::VectorSize inputLayerSize)
@@ -114,6 +115,9 @@ NetOutput SequentialNet::apply(NetInput const & input) const
 
 void SequentialNet::mutate(Mutation const & mutation)
 {
-
+	for (auto layer : mVecOfLayers)
+	{
+		layer->mutate();
+	}
 }
 

@@ -19,7 +19,7 @@ private:
 public:
 	NetBrain();
 	virtual ~NetBrain() override = default;
-	NetBrain(NetBrain const &) = default;
+	NetBrain(NetBrain const & netBrain);
 	NetBrain& operator=(NetBrain const & netBrain);
 
 	virtual BrainType getBrainType() const override;
