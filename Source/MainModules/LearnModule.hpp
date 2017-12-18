@@ -22,6 +22,7 @@ private:
 private:
 	NetBrain mBestNetBrain;
 	NetBrain mCurrentNetBrain;
+	float mCurrentIntegratedPath;
 	float mBestRate;
 	bool mFirstSample = true;
 	sf::Time mSimulatedTimeOfCurrentSample;

@@ -4,8 +4,9 @@
 
 LearnModule::LearnModule()
 {
-	Track track("./Data/Tracks/test.tr");
+	Track track("./Data/Tracks/learning.tr");
 	pWorld = new World(track, {});
+	pWorld->setWantedViewToTrackView(sf::FloatRect(0.f, 0.f, 400.f, 200.f));
 }
 
 LearnModule::~LearnModule()
@@ -31,7 +32,7 @@ void LearnModule::update(sf::Time const & time, sf::RenderWindow const * renderW
 	//Rate function: length of covered track!
 
 	//Set constants
-	sf::Time const SIMULATION_TIME = sf::seconds(20.f); //This could be made varying!
+	sf::Time const SIMULATION_TIME = sf::seconds(10.f); //This could be made varying!
 	sf::Time const INTERRUPT_FOR_GAME_LOOP_TIME = sf::seconds(1.f / 50.f);
 	sf::Time const WORLD_UPDATE_TIME = sf::seconds(1.f / 20.f); //This can probably be chosen much bigger: e.g. 1/10. This would increase the learning rate by a factor of 5 and would probably have no impact on the driving behaviour! (Humans change there behaviour almost only every second!) However, short times yield big jumps in update procedure! Better choose not to large times!
 
@@ -45,6 +46,7 @@ void LearnModule::update(sf::Time const & time, sf::RenderWindow const * renderW
 		pWorld->addCar(neuralNetCar);
 		pWorld->setUsedViewToWantedView();
 		mSimulatedTimeOfCurrentSample = sf::Time::Zero;
+		mCurrentIntegratedPath = 0.f;
 	}
 
 	if (mSimulatedTimeOfCurrentSample > SIMULATION_TIME) //Rate, accept/discard, initialize new mutated sample
@@ -54,6 +56,9 @@ void LearnModule::update(sf::Time const & time, sf::RenderWindow const * renderW
 
 		//Rate
 		float rate = pWorld->getTrackReference().getDistanceFromStartTo(pWorld->getCarsReference().front().getPosition());
+		rate *= myMath::Simple::sign(mCurrentIntegratedPath - 10.f);
+		rate = mCurrentIntegratedPath;
+		mCurrentIntegratedPath = 0.f;
 		std::cout << "Rate: " << rate << "/" << mBestRate << std::endl;
 		//Accept, Discard
 		if (mFirstSample)
@@ -91,6 +96,8 @@ void LearnModule::update(sf::Time const & time, sf::RenderWindow const * renderW
 		{
 			pWorld->update(WORLD_UPDATE_TIME, renderWindow);
 			mSimulatedTimeOfCurrentSample += WORLD_UPDATE_TIME;
+			Car const & firstCar = pWorld->getCarsReference().front();
+			mCurrentIntegratedPath += mySFML::Simple::scalarProduct(mySFML::Simple::normalize(pWorld->getTrackReference().getForwardDirectionAt(firstCar.getPosition())), firstCar.getVelocity() * firstCar.getDirection() * WORLD_UPDATE_TIME.asSeconds());
 		}
 	}
 	

@@ -18,6 +18,10 @@ private:
 	std::list<Car> mListOfCars;
 	sf::View mUsedView = sf::View();
 
+	bool mWantedViewIsCarView = true;
+	sf::FloatRect mWantedTrackViewRectangle;
+
+
 public:
 	World();
 	World(Track const & track, std::list<Car> const & listOfCars);
@@ -41,6 +45,10 @@ public:
 public:
 	sf::View getWantedView() const;
 	void setUsedViewToWantedView();
+
+public:
+	void setWantedViewToCarView();
+	void setWantedViewToTrackView(sf::FloatRect const & floatRect);
 
 };
 

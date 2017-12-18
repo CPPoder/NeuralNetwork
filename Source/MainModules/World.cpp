@@ -43,6 +43,7 @@ void World::update(sf::Time const & time, sf::RenderWindow const * renderWindow)
 	for (auto & car : mListOfCars)
 	{
 		car.update(time, renderWindow, this);
+		//std::cout << car.getPosition().x << " " << car.getPosition().y << std::endl;
 	}
 
 
@@ -103,23 +104,37 @@ sf::View World::getUsedView() const
 
 sf::View World::getWantedView() const
 {
-	//Standard view
-	sf::View raceView(sf::FloatRect(200.f, 0.f, 200.f, 100.f));
-	return raceView;
-
-	//Car following view
-	Car const & car = mListOfCars.front();
-	sf::View carView;
-	carView.setSize(200.f, 100.f);
-	carView.setCenter(car.getPosition() + 1.2f * car.getVelocity() * car.getDirection());
-	carView.setRotation(90.f - mySFML::Simple::angleOf(car.getDirection()) / myMath::Const::PIf * 180.f);
-	carView.zoom(std::sqrt(0.1f + car.getVelocity() * car.getVelocity() / 1000.f));
-
-	//Return wanted view (Either raceView or carView)
-	return carView;
+	if (mWantedViewIsCarView)
+	{
+		//Car following view
+		Car const & car = mListOfCars.front();
+		sf::View carView;
+		carView.setSize(200.f, 100.f);
+		carView.setCenter(car.getPosition() + 1.2f * car.getVelocity() * car.getDirection());
+		carView.setRotation(90.f - mySFML::Simple::angleOf(car.getDirection()) / myMath::Const::PIf * 180.f);
+		carView.zoom(std::sqrt(0.1f + car.getVelocity() * car.getVelocity() / 1000.f));
+		return carView;
+	}
+	else
+	{
+		//Track view
+		return sf::View(mWantedTrackViewRectangle);
+	}
 }
 
 void World::setUsedViewToWantedView()
 {
 	mUsedView = this->getWantedView();
 }
+
+void World::setWantedViewToCarView()
+{
+	mWantedViewIsCarView = true;
+}
+
+void World::setWantedViewToTrackView(sf::FloatRect const & floatRect)
+{
+	mWantedViewIsCarView = false;
+	mWantedTrackViewRectangle = floatRect;
+}
+

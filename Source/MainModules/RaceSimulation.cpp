@@ -8,7 +8,7 @@
 
 RaceSimulation::RaceSimulation()
 {
-	Track track("./Data/Tracks/test.tr");
+	Track track("./Data/Tracks/learning.tr");
 	std::list<Car> listOfCars;
 	sf::Vector2f pos = track.calculatePositionInTrackNear(track.getStartPosition());
 	sf::Vector2f dir = track.getForwardDirectionAt(pos);
