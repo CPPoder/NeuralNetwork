@@ -11,6 +11,7 @@ LearnModule::LearnModule()
 
 LearnModule::~LearnModule()
 {
+	mBestNetBrain.saveToFile("./Data/Nets/start.net");
 	delete pWorld;
 	pWorld = nullptr;
 }
@@ -32,7 +33,7 @@ void LearnModule::update(sf::Time const & time, sf::RenderWindow const * renderW
 	//Rate function: length of covered track!
 
 	//Set constants
-	sf::Time const SIMULATION_TIME = sf::seconds(10.f); //This could be made varying!
+	sf::Time const SIMULATION_TIME = sf::seconds(200.f); //This could be made varying!
 	sf::Time const INTERRUPT_FOR_GAME_LOOP_TIME = sf::seconds(1.f / 50.f);
 	sf::Time const WORLD_UPDATE_TIME = sf::seconds(1.f / 20.f); //This can probably be chosen much bigger: e.g. 1/10. This would increase the learning rate by a factor of 5 and would probably have no impact on the driving behaviour! (Humans change there behaviour almost only every second!) However, short times yield big jumps in update procedure! Better choose not to large times!
 

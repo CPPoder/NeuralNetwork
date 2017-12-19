@@ -121,3 +121,103 @@ void SequentialNet::mutate(Mutation const & mutation)
 	}
 }
 
+
+
+void SequentialNet::setMatrixOfLayer(unsigned int layer, Mat::Matrix<NetNodeType> const & matrix)
+{
+	Layer* layerPointer = mVecOfLayers.at(layer);
+	DenseLayer* denseLayerPointer = dynamic_cast<DenseLayer*>(layerPointer);
+	if (denseLayerPointer == nullptr)
+	{
+		throw "I can not program!";
+	}
+	denseLayerPointer->setMatrix(matrix);
+}
+
+void SequentialNet::setBiasOfLayer(unsigned int layer, Mat::Vector<NetNodeType> const & bias)
+{
+	Layer* layerPointer = mVecOfLayers.at(layer);
+	DenseLayer* denseLayerPointer = dynamic_cast<DenseLayer*>(layerPointer);
+	if (denseLayerPointer == nullptr)
+	{
+		throw "I can not program!";
+	}
+	denseLayerPointer->setBias(bias);
+}
+
+
+
+void SequentialNet::saveToFile(std::string const & path) const
+{
+	std::ofstream oStream(path);
+
+	//Net type
+	oStream << "<NetType:Begin>" << std::endl;
+	oStream << "Sequential" << std::endl;
+	oStream << "<NetType:End>" << std::endl;
+	
+	//Layers
+	oStream << "<Layers:Begin>" << std::endl;
+	for (auto const layerPointer : mVecOfLayers)
+	{
+		DenseLayer const * denseLayerPointer = dynamic_cast<DenseLayer const *>(layerPointer);
+
+		oStream << "<Layer:Begin>" << std::endl;
+		
+		//Layer type
+		oStream << "<LayerType:Begin>" << std::endl;
+		oStream << "Dense" << std::endl;
+		oStream << "<LayerType:End>" << std::endl;
+
+		//Matrix
+		oStream << "<Matrix:Begin>" << std::endl;
+		Mat::Matrix<NetNodeType> matrix = denseLayerPointer->getMatrix();
+		for (unsigned int y = 0u; y < matrix.getSize().y(); ++y)
+		{
+			for (unsigned int x = 0u; x < matrix.getSize().x(); ++x)
+			{
+				if (x != 0u)
+				{
+					oStream << " ";
+				}
+				oStream << matrix.at(Mat::XY(x, y));
+			}
+			oStream << std::endl;
+		}
+		oStream << "<Matrix:End>" << std::endl;
+
+		//Bias
+		oStream << "<Bias:Begin>" << std::endl;
+		Mat::Vector<NetNodeType> bias = denseLayerPointer->getBias();
+		for (unsigned int i = 0u; i < bias.getSize(); ++i)
+		{
+			if (i != 0u)
+			{
+				oStream << " ";
+			}
+			oStream << bias.at(i);
+		}
+		oStream << std::endl;
+		oStream << "<Bias:End>" << std::endl;
+
+		//Activation
+		oStream << "<Activation:Begin>" << std::endl;
+		oStream << Activation::mapTypeToString(denseLayerPointer->getActivation().getType()) << std::endl;
+		oStream << "<Activation:End>" << std::endl;
+
+		oStream << "<Layer:End>" << std::endl;
+	}
+	oStream << "<Layers:End>" << std::endl;
+
+	oStream.close();
+}
+
+
+
+
+
+
+
+
+
+

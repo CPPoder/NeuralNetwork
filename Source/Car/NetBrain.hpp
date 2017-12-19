@@ -30,6 +30,7 @@ public:
 
 public:
 	void renderSeeingLines(sf::RenderWindow* renderWindow, sf::View view) const;
+	void saveToFile(std::string const & path) const;
 
 public:
 	static constexpr unsigned int sNumOfAngles = 7u; //16 different angles

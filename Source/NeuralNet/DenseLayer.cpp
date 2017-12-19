@@ -30,8 +30,9 @@ Mat::Vector<NetNodeType>&& DenseLayer::apply(Mat::Vector<NetNodeType> && in) con
 void DenseLayer::mutate()
 {
 	//Determine mutation chances
-	float chanceOfMutationForMatrix = Random::getRandomFloatBetween(0.f, 0.1f);
-	float chanceOfMutationForBias = Random::getRandomFloatBetween(0.f, 0.1f);
+	float chanceOfMutationForMatrix = Random::getRandomFloatBetween(0.f, 0.02f);
+	float chanceOfMutationForBias = Random::getRandomFloatBetween(0.f, 0.02f);
+	float constexpr mutationStrengthConstant = 0.03f;
 
 	//Mutate matrix
 	for (unsigned int x = 0; x < mMatrix.getSize().x(); ++x)
@@ -41,7 +42,7 @@ void DenseLayer::mutate()
 			float mutationDice = Random::getRandomFloatBetween(0.f, 1.f);
 			if (mutationDice > 1.f - chanceOfMutationForMatrix)
 			{
-				float mutationStrength = Random::getRandomFloatBetween(-0.05f, 0.05f);
+				float mutationStrength = Random::getRandomFloatBetween(-mutationStrengthConstant, mutationStrengthConstant);
 				mMatrix.at(Mat::XY(x, y)) += mutationStrength;
 			}
 		}
@@ -53,7 +54,7 @@ void DenseLayer::mutate()
 		float mutationDice = Random::getRandomFloatBetween(0.f, 1.f);
 		if (mutationDice > 1.f - chanceOfMutationForBias)
 		{
-			float mutationStrength = Random::getRandomFloatBetween(-0.05f, 0.05f);
+			float mutationStrength = Random::getRandomFloatBetween(-mutationStrengthConstant, mutationStrengthConstant);
 			mBias.at(i) += mutationStrength;
 		}
 	}

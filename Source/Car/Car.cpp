@@ -287,6 +287,16 @@ void Car::setPosition(sf::Vector2f const & position)
 }
 
 
+void Car::saveNetBrainIfNetBrainToFile(std::string const & path) const
+{
+	NetBrain* netBrainPointer = dynamic_cast<NetBrain*>(pBrain);
+	if (netBrainPointer != nullptr)
+	{
+		netBrainPointer->saveToFile(path);
+	}
+}
+
+
 ///////////////////////////
 //CheckForBoundaryCollision
 

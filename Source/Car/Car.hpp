@@ -101,6 +101,9 @@ public:
 	//Setter
 	void setPosition(sf::Vector2f const & position);
 
+	//Save Brain
+	void saveNetBrainIfNetBrainToFile(std::string const & path) const;
+
 private:
 	void setVertexArray();
 

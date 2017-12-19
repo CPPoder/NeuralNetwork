@@ -39,6 +39,9 @@ public:
 	virtual NetOutput apply(NetInput const & input) const = 0;
 	virtual void mutate(Mutation const & mutation) = 0;
 
+public:
+	virtual void saveToFile(std::string const & path) const = 0;
+
 
 
 };

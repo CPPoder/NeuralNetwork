@@ -17,13 +17,46 @@ NetBrain::NetBrain()
 	//This layer shall have between input number and output number of neurons! Choose:
 	
 	//Add hidden layer
-	mSequentialNet.addLayer(DenseLayer((sNetInputSize + sNetOutputSize) / 2u, Activation::RectifiedLinearUnit));
+	unsigned int constexpr hiddenLayerSize = (sNetInputSize + sNetOutputSize) / 2u;
+	mSequentialNet.addLayer(DenseLayer(hiddenLayerSize, Activation::Atan));
 
 	//Add output layer
 	mSequentialNet.addLayer(DenseLayer(sNetOutputSize, Activation::Atan));
+	mSequentialNet.compile();
+
+	//Preset somehow good values
+	float constexpr alphaGas = 0.03f;
+	float constexpr betaGas = 0.2f;
+	float constexpr alphaSteer = 0.04f;
+	float constexpr betaSteer = 0.9f;
+	float constexpr vWanted = 4.f;
+
+	Mat::Matrix<NetNodeType> matrix0(Mat::XY(sNetInputSize, hiddenLayerSize), 0.f);
+	matrix0.at(Mat::XY(sNetInputSize - 4u, 0u)) = alphaGas * betaGas;
+	matrix0.at(Mat::XY(sNetInputSize - 2u, 0u)) = -betaGas;
+	matrix0.at(Mat::XY(sNetInputSize - 1u, 1u)) = -betaSteer;
+	matrix0.at(Mat::XY(sNumOfAngles + 4u, 1u)) = -alphaSteer * betaSteer;
+	matrix0.at(Mat::XY(4u, 1u)) = alphaSteer * betaSteer;
+	mSequentialNet.setMatrixOfLayer(0u, matrix0);
+
+	Mat::Vector<NetNodeType> bias0(hiddenLayerSize, 0.f);
+	bias0.at(0) = 0.f - vWanted * alphaGas * betaGas;
+	bias0.at(1) = 0.f;
+	mSequentialNet.setBiasOfLayer(0u, bias0);
+
+	Mat::Matrix<NetNodeType> matrix1(Mat::XY(hiddenLayerSize, sNetOutputSize), 0.f);
+	matrix1.at(Mat::XY(0u, 0u)) = -1.f;
+	matrix1.at(Mat::XY(1u, 1u)) = 1.f;
+	mSequentialNet.setMatrixOfLayer(1u, matrix1);
+
+	Mat::Vector<NetNodeType> bias1(sNetOutputSize, 0.f);
+	bias1.at(0u) = -0.f;
+	bias1.at(1u) = -0.f;
+	mSequentialNet.setBiasOfLayer(1u, bias1);
+
 
 	//Compile net
-	mSequentialNet.compile();
+	//mSequentialNet.compile();
 }
 
 NetBrain::NetBrain(NetBrain const & netBrain)
@@ -170,6 +203,11 @@ void NetBrain::renderSeeingLines(sf::RenderWindow* renderWindow, sf::View view) 
 	renderWindow->setView(originalView);
 }
 
+
+void NetBrain::saveToFile(std::string const & path) const
+{
+	mSequentialNet.saveToFile(path);
+}
 
 
 

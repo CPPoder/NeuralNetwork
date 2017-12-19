@@ -3,6 +3,8 @@
 
 
 #include <vector>
+#include <fstream>
+#include <sstream>
 
 #include "Source\NeuralNet\NeuralNet.hpp"
 
@@ -29,6 +31,12 @@ public:
 	virtual NetOutput apply(NetInput const & input) const override;
 	virtual void mutate(Mutation const & mutation) override;
 
+public:
+	void setMatrixOfLayer(unsigned int layer, Mat::Matrix<NetNodeType> const & matrix);
+	void setBiasOfLayer(unsigned int layer, Mat::Vector<NetNodeType> const & bias);
+
+public:
+	virtual void saveToFile(std::string const & path) const override;
 
 
 
