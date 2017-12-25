@@ -42,6 +42,7 @@ void LearnModule::update(sf::Time const & time, sf::RenderWindow const * renderW
 	{
 		sf::Vector2f carPos = pWorld->getTrackReference().getStartPosition();
 		mBestNetBrain = NetBrain(); //Load here from some file later!
+		mBestNetBrain.loadFromFile("./Data/Nets/start.net");
 		mCurrentNetBrain = mBestNetBrain;
 		Car neuralNetCar(carPos, pWorld->getTrackReference().getForwardDirectionAt(carPos), 0.f, mCurrentNetBrain);
 		pWorld->addCar(neuralNetCar);
@@ -69,7 +70,8 @@ void LearnModule::update(sf::Time const & time, sf::RenderWindow const * renderW
 		}
 		else
 		{
-			if (rate > mBestRate)
+			float constexpr epsilon = 0.001f;
+			if (rate + epsilon > mBestRate)
 			{
 				mBestRate = rate;
 				mBestNetBrain = mCurrentNetBrain;

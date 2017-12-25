@@ -36,6 +36,8 @@ public:
 	void setBias(Mat::Vector<NetNodeType> && vector);
 
 	Activation getActivation() const;
+	void setActivation(Activation activation);
+
 	virtual Mat::VectorSize getLayerSize() const override;
 
 

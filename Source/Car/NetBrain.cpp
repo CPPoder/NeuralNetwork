@@ -209,6 +209,10 @@ void NetBrain::saveToFile(std::string const & path) const
 	mSequentialNet.saveToFile(path);
 }
 
+void NetBrain::loadFromFile(std::string const & path)
+{
+	mSequentialNet.loadFromFile(path);
+}
 
 
 

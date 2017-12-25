@@ -9,6 +9,8 @@
 #include "Source\NeuralNet\NeuralNet.hpp"
 
 
+class Activation;
+
 
 class SequentialNet final : public NeuralNet
 {
@@ -34,9 +36,11 @@ public:
 public:
 	void setMatrixOfLayer(unsigned int layer, Mat::Matrix<NetNodeType> const & matrix);
 	void setBiasOfLayer(unsigned int layer, Mat::Vector<NetNodeType> const & bias);
+	void setActivationOfLayer(unsigned int layer, Activation activation);
 
 public:
 	virtual void saveToFile(std::string const & path) const override;
+	virtual void loadFromFile(std::string const & path) override;
 
 
 

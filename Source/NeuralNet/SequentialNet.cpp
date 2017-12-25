@@ -145,10 +145,22 @@ void SequentialNet::setBiasOfLayer(unsigned int layer, Mat::Vector<NetNodeType> 
 	denseLayerPointer->setBias(bias);
 }
 
+void SequentialNet::setActivationOfLayer(unsigned int layer, Activation activation)
+{
+	Layer* layerPointer = mVecOfLayers.at(layer);
+	DenseLayer* denseLayerPointer = dynamic_cast<DenseLayer*>(layerPointer);
+	if (denseLayerPointer == nullptr)
+	{
+		throw "I can not program!";
+	}
+	denseLayerPointer->setActivation(activation);
+}
+
 
 
 void SequentialNet::saveToFile(std::string const & path) const
 {
+	std::cout << "Save SequentialNet to file \"" << path << "\"...";
 	std::ofstream oStream(path);
 
 	//Net type
@@ -210,11 +222,198 @@ void SequentialNet::saveToFile(std::string const & path) const
 	oStream << "<Layers:End>" << std::endl;
 
 	oStream.close();
+	std::cout << "Complete!" << std::endl;
 }
 
 
 
+void SequentialNet::loadFromFile(std::string const & path)
+{
+	//Open input file stream
+	std::cout << "Load SequentialNet from file \"" << path << "\"...";
+	std::ifstream inputStream(path);
+	if (!inputStream)
+	{
+		std::cout << "Could not open file!" << std::endl;
+		return;
+	}
 
+	//Extract lines
+	std::vector<std::string> vecOfLines;
+	while (!inputStream.eof())
+	{
+		std::string line;
+		std::getline(inputStream, line);
+		vecOfLines.push_back(line);
+	}
+
+	//Define function for extraction of blocks
+	std::function<std::vector<std::vector<std::string>>(std::vector<std::string> const &, std::string const &)> getLinesBetween = 
+		[](std::vector<std::string> const & vecOfLines, std::string const & keyword) -> std::vector<std::vector<std::string>>
+	{
+		std::vector<std::vector<std::string>> vecOfBlocks;
+		std::vector<std::string> vecOfStrings;
+		bool inside = false;
+		for (auto const & line : vecOfLines)
+		{
+			if (line == ("<" + keyword + ":Begin>"))
+			{
+				if (!inside)
+				{
+					inside = true;
+					continue;
+				}
+			}
+			else if (line == ("<" + keyword + ":End>"))
+			{
+				if (inside)
+				{
+					inside = false;
+					vecOfBlocks.push_back(vecOfStrings);
+					vecOfStrings.clear();
+					continue;
+				}
+			}
+			else if (inside)
+			{
+				vecOfStrings.push_back(line);
+			}
+		}
+		return vecOfBlocks;
+	};
+
+	//NetType
+	std::vector<std::vector<std::string>> netTypeBlocks = getLinesBetween(vecOfLines, "NetType");
+	if (netTypeBlocks.size() != 1)
+	{
+		std::cout << "Could not identify net type!" << std::endl;
+		return;
+	}
+	if (netTypeBlocks.front().size() != 1)
+	{
+		std::cout << "Could not identify net type!" << std::endl;
+		return;
+	}
+	std::string netTypeString = netTypeBlocks.front().front();
+	bool netTypeIsSequential = false;
+	if (netTypeString == "Sequential")
+	{
+		netTypeIsSequential = true;
+	}
+	else
+	{
+		std::cout << "Could not identify net type!" << std::endl;
+		return;
+	}
+
+	//LayersBlock
+	std::vector<std::vector<std::string>> layersBlocks = getLinesBetween(vecOfLines, "Layers");
+	if (layersBlocks.size() != 1)
+	{
+		std::cout << "Could not identify layers!" << std::endl;
+		return;
+	}
+	std::vector<std::string> layersBlock = layersBlocks.front();
+
+	//LayerBlocks
+	std::vector<std::vector<std::string>> layerBlocks = getLinesBetween(layersBlock, "Layer");
+	if (layerBlocks.empty())
+	{
+		std::cout << "Could not identify layers!" << std::endl;
+		return;
+	}
+
+	//Extract layers from layerBlocks
+	std::vector<Mat::Matrix<NetNodeType>> vecOfMatrices;
+	std::vector<Mat::Vector<NetNodeType>> vecOfBiases;
+	std::vector<std::string> vecOfActivations;
+	for (auto const & layerBlock : layerBlocks)
+	{
+		//Extract matrix
+		std::vector<std::vector<std::string>> matrixBlocks = getLinesBetween(layerBlock, "Matrix");
+		if (matrixBlocks.size() != 1)
+		{
+			std::cout << "Could not identify matrix!" << std::endl;
+			return;
+		}
+		std::vector<std::string> matrixBlock = matrixBlocks.front();
+		std::vector<std::vector<NetNodeType>> vecOfMatrixRows;
+		for (auto const & line : matrixBlock)
+		{
+			std::stringstream sstream(line);
+			std::vector<NetNodeType> rowVec;
+			while (!sstream.eof())
+			{
+				float f;
+				sstream >> f;
+				rowVec.push_back(f);
+			}
+			vecOfMatrixRows.push_back(rowVec);
+		}
+		Mat::Matrix<NetNodeType> matrix(vecOfMatrixRows);
+		vecOfMatrices.push_back(matrix);
+
+		//Extract bias
+		std::vector<std::vector<std::string>> biasBlocks = getLinesBetween(layerBlock, "Bias");
+		if (biasBlocks.size() != 1)
+		{
+			std::cout << "Could not identify bias!" << std::endl;
+			return;
+		}
+		std::vector<std::string> biasBlock = biasBlocks.front();
+		if (biasBlock.size() != 1)
+		{
+			std::cout << "Could not identify bias!" << std::endl;
+		}
+		std::string biasString = biasBlock.front();
+		std::vector<NetNodeType> vecOfBiasEntries;
+		std::stringstream sstream(biasString);
+		while (!sstream.eof())
+		{
+			float f;
+			sstream >> f;
+			vecOfBiasEntries.push_back(f);
+		}
+		Mat::Vector<NetNodeType> bias(vecOfBiasEntries);
+		vecOfBiases.push_back(bias);
+
+		//Extract activation
+		std::vector<std::vector<std::string>> activationBlocks = getLinesBetween(layerBlock, "Activation");
+		if (activationBlocks.size() != 1)
+		{
+			std::cout << "Could not identify activation!" << std::endl;
+			return;
+		}
+		std::vector<std::string> activationBlock = activationBlocks.front();
+		if (activationBlock.size() != 1)
+		{
+			std::cout << "Could not identify activation!" << std::endl;
+			return;
+		}
+		std::string activationString = activationBlock.front();
+		vecOfActivations.push_back(activationString);
+
+	}
+
+	//Build net
+	SequentialNet newNet(0);
+	for (auto const & matrix : vecOfMatrices)
+	{
+		newNet.addLayer(DenseLayer(0, Activation::Atan));
+	}
+	for (unsigned int i = 0; i < vecOfMatrices.size(); ++i)
+	{
+		newNet.setMatrixOfLayer(i, vecOfMatrices.at(i));
+		newNet.setBiasOfLayer(i, vecOfBiases.at(i));
+		newNet.setActivationOfLayer(i, Activation::getActivationOfType(Activation::mapStringToType(vecOfActivations.at(i))));
+	}
+	*this = newNet;
+
+
+	//Clean up
+	inputStream.close();
+	std::cout << "Complete!" << std::endl;
+}
 
 
 

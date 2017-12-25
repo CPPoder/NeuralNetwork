@@ -97,6 +97,14 @@ Activation DenseLayer::getActivation() const
 {
 	return mActivation;
 }
+
+void DenseLayer::setActivation(Activation activation)
+{
+	mActivation = activation;
+}
+
+
+
 Mat::VectorSize DenseLayer::getLayerSize() const
 {
 	return mLayerSize;

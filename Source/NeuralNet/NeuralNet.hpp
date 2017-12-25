@@ -41,6 +41,7 @@ public:
 
 public:
 	virtual void saveToFile(std::string const & path) const = 0;
+	virtual void loadFromFile(std::string const & path) = 0;
 
 
 

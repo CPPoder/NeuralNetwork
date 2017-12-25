@@ -12,10 +12,12 @@ RaceSimulation::RaceSimulation()
 	std::list<Car> listOfCars;
 	sf::Vector2f pos = track.calculatePositionInTrackNear(track.getStartPosition());
 	sf::Vector2f dir = track.getForwardDirectionAt(pos);
-	listOfCars.push_back(Car(pos, dir, 0.f, BrainType::NET));
-	for (unsigned int i = 0; i < 0; ++i)
+	listOfCars.push_back(Car(pos, dir, 0.f, BrainType::PLAYER));
+	for (unsigned int i = 0; i < 1; ++i)
 	{
-		listOfCars.push_back(Car(track.calculatePositionInTrackNear(track.getStartPosition()), sf::Vector2f(0.f, 1.f), 0.f, BrainType::RANDOM));
+		NetBrain netBrain;
+		netBrain.loadFromFile("./Data/Nets/start.net");
+		listOfCars.push_back(Car(pos, dir, 0.f, netBrain));
 	}
 	mWorld = World(track, listOfCars);
 	mWorld.setUsedViewToWantedView();
