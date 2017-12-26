@@ -34,7 +34,7 @@ public:
 	void loadFromFile(std::string const & path);
 
 public:
-	static constexpr unsigned int sNumOfAngles = 7u; //16 different angles
+	static constexpr unsigned int sNumOfAngles = 4u; //10 different angles
 	static constexpr unsigned int sFullNumOfAngles = 2u * sNumOfAngles + 2u; //Every angle in both directions + front and back
 	static constexpr unsigned int sNetInputSize = sFullNumOfAngles + 5u; //borderCollisions + forwardProjection + (velocity, damage, actualGasBrake, actualSteering)
 	static constexpr unsigned int sNetOutputSize = 2u; //gasBrakeDerivative & steeringWheelDerivative

@@ -11,7 +11,7 @@ LearnModule::LearnModule()
 
 LearnModule::~LearnModule()
 {
-	mBestNetBrain.saveToFile("./Data/Nets/start.net");
+	mBestNetBrain.saveToFile("./Data/Nets/learn.net");
 	delete pWorld;
 	pWorld = nullptr;
 }
@@ -42,7 +42,7 @@ void LearnModule::update(sf::Time const & time, sf::RenderWindow const * renderW
 	{
 		sf::Vector2f carPos = pWorld->getTrackReference().getStartPosition();
 		mBestNetBrain = NetBrain(); //Load here from some file later!
-		mBestNetBrain.loadFromFile("./Data/Nets/start.net");
+		mBestNetBrain.loadFromFile("./Data/Nets/learn.net");
 		mCurrentNetBrain = mBestNetBrain;
 		Car neuralNetCar(carPos, pWorld->getTrackReference().getForwardDirectionAt(carPos), 0.f, mCurrentNetBrain);
 		pWorld->addCar(neuralNetCar);

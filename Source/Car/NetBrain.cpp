@@ -35,8 +35,8 @@ NetBrain::NetBrain()
 	matrix0.at(Mat::XY(sNetInputSize - 4u, 0u)) = alphaGas * betaGas;
 	matrix0.at(Mat::XY(sNetInputSize - 2u, 0u)) = -betaGas;
 	matrix0.at(Mat::XY(sNetInputSize - 1u, 1u)) = -betaSteer;
-	matrix0.at(Mat::XY(sNumOfAngles + 4u, 1u)) = -alphaSteer * betaSteer;
-	matrix0.at(Mat::XY(4u, 1u)) = alphaSteer * betaSteer;
+	matrix0.at(Mat::XY(sNumOfAngles + 2u, 1u)) = -alphaSteer * betaSteer;
+	matrix0.at(Mat::XY(2u, 1u)) = alphaSteer * betaSteer;
 	mSequentialNet.setMatrixOfLayer(0u, matrix0);
 
 	Mat::Vector<NetNodeType> bias0(hiddenLayerSize, 0.f);
@@ -217,7 +217,8 @@ void NetBrain::loadFromFile(std::string const & path)
 
 
 //const std::array<float, NetBrain::sNumOfAngles> NetBrain::sArrayOfAngles = { 0.3f, 0.6f, 1.2f, 2.5f, 5.f, 12.f, 25.f, 35.f, 50.f, 70.f, 90.f, 110.f, 130.f, 150.f, 165.f, 175.f };
-const std::array<float, NetBrain::sNumOfAngles> NetBrain::sArrayOfAngles = { 2.f, 5.f, 10.f, 25.f, 45.f, 90.f, 135.f };
+//const std::array<float, NetBrain::sNumOfAngles> NetBrain::sArrayOfAngles = { 2.f, 5.f, 10.f, 25.f, 45.f, 90.f, 135.f };
+const std::array<float, NetBrain::sNumOfAngles> NetBrain::sArrayOfAngles = { 5.f, 20.f, 45.f, 90.f };
 
 const std::array<float, NetBrain::sFullNumOfAngles> NetBrain::sFullArrayOfAngles = []()
 {

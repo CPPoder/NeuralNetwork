@@ -16,7 +16,7 @@ RaceSimulation::RaceSimulation()
 	for (unsigned int i = 0; i < 1; ++i)
 	{
 		NetBrain netBrain;
-		netBrain.loadFromFile("./Data/Nets/start.net");
+		netBrain.loadFromFile("./Data/Nets/learn.net");
 		listOfCars.push_back(Car(pos, dir, 0.f, netBrain));
 	}
 	mWorld = World(track, listOfCars);
