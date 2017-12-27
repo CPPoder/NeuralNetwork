@@ -184,6 +184,11 @@ void NetBrain::mutate()
 	mSequentialNet.mutate(Mutation());
 }
 
+void NetBrain::setEntriesRandom()
+{
+	mSequentialNet.setEntriesRandom();
+}
+
 
 
 

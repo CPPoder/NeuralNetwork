@@ -156,6 +156,20 @@ void SequentialNet::setActivationOfLayer(unsigned int layer, Activation activati
 	denseLayerPointer->setActivation(activation);
 }
 
+void SequentialNet::setEntriesRandom()
+{
+	for (auto layerPointer : mVecOfLayers)
+	{
+		DenseLayer* denseLayerPointer = dynamic_cast<DenseLayer*>(layerPointer);
+		if (denseLayerPointer == nullptr)
+		{
+			throw "I can not program!";
+		}
+		denseLayerPointer->setEntriesRandom();
+	}
+	
+}
+
 
 
 void SequentialNet::saveToFile(std::string const & path) const

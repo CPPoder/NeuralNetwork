@@ -37,6 +37,7 @@ public:
 	void setMatrixOfLayer(unsigned int layer, Mat::Matrix<NetNodeType> const & matrix);
 	void setBiasOfLayer(unsigned int layer, Mat::Vector<NetNodeType> const & bias);
 	void setActivationOfLayer(unsigned int layer, Activation activation);
+	void setEntriesRandom();
 
 public:
 	virtual void saveToFile(std::string const & path) const override;

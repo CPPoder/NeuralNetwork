@@ -26,6 +26,7 @@ private:
 	float mBestRate;
 	bool mFirstSample = true;
 	sf::Time mSimulatedTimeOfCurrentSample;
+	sf::Time mTimeWithoutMovement;
 
 	World* pWorld = nullptr;
 

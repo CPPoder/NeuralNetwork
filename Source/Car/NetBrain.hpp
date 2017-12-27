@@ -27,6 +27,7 @@ public:
 	virtual BrainOutput calculateBrainOutput(World const * worldPointer, Car const * carPointer) override;
 
 	void mutate();
+	void setEntriesRandom();
 
 public:
 	void renderSeeingLines(sf::RenderWindow* renderWindow, sf::View view) const;

@@ -11,7 +11,7 @@ LearnModule::LearnModule()
 
 LearnModule::~LearnModule()
 {
-	mBestNetBrain.saveToFile("./Data/Nets/learnFromScratch.net");
+	mBestNetBrain.saveToFile("./Data/Nets/learn.net");
 	delete pWorld;
 	pWorld = nullptr;
 }
@@ -42,19 +42,22 @@ void LearnModule::update(sf::Time const & time, sf::RenderWindow const * renderW
 	{
 		sf::Vector2f carPos = pWorld->getTrackReference().getStartPosition();
 		mBestNetBrain = NetBrain(); //Load here from some file later!
-		mBestNetBrain.loadFromFile("./Data/Nets/learnFromScratch.net");
+		//mBestNetBrain.setEntriesRandom();
+		mBestNetBrain.loadFromFile("./Data/Nets/learn.net");
 		mCurrentNetBrain = mBestNetBrain;
 		Car neuralNetCar(carPos, pWorld->getTrackReference().getForwardDirectionAt(carPos), 0.f, mCurrentNetBrain);
 		pWorld->addCar(neuralNetCar);
 		pWorld->setUsedViewToWantedView();
 		mSimulatedTimeOfCurrentSample = sf::Time::Zero;
+		mTimeWithoutMovement = sf::Time::Zero;
 		mCurrentIntegratedPath = 0.f;
 	}
 
-	if (mSimulatedTimeOfCurrentSample > SIMULATION_TIME) //Rate, accept/discard, initialize new mutated sample
+	if ((mSimulatedTimeOfCurrentSample > SIMULATION_TIME) || (mTimeWithoutMovement > sf::seconds(10.f))) //Rate, accept/discard, initialize new mutated sample
 	{
 		//Reset mSimulatedTimeOfCurrentSample
 		mSimulatedTimeOfCurrentSample = sf::Time::Zero;
+		mTimeWithoutMovement = sf::Time::Zero;
 
 		//Rate
 		float rate = pWorld->getTrackReference().getDistanceFromStartTo(pWorld->getCarsReference().front().getPosition());
@@ -101,6 +104,14 @@ void LearnModule::update(sf::Time const & time, sf::RenderWindow const * renderW
 			mSimulatedTimeOfCurrentSample += WORLD_UPDATE_TIME;
 			Car const & firstCar = pWorld->getCarsReference().front();
 			mCurrentIntegratedPath += mySFML::Simple::scalarProduct(mySFML::Simple::normalize(pWorld->getTrackReference().getForwardDirectionAt(firstCar.getPosition())), firstCar.getVelocity() * firstCar.getDirection() * WORLD_UPDATE_TIME.asSeconds());
+			if (firstCar.getVelocity() < 0.1f)
+			{
+				mTimeWithoutMovement += WORLD_UPDATE_TIME;
+			}
+			else
+			{
+				mTimeWithoutMovement = sf::Time::Zero;
+			}
 		}
 	}
 	

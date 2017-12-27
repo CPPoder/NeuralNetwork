@@ -38,6 +38,8 @@ public:
 	Activation getActivation() const;
 	void setActivation(Activation activation);
 
+	void setEntriesRandom();
+
 	virtual Mat::VectorSize getLayerSize() const override;
 
 

@@ -62,6 +62,26 @@ void DenseLayer::mutate()
 
 
 
+void DenseLayer::setEntriesRandom()
+{
+	//Randomize matrix
+	for (unsigned int x = 0; x < mMatrix.getSize().x(); ++x)
+	{
+		for (unsigned int y = 0; y < mMatrix.getSize().y(); ++y)
+		{
+			mMatrix.at(Mat::XY(x, y)) = Random::getRandomFloatBetween(-1.f, 1.f);
+		}
+	}
+
+	//Randomize bias
+	for (unsigned int i = 0; i < mBias.getSize(); ++i)
+	{
+		mBias.at(i) = Random::getRandomFloatBetween(-1.f, 1.f);
+	}
+}
+
+
+
 
 Mat::Matrix<NetNodeType> const & DenseLayer::getMatrix() const
 {
