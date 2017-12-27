@@ -30,8 +30,8 @@ Mat::Vector<NetNodeType>&& DenseLayer::apply(Mat::Vector<NetNodeType> && in) con
 void DenseLayer::mutate()
 {
 	//Determine mutation chances
-	float chanceOfMutationForMatrix = Random::getRandomFloatBetween(0.f, 0.02f);
-	float chanceOfMutationForBias = Random::getRandomFloatBetween(0.f, 0.02f);
+	float chanceOfMutationForMatrix = Random::getRandomFloatBetween(0.f, 0.04f);
+	float chanceOfMutationForBias = Random::getRandomFloatBetween(0.f, 0.04f);
 	float constexpr mutationStrengthConstant = 0.03f;
 
 	//Mutate matrix
