@@ -35,7 +35,8 @@ void RaceSimulation::render(sf::RenderWindow * renderWindow)
 
 void RaceSimulation::update(sf::Time const & time, sf::RenderWindow const * renderWindow)
 {
-	mWorld.update(time, renderWindow);
+	//mWorld.update(time, renderWindow);
+	mWorld.update(sf::seconds(1.f / 20.f), renderWindow);
 }
 
 
