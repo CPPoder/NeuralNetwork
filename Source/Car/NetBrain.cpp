@@ -32,7 +32,7 @@ NetBrain::NetBrain()
 	float constexpr vWanted = 4.f;
 
 	Mat::Matrix<NetNodeType> matrix0(Mat::XY(sNetInputSize, hiddenLayerSize), 0.f);
-	matrix0.at(Mat::XY(sNetInputSize - 4u, 0u)) = alphaGas * betaGas;
+	matrix0.at(Mat::XY(sNetInputSize - 3u, 0u)) = alphaGas * betaGas; //4u -> 3u because no damage input anymore!
 	matrix0.at(Mat::XY(sNetInputSize - 2u, 0u)) = -betaGas;
 	matrix0.at(Mat::XY(sNetInputSize - 1u, 1u)) = -betaSteer;
 	matrix0.at(Mat::XY(sNumOfAngles + 2u, 1u)) = -alphaSteer * betaSteer;
@@ -125,9 +125,11 @@ BrainOutput NetBrain::calculateBrainOutput(World const * worldPointer, Car const
 	}
 	netInput.at(sFullNumOfAngles) = forwardProjection;
 	netInput.at(sFullNumOfAngles + 1) = velocity;
-	netInput.at(sFullNumOfAngles + 2) = damage;
-	netInput.at(sFullNumOfAngles + 3) = actualGasBrake;
-	netInput.at(sFullNumOfAngles + 4) = actualSteering;
+	//netInput.at(sFullNumOfAngles + 2) = damage;
+	//netInput.at(sFullNumOfAngles + 3) = actualGasBrake;
+	//netInput.at(sFullNumOfAngles + 4) = actualSteering;
+	netInput.at(sFullNumOfAngles + 2) = actualGasBrake; //Net gets no damage input anymore!
+	netInput.at(sFullNumOfAngles + 3) = actualSteering;
 	NetOutput netOutput = mSequentialNet.apply(netInput);
 
 
@@ -223,7 +225,8 @@ void NetBrain::loadFromFile(std::string const & path)
 
 //const std::array<float, NetBrain::sNumOfAngles> NetBrain::sArrayOfAngles = { 0.3f, 0.6f, 1.2f, 2.5f, 5.f, 12.f, 25.f, 35.f, 50.f, 70.f, 90.f, 110.f, 130.f, 150.f, 165.f, 175.f };
 //const std::array<float, NetBrain::sNumOfAngles> NetBrain::sArrayOfAngles = { 2.f, 5.f, 10.f, 25.f, 45.f, 90.f, 135.f };
-const std::array<float, NetBrain::sNumOfAngles> NetBrain::sArrayOfAngles = { 5.f, 20.f, 45.f, 90.f };
+//const std::array<float, NetBrain::sNumOfAngles> NetBrain::sArrayOfAngles = { 5.f, 20.f, 45.f, 90.f };
+const std::array<float, NetBrain::sNumOfAngles> NetBrain::sArrayOfAngles = { 10.f, 30.f, 90.f };
 
 const std::array<float, NetBrain::sFullNumOfAngles> NetBrain::sFullArrayOfAngles = []()
 {
@@ -240,7 +243,7 @@ const std::array<float, NetBrain::sFullNumOfAngles> NetBrain::sFullArrayOfAngles
 		arr.at(arrPos) = -angle;
 		++arrPos;
 	}
-	arr.back() = 180.f;
+	//arr.back() = 180.f;
 	return arr;
 }();
 
