@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Source\GameState\LearnState.hpp"
+#include "Source\Framework\Framework.hpp"
 
 
 
@@ -7,7 +8,7 @@ namespace GameState
 {
 	LearnState::LearnState()
 	{
-
+		//Framework::setFramerateLimit(true, 50);
 	}
 
 	LearnState::~LearnState()

@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "Source\GameState\EditorState.hpp"
+#include "Source\Framework\Framework.hpp"
 
 namespace GameState
 {
 	EditorState::EditorState()
 		: mEditor(mEditorWindowSize)
 	{
-
+		//Framework::setFramerateLimit(true, 50);
 	}
 
 	EditorState::~EditorState()

@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "Source\GameState\RaceState.hpp"
+#include "Source\Framework\Framework.hpp"
 
 namespace GameState
 {
 	RaceState::RaceState()
 		: mRaceSimulation()
 	{
-
+		//Framework::setFramerateLimit(true, 20);
 	}
 
 	RaceState::~RaceState()
