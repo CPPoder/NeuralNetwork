@@ -32,7 +32,7 @@ void DenseLayer::mutate()
 	//Determine mutation chances
 	float chanceOfMutationForMatrix = Random::getRandomFloatBetween(0.f, 0.04f);
 	float chanceOfMutationForBias = Random::getRandomFloatBetween(0.f, 0.04f);
-	float constexpr mutationStrengthConstant = 0.01f;
+	float constexpr mutationStrengthConstant = 0.005f;
 
 	//Mutate matrix
 	for (unsigned int x = 0; x < mMatrix.getSize().x(); ++x)
