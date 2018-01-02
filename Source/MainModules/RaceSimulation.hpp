@@ -23,7 +23,7 @@ private:
 	Event mEvent = Event::NONE;
 
 private:
-	World mWorld;
+	World* pWorld = nullptr;
 
 public:
 	RaceSimulation();
