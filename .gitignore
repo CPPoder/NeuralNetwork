@@ -19,3 +19,4 @@ NeuralNetworks.vcxproj.filters
 *.ipch
 *.exe
 Debug/NeuralNetworks.ilk
+NeuralNetworks.vcxproj.user
