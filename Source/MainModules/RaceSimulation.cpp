@@ -23,7 +23,7 @@ RaceSimulation::RaceSimulation()
 	for (unsigned int i = 0; i < 1; ++i)
 	{
 		NetBrain netBrain = NetBrain();
-		netBrain.loadFromFile("./Data/Nets/learn.net");
+		netBrain.loadFromFile("./Data/Nets/learn_small.net");
 		Car neuralNetCar(pos, dir, 0.f, netBrain);
 		pWorld->addCar(neuralNetCar);
 	}

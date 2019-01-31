@@ -171,25 +171,21 @@ void SequentialNet::setEntriesRandom()
 }
 
 
-
-void SequentialNet::saveToFile(std::string const & path) const
+std::ostream& operator<<(std::ostream& oStream, SequentialNet const & sequentialNet)
 {
-	std::cout << "Save SequentialNet to file \"" << path << "\"...";
-	std::ofstream oStream(path);
-
 	//Net type
 	oStream << "<NetType:Begin>" << std::endl;
 	oStream << "Sequential" << std::endl;
 	oStream << "<NetType:End>" << std::endl;
-	
+
 	//Layers
 	oStream << "<Layers:Begin>" << std::endl;
-	for (auto const layerPointer : mVecOfLayers)
+	for (auto const layerPointer : sequentialNet.mVecOfLayers)
 	{
 		DenseLayer const * denseLayerPointer = dynamic_cast<DenseLayer const *>(layerPointer);
 
 		oStream << "<Layer:Begin>" << std::endl;
-		
+
 		//Layer type
 		oStream << "<LayerType:Begin>" << std::endl;
 		oStream << "Dense" << std::endl;
@@ -234,6 +230,18 @@ void SequentialNet::saveToFile(std::string const & path) const
 		oStream << "<Layer:End>" << std::endl;
 	}
 	oStream << "<Layers:End>" << std::endl;
+
+	//Return output stream
+	return oStream;
+}
+
+
+void SequentialNet::saveToFile(std::string const & path) const
+{
+	std::cout << "Save SequentialNet to file \"" << path << "\"...";
+	std::ofstream oStream(path);
+
+	oStream << *this;
 
 	oStream.close();
 	std::cout << "Complete!" << std::endl;

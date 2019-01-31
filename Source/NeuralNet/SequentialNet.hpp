@@ -44,7 +44,7 @@ public:
 	virtual void loadFromFile(std::string const & path) override;
 
 
-
+	friend std::ostream& operator<<(std::ostream& oStream, SequentialNet const & sequentialNet);
 };
 
 

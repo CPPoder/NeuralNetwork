@@ -1,0 +1,37 @@
+<NetType:Begin>
+Sequential
+<NetType:End>
+<Layers:Begin>
+<Layer:Begin>
+<LayerType:Begin>
+Dense
+<LayerType:End>
+<Matrix:Begin>
+0 0 0 0.00274504 0.00821751 -0.202176 0
+-0.00225641 0.036 -0.0344833 0.00379556 0 -0.000805849 -0.901664
+-0.000702904 -0.00111704 0.00030135 0.00300773 0.00497962 -0.00970811 0.000381618
+0.00283921 0 -0.00260119 0.00108523 0.00292603 0.00644776 -0.00770072
+<Matrix:End>
+<Bias:Begin>
+-0.024 0 0.00396792 0.00225241
+<Bias:End>
+<Activation:Begin>
+Atan
+<Activation:End>
+<Layer:End>
+<Layer:Begin>
+<LayerType:Begin>
+Dense
+<LayerType:End>
+<Matrix:Begin>
+-1 0 8.77306e-06 0
+0.00238524 0.999567 0 -0.000314494
+<Matrix:End>
+<Bias:Begin>
+-0 -0
+<Bias:End>
+<Activation:Begin>
+Atan
+<Activation:End>
+<Layer:End>
+<Layers:End>

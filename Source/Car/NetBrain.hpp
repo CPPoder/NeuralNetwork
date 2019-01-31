@@ -35,7 +35,7 @@ public:
 	void loadFromFile(std::string const & path);
 
 public:
-	static constexpr unsigned int sNumOfAngles = 3u; //7 different angles
+	static constexpr unsigned int sNumOfAngles = 1u; //3 different angles
 	static constexpr unsigned int sFullNumOfAngles = 2u * sNumOfAngles + 1u; //Every angle in both directions + front
 	static constexpr unsigned int sNetInputSize = sFullNumOfAngles + 4u; //borderCollisions + forwardProjection + (velocity, actualGasBrake, actualSteering)
 	static constexpr unsigned int sNetOutputSize = 2u; //gasBrakeDerivative & steeringWheelDerivative
@@ -43,6 +43,7 @@ public:
 	static const std::array<float, sFullNumOfAngles> sFullArrayOfAngles;
 
 
+	friend std::ostream& operator<<(std::ostream& oStream, NetBrain const & netBrain);
 };
 
 
