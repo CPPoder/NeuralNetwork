@@ -45,6 +45,8 @@ void LearnModule::update(sf::Time const & time, sf::RenderWindow const * renderW
 		//mBestNetBrain.setEntriesRandom();
 		mBestNetBrain.loadFromFile("./Data/Nets/learn_small.net");
 		mCurrentNetBrain = mBestNetBrain;
+		std::cout << std::endl << "Starting brain:" << std::endl;
+		std::cout << mBestNetBrain << std::endl;
 		Car neuralNetCar(carPos, pWorld->getTrackReference().getForwardDirectionAt(carPos), 0.f, mCurrentNetBrain);
 		pWorld->addCar(neuralNetCar);
 		pWorld->setUsedViewToWantedView();
@@ -80,6 +82,8 @@ void LearnModule::update(sf::Time const & time, sf::RenderWindow const * renderW
 			{
 				mBestRate = rate;
 				mBestNetBrain = mCurrentNetBrain;
+				std::cout << "Found new best net brain:" << std::endl;
+				std::cout << mBestNetBrain << std::endl;
 			}
 			else
 			{
@@ -88,6 +92,7 @@ void LearnModule::update(sf::Time const & time, sf::RenderWindow const * renderW
 		}
 
 		//Mutate currentNetBrain
+		//std::cout << "Mutated!" << std::endl;
 		mCurrentNetBrain.mutate();
 
 		//Use new current net brain for new car

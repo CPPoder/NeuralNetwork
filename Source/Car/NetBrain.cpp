@@ -234,7 +234,7 @@ void NetBrain::loadFromFile(std::string const & path)
 //const std::array<float, NetBrain::sNumOfAngles> NetBrain::sArrayOfAngles = { 2.f, 5.f, 10.f, 25.f, 45.f, 90.f, 135.f };
 //const std::array<float, NetBrain::sNumOfAngles> NetBrain::sArrayOfAngles = { 5.f, 20.f, 45.f, 90.f };
 //const std::array<float, NetBrain::sNumOfAngles> NetBrain::sArrayOfAngles = { 10.f, 30.f, 90.f };
-const std::array<float, NetBrain::sNumOfAngles> NetBrain::sArrayOfAngles = { 10.f };
+const std::array<float, NetBrain::sNumOfAngles> NetBrain::sArrayOfAngles = { 50.f };
 
 const std::array<float, NetBrain::sFullNumOfAngles> NetBrain::sFullArrayOfAngles = []()
 {
