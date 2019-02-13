@@ -1,4 +1,4 @@
-This application containes 3 parts:
+This application consists of 3 parts:
 
 1. An editor in which one can build race tracks.
 
